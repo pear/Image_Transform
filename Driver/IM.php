@@ -96,16 +96,6 @@ Class Image_Transform_IM extends Image_Transform
      */
     function addText($params)
     {
-        /*
-        $params = array(
-                        'text' => 'This is Text',
-                        'x' => 10,
-                        'y' => 20,
-                        'color' => 'red',
-                        'font' => 'Arial',
-                        'resize_first' => false
-                        );
-        */
         $default_params = array(
                                 'text' => 'This is Text',
                                 'x' => 10,
@@ -132,11 +122,12 @@ Class Image_Transform_IM extends Image_Transform
      * @param $filename string the name of the file to write to
      * @return none
      */
-    function save($filename, $quality = 75)
+    function save($filename, $quality = 75, $type = '')
     {
+        $type == '' ? $this->type : $type;
         $cmd = 'ulimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . escapeshellarg($filename) . ' 2>&1';
         passthru($cmd);
-		print $cmd;
+		#print $cmd;
     } // End save
     
     /**
@@ -164,7 +155,7 @@ Class Image_Transform_IM extends Image_Transform
      *
      * @return none
      */
-    function destroy()
+    function free()
     {
         return true;
     }

@@ -115,9 +115,10 @@ Class Image_Transform_GD extends Image_Transform
      * @param $filename string the name of the file to write to
      * @return none
      */
-    function save($filename)
+    function save($filename, $quality = 75, $type = '')
     {
-        $functionName = 'Image' . $this->type;
+        $type == '' ? $this->type : $type;
+        $functionName = 'Image' . $type;
         $functionName($this->imageHandle, $filename) ;
         $this->imageHandle = $this->old_image;
         $this->resized = false;
@@ -149,7 +150,7 @@ Class Image_Transform_GD extends Image_Transform
      *
      * @return none
      */
-    function destroy()
+    function free()
     {
         if ($this->imageHandle){
             ImageDestroy($this->imageHandle);

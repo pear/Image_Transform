@@ -117,10 +117,11 @@ Class Image_Transform_NetPBM extends Image_Transform
      * @param $filename string the name of the file to write to
      * @return none
      */
-    function save($filename, $quality = 75)
+    function save($filename, $quality = 75, $type = '')
     {
+        $type == '' ? $this->type : $type;
         $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
-        switch($this->type){
+        switch($type){
         	case 'jpeg': 
         		$arg = "--quality=$quality";
         		break;
@@ -130,7 +131,7 @@ Class Image_Transform_NetPBM extends Image_Transform
         	default:
                 break;
         } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $this->type . ' ' . $args . ' > ' . $filename . ' 2>&1';
+        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $type . ' ' . $args . ' > ' . $filename . ' 2>&1';
         passthru($cmd);
         $this->command = array();
     } // End save
@@ -171,7 +172,7 @@ Class Image_Transform_NetPBM extends Image_Transform
      *
      * @return none
      */
-    function destroy()
+    function free()
     {
         return true;
     }
