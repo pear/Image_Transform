@@ -117,7 +117,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
             if ($color[0]=='#'){
                 $this->colorhex2colorarray( $color );
             } else {
-                include_once('Image/Transform/Drivers/ColorsDefs.php');
+                include_once('Image/Transform/Driver/ColorsDefs.php');
                 $color = isset($colornames[$color])?$colornames[$color]:false;
             }
         }
@@ -168,7 +168,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
             if ($color[0]=='#'){
                 $this->colorhex2colorarray( $color_mask );
             } else {
-                include_once('Image/Transform/Drivers/ColorDefs.php');
+                include_once('Image/Transform/Driver/ColorDefs.php');
                 $color = isset($colornames[$color_mask])?$colornames[$color_mask]:false;
             }
         }
