@@ -338,6 +338,27 @@ Class Image_Transform
     {
     	return $this->scaleMaxLength($size);
     }
+    
+    /**
+     * Fit the image in the specified box
+     *
+     * If the image is bigger than the box specified by $width and $height,
+     * it will be scaled down to fit inside of it.
+     * If the image is smaller, nothing is done.
+     *
+     * @return bool|PEAR_Error TRUE or PEAR Error object on error
+     * @access public
+     */
+    function fit($width, $height)
+    {
+        if ($this->img_x <= $width
+            && $this->img_y <= height) {
+            return true;
+        }
+        return ($this->img_y <= $height)
+                ? $this->scaleByX($width)
+                : $this->scaleByY($height);
+    }
 
     /**
      * Set one options
