@@ -229,8 +229,9 @@ Class Image_Transform_Driver_GD extends Image_Transform
         $type           = $type==''? $this->type : $type;
         $functionName   = 'image' . $type;
         $functionName($this->imageHandle, $filename) ;
-        $this->imageHandle = $this->old_image;
-        $this->resized = false;
+        if (!$this->keep_settings_on_save) {
+            $this->free();
+        }
     } // End save
 
 
@@ -251,9 +252,9 @@ Class Image_Transform_Driver_GD extends Image_Transform
         header('Content-type: image/' . strtolower($this->type));
         $functionName($this->imageHandle, '', $quality);
         $this->imageHandle = $this->old_image;
-        $this->resized = false;
-        ImageDestroy($this->old_image);
-        $this->free();
+        if (!$this->keep_settings_on_save) {
+            $this->free();
+        }
     }
 
     /**
@@ -263,6 +264,9 @@ Class Image_Transform_Driver_GD extends Image_Transform
      */
     function free()
     {
+        $this->imageHandle = $this->old_image;
+        $this->resized = false;
+        ImageDestroy($this->old_image);
         if ($this->imageHandle){
             ImageDestroy($this->imageHandle);
         }
