@@ -50,9 +50,9 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function __construct()
     {
-        require_once 'System/Command.php';
+        require_once 'System.php';
         if (!defined('IMAGE_TRANSFORM_NETPBM_PATH')) {
-            $path = dirname(System_Command::which('pnmscale'))
+            $path = dirname(System::which('pnmscale'))
                     . DIRECTORY_SEPARATOR;
             define('IMAGE_TRANSFORM_NETPBM_PATH', $path);
         }

@@ -61,7 +61,7 @@ It provides :
     </filelist>
   </release>
   <deps>
-    <dep type="pkg" rel="has">System_Command</dep> <!-- needs version dependency on release fixed for Windows -->
+  <!--  <dep type="pkg" rel="has">System_Command</dep>  needs version dependency on release fixed for Windows -->
  </deps>
   <changelog>
     <release>
