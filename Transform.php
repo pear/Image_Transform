@@ -211,13 +211,13 @@ Class Image_Transform
     } // End scaleByFactor
 
     /**
-     * Scales an image so that the longest side has this dimension.
+     * Scales an image so that the longest side has the specified dimension.
      *
      * @access public
      * @param int $size Max dimension in pixels
      * @return none
      */
-    function scaleByLength($size)
+    function scaleMaxLength($size)
     {
          if ($this->img_x >= $this->img_y) {
             $new_x = $size;
@@ -229,7 +229,16 @@ Class Image_Transform
         return $this->_resize($new_x, $new_y);
     } // End scaleByLength
 
-
+    /**
+     * Alias for scaleMaxLength
+     * 
+     * @access public
+     * @return void 
+     */
+    function scaleByLength($size){
+    	$this->scaleMaxLength($size);
+    }
+    
     /**
      * Sets the image type (in lowercase letters), the image height and width.
      * 
