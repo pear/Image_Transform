@@ -16,7 +16,7 @@ $im->resize(300, 50);
 // $im->addText(array('text' => 'Annotated'));
 //$im->display();
 $im->save('/www/htdocs/test.jpg');
-// Now free the memory - should be called free?
-$im->destroy();
+// Now free the memory
+$im->free();
 ?>
 <img src="test.jpg">
