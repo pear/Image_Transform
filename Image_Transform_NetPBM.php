@@ -97,7 +97,7 @@ Class Image_Transform_NetPBM extends Image_Transform
                                 'color' => 'red',
                                 'font' => 'Arial.ttf',
 								'size' => '12',
-								'angle' => 0;
+								'angle' => 0,
                                 'resize_first' => false // Carry out the scaling of the image before annotation?
                                 );
          $params = array_merge($default_params, $params);
@@ -126,6 +126,7 @@ Class Image_Transform_NetPBM extends Image_Transform
         } // switch
         $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $this->type . ' ' . $args . ' > ' . $filename . ' 2>&1';
         passthru($cmd);
+        $this->command = array();
     } // End save
     
     /**
@@ -155,7 +156,7 @@ Class Image_Transform_NetPBM extends Image_Transform
         } // switch
         $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $type . ' ' . $arg . ' 2>&1';
         passthru($cmd);
-        }
+        $this->command = array();
     }
 
     
