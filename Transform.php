@@ -30,7 +30,7 @@ if(!defined(IMAGE_TRANSFORM_LIB_PATH)){
 }*/
 /**
  * The main "Image_Resize" class is a container and base class which
- * provides the static methods for creating Image objects as well as 
+ * provides the static methods for creating Image objects as well as
  * some utility functions (maths) common to all parts of Image Resize.
  *
  * The object model of DB is as follows (indentation means inheritance):
@@ -40,9 +40,9 @@ if(!defined(IMAGE_TRANSFORM_LIB_PATH)){
  * |            the actual Image implementations as well as a bunch of
  * |            maths methods.
  * |
- * +-Image_GD   The Image implementation for the PHP GD extension .  Inherits 
+ * +-Image_GD   The Image implementation for the PHP GD extension .  Inherits
  *              Image_Resize
- *              When calling DB::setup for GD images the object returned is an 
+ *              When calling DB::setup for GD images the object returned is an
  *              instance of this class.
  *
  * @package  Image Resize
@@ -60,26 +60,26 @@ Class Image_Transform
     /**
      * Type of the image file (eg. jpg, gif png ...)
      * @var string
-     */    
+     */
     var $type = '';
     /**
      * Original image width in x direction
-     * @var int 
+     * @var int
      */
     var $img_x = '';
     /**
      * Original image width in y direction
-     * @var int 
+     * @var int
      */
     var $img_y = '';
     /**
      * New image width in x direction
-     * @var int 
+     * @var int
      */
     var $new_x = '';
     /**
      * New image width in y direction
-     * @var int 
+     * @var int
      */
     var $new_y = '';
     /**
@@ -93,7 +93,7 @@ Class Image_Transform
      * or saving.
      */
      var $resized = false;
-    
+
     /**
      * Create a new Image_resize object
      *
@@ -109,22 +109,22 @@ Class Image_Transform
      */
     function &factory($driver)
     {
-        include_once "Transform/$driver.php";
+        include_once "Transform/Drivers/$driver.php";
 
         $classname = "Image_Transform_{$driver}";
         $obj =& new $classname;
         return $obj;
     }
-    
-    
+
+
     /**
      * Resize the Image in the X and/or Y direction
      * If either is 0 it will be scaled proportionally
      *
      * @access public
      *
-     * @param mixed $new_x (0, number, percentage 10% or 0.1) 
-     * @param mixed $new_y (0, number, percentage 10% or 0.1)     
+     * @param mixed $new_x (0, number, percentage 10% or 0.1)
+     * @param mixed $new_y (0, number, percentage 10% or 0.1)
      *
      * @return mixed none or PEAR_error
      */
@@ -136,11 +136,11 @@ Class Image_Transform
         // Now do the library specific resizing.
         $this->_resize($new_x, $new_y);
     } // End resize
-    
-    
+
+
     /**
      * Scale the image to have the max x dimension specified.
-     * 
+     *
      * @param int $new_x Size to scale X-dimension to
      * @return none
      */
@@ -149,10 +149,10 @@ Class Image_Transform
         $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
         $this->_resize($new_x, $new_y);
     } // End resizeX
-    
+
     /**
      * Scale the image to have the max y dimension specified.
-     * 
+     *
      * @access public
      * @param int $new_y Size to scale Y-dimension to
      * @return none
@@ -162,12 +162,12 @@ Class Image_Transform
         $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
         $this->_resize($new_x, $new_y);
     } // End resizeY
-    
+
     /**
      * Scale Image to a maximum or percentage
      *
      * @access public
-     * @param mixed (number, percentage 10% or 0.1) 
+     * @param mixed (number, percentage 10% or 0.1)
      * @return mixed none or PEAR_error
      */
     function scale($size)
@@ -186,7 +186,7 @@ Class Image_Transform
      * Scales an image to a percentage of its original size.  For example, if
      * my image was 640x480 and I called scaleByPercentage(10) then the image
      * would be resized to 64x48
-     * 
+     *
      * @access public
      * @param int $size Percentage of original size to scale to
      * @return none
@@ -195,12 +195,12 @@ Class Image_Transform
     {
         $this->scaleByFactor($size / 100);
     } // End scaleByPercentage
-    
+
     /**
      * Scales an image to a factor of its original size.  For example, if
      * my image was 640x480 and I called scaleByFactor(0.5) then the image
      * would be resized to 320x240.
-     * 
+     *
      * @access public
      * @param float $size Factor of original size to scale to
      * @return none
@@ -211,7 +211,7 @@ Class Image_Transform
         $new_y = round($size * $this->img_y, 0);
         $this->_resize($new_x, $new_y);
     } // End scaleByFactor
-    
+
     /**
      * Scales an image so that the longest side has this dimension.
      *
@@ -230,47 +230,50 @@ Class Image_Transform
         }
         $this->_resize($new_x, $new_y);
     } // End scaleByLength
-    
-    
+
+
     /**
      *
      * @access public
-     * @return void 
+     * @return void
      */
     function _get_image_details($image)
     {
-    	$data = GetImageSize($image);
-        #1 = GIF, 2 = JPG, 3 = PNG, 4 = SWF, 5 = PSD, 6 = BMP, 7 = TIFF(intel byte order), 8 = TIFF(motorola byte order, 
+    	$data = @GetImageSize($image);
+        #1 = GIF, 2 = JPG, 3 = PNG, 4 = SWF, 5 = PSD, 6 = BMP, 7 = TIFF(intel byte order), 8 = TIFF(motorola byte order,
         # 9 = JPC, 10 = JP2, 11 = JPX, 12 = JB2, 13 = SWC
-        switch($data[2]){
-            case 1:
-                $type = 'gif';
-                break;
-            case 2:
-                $type = 'jpeg';
-                break;
-            case 3:
-                $type = 'png';
-                break;
-            case 4:
-                $type = 'swf';
-                break;
-            case 5:
-                $type = 'psd';
-            case 6:
-                $type = 'bmp';
-            case 7:
-            case 8:
-                $type = 'tiff';
-            default:
-                return PEAR::raiseError("We do not recognize this image format", true);
+        if (is_array($data)){
+            switch($data[2]){
+                case 1:
+                    $type = 'gif';
+                    break;
+                case 2:
+                    $type = 'jpeg';
+                    break;
+                case 3:
+                    $type = 'png';
+                    break;
+                case 4:
+                    $type = 'swf';
+                    break;
+                case 5:
+                    $type = 'psd';
+                case 6:
+                    $type = 'bmp';
+                case 7:
+                case 8:
+                    $type = 'tiff';
+                default:
+                    return PEAR::raiseError("We do not recognize this image format", true);
+            }
+            $this->img_x = $data[0];
+            $this->img_y = $data[1];
+            $this->type = $type;
+
+            return true;
+        } else {
+            return PEAR::raiseError("Cannot fetch image or images details.", true);
         }
-        
-        $this->img_x = $data[0];
-        $this->img_y = $data[1];
-        $this->type = $type;
-        
-        return true;
         /*
         $output = array(
                         'width' => $data[0],
@@ -280,16 +283,16 @@ Class Image_Transform
         return $output;
         */
     }
-    
-    
+
+
     /**
      * Parse input and convert
      * If either is 0 it will be scaled proportionally
      *
      * @access private
      *
-     * @param mixed $new_size (0, number, percentage 10% or 0.1) 
-     * @param int $old_size     
+     * @param mixed $new_size (0, number, percentage 10% or 0.1)
+     * @param int $old_size
      *
      * @return mixed none or PEAR_error
      */
@@ -312,56 +315,56 @@ Class Image_Transform
      * Set the image width
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return 
+     * @return
      */
     function _set_img_x($size)
     {
     	$this->img_x = $size;
     }
-    
+
     /**
      * Set the image height
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return 
+     * @return
      */
     function _set_img_y($size)
     {
     	$this->img_y = $size;
     }
-    
+
     /**
      * Set the image width
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return 
+     * @return
      */
     function _set_new_x($size)
     {
     	$this->new_x = $size;
     }
-    
+
     /**
      * Set the image height
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return 
+     * @return
      */
     function _set_new_y($size)
     {
     	$this->new_y = $size;
     }
-    
+
     /**
      * Get the type of the image being manipulated
-     * 
+     *
      * @return string $this->type the image type
      */
     function getImageType()
     {
         return $this->type;
     }
-    
+
     /**
      *
      * @access public
@@ -370,7 +373,7 @@ Class Image_Transform
     function getWebSafeFormat()
     {
     	switch($this->type){
-    		case 'gif': 
+    		case 'gif':
             case 'png':
     			return 'png';
     			break;
@@ -378,7 +381,7 @@ Class Image_Transform
     			return 'jpeg';
     	} // switch
     }
-    
+
     /**
      * Place holder for the real resize method
      * used by extended methods to do the resizing
@@ -389,7 +392,7 @@ Class Image_Transform
     function _resize() {
         return PEAR::raiseError("No Resize method exists", true);
     }
-    
+
     /**
      * Place holder for the real load method
      * used by extended methods to do the resizing
@@ -400,7 +403,7 @@ Class Image_Transform
     function load($filename) {
         return PEAR::raiseError("No Load method exists", true);
     }
-    
+
     /**
      * Place holder for the real display method
      * used by extended methods to do the resizing
@@ -412,7 +415,7 @@ Class Image_Transform
     function display($type, $quality) {
         return PEAR::raiseError("No Display method exists", true);
     }
-    
+
     /**
      * Place holder for the real save method
      * used by extended methods to do the resizing
@@ -435,26 +438,26 @@ Class Image_Transform
     function free() {
         return PEAR::raiseError("No Save method exists", true);
     }
-        
+
     /* Methods to add to the driver classes in the future */
     function addText()
     {
         /* Should be nearly implemented now!) */
     }
-    
+
     function addDropShadow()
     {
-    
+
     }
-    
+
     function addBorder()
     {
-    
+
     }
-    
+
     function crop()
     {
-    
+
     }
 }
 ?>
