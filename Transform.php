@@ -231,9 +231,10 @@ Class Image_Transform
 
 
     /**
-     *
-     * @access public
-     * @return void
+     * Sets the image type (in lowercase letters), the image height and width.
+     * 
+     * @access private
+     * @return mixed True or PEAR_error
      */
     function _get_image_details($image)
     {
@@ -307,7 +308,7 @@ Class Image_Transform
     /**
      * Returns the current value of $this->default_text_params.
      * 
-     * @access public
+     * @access private
      * @return array $this->default_text_params The current text parameters
      */
     function _get_default_text_params()
@@ -342,7 +343,9 @@ Class Image_Transform
     }
 
     /**
-     * Set the image width
+     * Set the new image width
+     * 
+     * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
      * @return
@@ -353,7 +356,9 @@ Class Image_Transform
     }
 
     /**
-     * Set the image height
+     * Set the new image height
+     * 
+     * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
      * @return
@@ -366,6 +371,7 @@ Class Image_Transform
     /**
      * Get the type of the image being manipulated
      *
+     * @access public
      * @return string $this->type the image type
      */
     function getImageType()
