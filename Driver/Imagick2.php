@@ -110,8 +110,8 @@ Class Image_Transform_Driver_Imagick2 extends Image_Transform
     {
         if (imagick_rotate ($this->imageHandle, $angle)){
            
-            $this->new_x = imagick_get_attribute($img2,'width');
-            $this->new_y = imagick_get_attribute($img2,'height');
+            $this->new_x = imagick_getwidth($this->imageHandle);
+            $this->new_y = imagick_getheight($this->imageHandle);
         } else {
             return $this->raiseError("Cannot create a new imagick imagick image for the resize.", true);
         }
