@@ -124,6 +124,52 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
     } // End load
 
+    
+    /**
+     * Add a border of constant width around an image
+     *
+     * @param int $border_width Width of border to add
+     * @author Peter Bowyer
+     * @return bool true
+     */
+    function addBorder($border_width, $color = '')
+    {
+        $this->new_x = $this->img_x + 2*$border_width;
+        $this->new_y = $this->img_y + 2*$border_width;
+        
+        if (function_exists('ImageCreateTrueColor') && $this->true_color) {
+            $new_img =ImageCreateTrueColor($new_x, $new_y);
+        }
+        if (!$new_img) {
+            $new_img =ImageCreate($new_x, $new_y);
+            imagepalettecopy($new_img, $this->imageHandle);
+        }
+        
+        if ($color) {
+            if (!is_array($color)) {
+                if ($color{0} == '#') {
+    				// Not already in numberical format, so we convert it.
+                    $color = $this->colorhex2colorarray($color);
+                } else {
+                    include_once 'Image/Transform/Driver/ColorsDefs.php';
+                    $color = isset($colornames[$color])?$colornames[$color]:false;
+                }
+            }
+            if ($this->true_color) {
+                $c = imagecolorresolve($this->imageHandle, $color[0], $color[1], $color[2]);
+                imagefill($new_img, 0, 0, $c);
+            } else {
+                imagecolorset($new_img, imagecolorat($new_img, 0, 0), $color[0], $color[1], $color[2]);
+            }
+        }
+        ImageCopy($new_img, $this->imageHandle, $border_width, $border_width, 0, 0, $this->img_x, $this->img_y);
+        $this->imageHandle = $new_img;
+        $this->resized = true;
+
+        return true;    
+    }
+    
+    
     /**
      * addText
      *
@@ -222,10 +268,11 @@ Class Image_Transform_Driver_GD extends Image_Transform
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
-        if (function_exists('ImageCreateTrueColor') && @ImageCreateTrueColor()) {
-            $new_img = ImageCreateTrueColor($width, $height);
-        } else {
-            $new_img = ImageCreate($width, $height);
+        if (function_exists('ImageCreateTrueColor')) {
+            $new_img =ImageCreateTrueColor($new_x, $new_y);
+        }
+        if (!$new_img) {
+            $new_img =ImageCreate($new_x, $new_y);
         }
         imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height);
 
