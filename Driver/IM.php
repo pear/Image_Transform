@@ -42,7 +42,7 @@ Class Image_Transform_IM extends Image_Transform
             define('IMAGE_TRANSFORM_LIB_PATH', escapeshellcmd(System_Command::which('convert')) . '/');
         }
         return true;
-    } // End function Image_IM
+    } // End Image_IM
     
     /**
      * Load image 
@@ -58,10 +58,7 @@ Class Image_Transform_IM extends Image_Transform
             return PEAR::raiseError('The image file ' . $image . ' does\'t exist', true);
         }
         $this->image = $image;
-        $this->_get_size();
-        // Should the image type be lower or upper case?
-        exec(IMAGE_TRANSFORM_LIB_PATH . 'identify -format "%m" ' . $image, $data);
-        $this->type = strtolower($data[0]);
+        $this->_get_image_details($image);
     } // End load
     
     /**
@@ -87,6 +84,9 @@ Class Image_Transform_IM extends Image_Transform
      */
     function rotate($angle)
     {
+        if ('-' == $angle{0}) {
+    		$angle = 360 - substr($angle, 1);
+    	}
          $this->command['rotate'] = "-rotate $angle";
     } // End rotate
     
@@ -159,19 +159,6 @@ Class Image_Transform_IM extends Image_Transform
     {
         return true;
     }
-    
-    /**
-     * get the image size (into img_x and img_y)
-     *
-     * @return none
-     */
-    function _get_size()
-    {
-        $str = exec(IMAGE_TRANSFORM_LIB_PATH . "identify -format \"%w::%h\" " . $this->image, $data);
-        $str = split('::', $data[0]);
-        $this->img_x = $str[0];
-        $this->img_y = $str[1];
-    } // End _get_size
-    
+
 } // End class ImageIM
 ?>

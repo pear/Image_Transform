@@ -55,8 +55,7 @@ Class Image_Transform_NetPBM extends Image_Transform
             define('IMAGE_TRANSFORM_LIB_PATH', escapeshellcmd(System_Command::which('pnmscale')) . '/');
         }
         $this->image = $image;
-        $this->type = $this->_get_type();
-        $this->_get_size();
+        $this->_get_image_details($image);
     } // End load
     
     /**
@@ -177,44 +176,6 @@ Class Image_Transform_NetPBM extends Image_Transform
         return true;
     }
     
-    /**
-     * get the image size (into img_x and img_y)
-     *
-     * @return none
-     */
-    function _get_size()
-    {
-        $size = GetImageSize($this->image);
-        $this->_set_img_x($size[0]);
-        $this->_set_img_y($size[1]);
-    } // End _get_size
-    
-    
-    /**
-     * get the image type
-     *
-     * @return string (gif,jpeg,png)
-     */
-    function _get_type() { // Should I pass $image by reference?
-        $data = GetImageSize($this->image);
-
-        switch($data[2]){
-            case '1':
-                $type = 'gif';
-                break;
-            case '2':
-                $type = 'jpeg';
-                break;
-            case '3':
-                $type = 'png';
-                break;
-            case 7:
-            case 8:
-                $type='tiff';
-                break;
-        }
-        return $type;
-    }
 
 } // End class ImageIM
 ?>

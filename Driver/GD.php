@@ -61,10 +61,10 @@ Class Image_Transform_GD extends Image_Transform
     function load($image)
     {
         $this->image = $image;
-        $this->type = $this->_get_type();
+        $this->_get_image_details($image);
         $functionName = 'ImageCreateFrom' . $this->type;
         $this->imageHandle = $functionName($this->image);
-        $this->_get_size();
+
     } // End load
 
 	
@@ -89,6 +89,28 @@ Class Image_Transform_GD extends Image_Transform
         }
 	} // End addText
     
+    function rotate($angle)
+    {
+        if ('-' == $angle{0}) {
+    		$angle = 360 - substr($angle, 1);
+    	}
+        $size = GetImageSize($img_sorgente);
+        $tot_x = $this->img_x;
+        $tot_y = $this->img_y;
+        
+        $img_risulta = ImageCreate ($tot_y,$tot_x)
+        
+        $img_sorgente=ImageCreateFromJpeg($img_sorgente);
+        
+        for($i_x=0;$i_x<$tot_x;$i_x++){
+            for($i_y=0;$i_y<$tot_y;$i_y++){ 
+                $ris_x=$tot_y-($i_y+1);
+                $ris_y=$i_x;
+                imagecopy($img_risulta, $img_sorgente, $ris_x,$ris_y,$i_x,$i_y,1,1);
+            } // Y
+        } // X
+
+    }
    /**
     * Resize Action
     *
@@ -156,40 +178,6 @@ Class Image_Transform_GD extends Image_Transform
             ImageDestroy($this->imageHandle);
         }
     }
-    
-    /**
-     * get the image type
-     *
-     * @return string (gif,jpeg,png)
-     */
-    function _get_type () { // Can I pass $image by reference?
-        $data = GetImageSize($this->image);
-
-        switch($data[2]){
-            case '1':
-                $type = 'gif';
-                break;
-            case '2':
-                $type = 'jpeg';
-                break;
-            case '3':
-                $type = 'png';
-                break;
-        }
-        return $type;
-    }
-
-    /**
-     * get the image size (into img_x and img_y)
-     *
-     * @return none
-     */
-    function _get_size()
-    {
-        $size = GetImageSize($this->image);
-        $this->img_x = $size[0];
-        $this->img_y = $size[1];
-    } // End _get_size
     
 } // End class ImageIM
 ?>
