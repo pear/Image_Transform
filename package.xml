@@ -32,32 +32,30 @@ It provides :
       </maintainer>
   </maintainers>
   <release>
-    <version>1.0</version>
-    <date>2004-07-14</date>
+    <version>1.0.0alpha1</version>
+    <date>2004-12-30</date>
     <license>PHP License</license>
     <state>alpha</state>
-    <notes></notes>
+    <notes>-</notes>
     <filelist>
-      <dir name="/" baseinstalldir="Image">
-        <file role="php">Transform.php</file>
-        <dir name="Transform">
-            <file role="php">IMAGETYPE.php</file>
-            <file role="php">image_type_to_mime_type.php</file>
-			<dir name="Driver" role="php">
-				<file>GD.php</file>
-				<file>GD1.php</file>
-				<file>IM.php</file>
-				<file>NetPBM.php</file>
-				<file>Imagick.php</file>
-				<file>Imagick2.php</file>
-				<file>Imlib.php</file>
-				<file>ColorsDefs.php</file>
-				<dir name="Imagick" role="php">
-					<file>ImageTypes.php</file>
-				</dir>
-			</dir>
-        </dir>
-      </dir>
+     <dir name="/" baseinstalldir="Image">
+      <file role="php">Transform.php</file>
+      <dir name="Driver" role="php" baseinstalldir="Image/Transform">
+       <file>IMAGETYPE.php</file>
+       <file>image_type_to_mime_type.php</file>
+   				<file>GD.php</file>
+   				<file>GD1.php</file>
+   				<file>IM.php</file>
+   				<file>NetPBM.php</file>
+   				<file>Imagick.php</file>
+   				<file>Imagick2.php</file>
+   				<file>Imlib.php</file>
+   				<file>ColorsDefs.php</file>
+   				<dir name="Imagick" role="php">
+   					<file>ImageTypes.php</file>
+   				</dir>
+   			</dir>
+     </dir>
     </filelist>
   </release>
   <deps>
