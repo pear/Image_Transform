@@ -130,7 +130,7 @@ Class Image_Transform_NetPBM extends Image_Transform
         	default:
                 break;
         } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $type . ' ' . $args . ' > ' . $filename . ' 2>&1';
+        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $type . ' ' . $arg . ' > ' . $filename . ' 2>&1';
         passthru($cmd);
         $this->command = array();
     } // End save
