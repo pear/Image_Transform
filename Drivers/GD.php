@@ -36,12 +36,13 @@
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_Drivers_GD extends Image_Transform
+Class Image_Transform_Driver_GD extends Image_Transform
 {
 	/**
 	 * Holds the image file for manipulation
 	 */
     var $imageHandle = '';
+
 	/**
 	 * Holds the original image file
 	 */
@@ -79,7 +80,24 @@ Class Image_Transform_Drivers_GD extends Image_Transform
         $this->imageHandle = $functionName($this->image);
     } // End load
 
-
+    /**
+     * addText
+     *
+     * @param   array   options     Array contains options
+     *                              array(
+     *                                  'text'  The string to draw
+     *                                  'x'     Horizontal position
+     *                                  'y'     Vertical Position
+     *                                  'Color' Font color
+     *                                  'font'  Font to be used
+     *                                  'size'  Size of the fonts in pixel
+     *                                  'resize_first'  Tell if the image has to be resized
+     *                                                  before drawing the text
+     *                              )
+     *
+     * @return none
+     * @see PEAR::isError()
+     */
 	function addText($params)
     {
 		$default_params = array(
@@ -95,6 +113,15 @@ Class Image_Transform_Drivers_GD extends Image_Transform
 		$params = array_merge($default_params, $params);
         extract($params);
 
+        if( !is_array($color) ){
+            if ($color[0]=='#'){
+                $this->colorhex2colorarray( $color );
+            } else {
+                include_once('Image/Transform/Drivers/ColorsDefs.php');
+                $color = isset($colornames[$color])?$colornames[$color]:false;
+            }
+        }
+
         $c = imagecolorresolve ($this->imageHandle, $color[0], $color[1], $color[2]);
 
         if ('ttf' == substr($font, -3)) {
@@ -102,7 +129,7 @@ Class Image_Transform_Drivers_GD extends Image_Transform
         } else {
         	ImagePSText($this->imageHandle, $size, $angle, $x, $y, $c, $font, $text);
         }
-        //imagestring($this->imageHandle,5,$x,$y,$text,$color);
+        return true;
 	} // End addText
 
 
@@ -113,7 +140,7 @@ Class Image_Transform_Drivers_GD extends Image_Transform
      *
      * @param int       $angle      Rotation angle
      * @param array     $options    array(  'autoresize'=>true|false,
-     *                                      'color_mask'=>array(r,g,b)
+     *                                      'color_mask'=>array(r,g,b), named color or #rrggbb
      *                                   )
      * @author Pierre-Alain Joye
      * @return mixed none or a PEAR error object on error
@@ -137,6 +164,15 @@ Class Image_Transform_Drivers_GD extends Image_Transform
 
         $t      = deg2rad($angle);
 
+        if( !is_array($color_mask) ){
+            if ($color[0]=='#'){
+                $this->colorhex2colorarray( $color_mask );
+            } else {
+                include_once('Image/Transform/Drivers/ColorDefs.php');
+                $color = isset($colornames[$color_mask])?$colornames[$color_mask]:false;
+            }
+        }
+
         // Do not round it, too much lost of quality
         $cosT   = cos($t);
         $sinT   = sin($t);
@@ -147,7 +183,6 @@ Class Image_Transform_Drivers_GD extends Image_Transform
         $height = $max_y  = $this->img_y;
         $min_y  = 0;
         $min_x  = 0;
-
 
         $x1     = round($max_x/2,0);
         $y1     = round($max_y/2,0);
@@ -196,6 +231,10 @@ Class Image_Transform_Drivers_GD extends Image_Transform
             return PEAR::raiseError('Cannot create buffer for the rotataion.',
                                 null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
+
+        $this->img_x = $width2;
+        $this->img_y = $height2;
+
 
         imagepalettecopy($img2,$img);
 
@@ -289,11 +328,12 @@ Class Image_Transform_Drivers_GD extends Image_Transform
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
-        if ( $new_img = ImageCreateTrueColor($new_x,$new_y) ){
-            return PEAR::raiseError('Cannot create the resize buffer.',
-                                null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
+        if(@ImageCreateTrueColor()){
+            $new_img =ImageCreateTrueColor($new_x,$new_y);
+        } else {
+            $new_img =ImageCreate($new_x,$new_y);
         }
-        if(function_exists('ImageCopyResampled')){
+        if(@ImageCopyResampled()){
             ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         } else {
             ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
@@ -320,8 +360,8 @@ Class Image_Transform_Drivers_GD extends Image_Transform
      */
     function save($filename, $quality = 75, $type = '')
     {
-        $type == '' ? $this->type : $type;
-        $functionName = 'Image' . $type;
+        $type           = $type==''? $this->type : $type;
+        $functionName   = 'image' . $type;
         $functionName($this->imageHandle, $filename) ;
         $this->imageHandle = $this->old_image;
         $this->resized = false;
