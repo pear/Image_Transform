@@ -62,6 +62,32 @@ Class Image_Transform_Driver_IM extends Image_Transform
         $this->_get_image_details($image);
     } // End load
 
+
+    function _get_image_details($image)
+    {  
+        $retval = Image_Transform::_get_image_details($image);
+        if (PEAR::isError($retval)) {
+            unset($retval); 
+
+            $cmd = IMAGE_TRANSFORM_LIB_PATH . 'identify -format %w:%h:%m ' . 
+                   escapeshellarg($image);
+            exec($cmd, $res, $exit);
+            
+            if ($exit == 0) {
+               $data  = explode(':', $res[0]);
+               $this->img_x = $data[0];
+               $this->img_y = $data[1];
+               $this->type  = strtolower($data[2]);
+               $retval = true;
+           } else {
+               $retval = PEAR::raiseError("Cannot fetch image or images details.", true);
+           }
+
+        }
+
+        return($retval);
+    }
+
     /**
      * Resize Action
      *
@@ -139,7 +165,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
 
     /**
      * Adjust the image gamma
-     *
+    {       *
      * @param float $outputgamma
      *
      * @return none
@@ -160,7 +186,10 @@ Class Image_Transform_Driver_IM extends Image_Transform
     function save($filename, $type='', $quality = 75)
     {
         $type == '' ? $this->type : $type;
-        $cmd = 'ulimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . escapeshellarg($filename) . ' 2>&1';
+        $cmd = 'ulimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
+                implode(' ', $this->command) . " -flatten -quality $quality " .
+                escapeshellarg($this->image) . ' ' . 
+                escapeshellarg($filename) . ' 2>&1';
         exec($cmd);
     } // End save
 
