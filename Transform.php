@@ -120,7 +120,7 @@ Class Image_Transform
 
     /**
      * Resize the Image in the X and/or Y direction
-     * If either is 0 it will be scaled proportionally
+     * If either is 0 it will keep the original size for this dimension
      *
      * @access public
      *
@@ -145,7 +145,7 @@ Class Image_Transform
      * @param int $new_x Size to scale X-dimension to
      * @return none
      */
-    function scaleMaxX($new_x)
+    function scaleByX($new_x)
     {
         $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
         return $this->_resize($new_x, $new_y);
@@ -158,16 +158,17 @@ Class Image_Transform
      * @param int $new_y Size to scale Y-dimension to
      * @return none
      */
-    function scaleMaxY($new_y)
+    function scaleByY($new_y)
     {
         $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
         return $this->_resize($new_x, $new_y);
     } // End resizeY
 
     /**
-     * Scale Image to a maximum or percentage
+     * Scales an image by a percentage, factor to a given length
      *
      * @access public
+	 * @see scaleByPercentage, scaleByFactor, scaleByLength
      * @param mixed (number, percentage 10% or 0.1)
      * @return mixed none or PEAR_error
      */
@@ -258,11 +259,14 @@ Class Image_Transform
                     break;
                 case 5:
                     $type = 'psd';
+					break;
                 case 6:
                     $type = 'bmp';
+					break;
                 case 7:
                 case 8:
                     $type = 'tiff';
+					break;
                 default:
                     return PEAR::raiseError("We do not recognize this image format", true);
             }
@@ -274,14 +278,6 @@ Class Image_Transform
         } else {
             return PEAR::raiseError("Cannot fetch image or images details.", true);
         }
-        /*
-        $output = array(
-                        'width' => $data[0],
-                        'height' => $data[1],
-                        'type' => $type
-                        );
-        return $output;
-        */
     }
 
 
@@ -366,7 +362,11 @@ Class Image_Transform
     }
 
     /**
-     *
+     * This looks at the current image type and attempts to determin which
+	 * web-safe format will be most suited.  It does not work brilliantly with
+	 * *.png images, because it is very difficult to know whether they are
+	 * 8-bit or greater.  Guess I need to have fatter code here :-)
+	 * 
      * @access public
      * @return string web-safe image type
      */
