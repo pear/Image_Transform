@@ -24,26 +24,11 @@
 
 require_once 'PEAR.php';
 
-/*
-if(!defined(IMAGE_TRANSFORM_LIB_PATH)){
-	define('IMAGE_TRANSFORM_LIB_PATH', '/usr/local/ImageMagick/bin/');
-}*/
 /**
- * The main "Image_Resize" class is a container and base class which
- * provides the static methods for creating Image objects as well as
- * some utility functions (maths) common to all parts of Image Resize.
+ * The main "Image_Transform" class is a container and base class which
+ * provides the static method for creating an Image object as well as
+ * some utility functions (maths) common to all parts of Image_Transform.
  *
- * The object model of DB is as follows (indentation means inheritance):
- *
- * Image_Resize The base for each Image implementation.  Provides default
- * |            implementations (in OO lingo virtual methods) for
- * |            the actual Image implementations as well as a bunch of
- * |            maths methods.
- * |
- * +-Image_GD   The Image implementation for the PHP GD extension .  Inherits
- *              Image_Resize
- *              When calling DB::setup for GD images the object returned is an
- *              instance of this class.
  *
  * @package  Image Resize
  * @version  1.00
@@ -93,6 +78,18 @@ Class Image_Transform
      * or saving.
      */
      var $resized = false;
+     
+     /**
+      * Default parameters used in the addText methods.
+      */
+     var $default_text_params = array('text' => 'This is Text',
+                                      'x' => 10,
+                                      'y' => 20,
+                                      'color' => 'red',
+                                      'font' => 'Arial.ttf',
+        							  'size' => '12',
+        							  'angle' => 0,
+                                      'resize_first' => false);
 
     /**
      * Create a new Image_resize object
@@ -308,7 +305,20 @@ Class Image_Transform
     }
 
     /**
+     * Returns the current value of $this->default_text_params.
+     * 
+     * @access public
+     * @return array $this->default_text_params The current text parameters
+     */
+    function _get_default_text_params()
+    {
+    	return $this->default_text_params;
+    }
+    
+    /**
      * Set the image width
+     * 
+     * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
      * @return
@@ -320,6 +330,8 @@ Class Image_Transform
 
     /**
      * Set the image height
+     * 
+     * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
      * @return
@@ -360,6 +372,30 @@ Class Image_Transform
     {
         return $this->type;
     }
+	
+
+	/**
+	 * Return the image width
+	 * 
+	 * @access public
+	 * @return int The width of the image
+	 */
+	function getImageWidth()
+	{
+		return $this->img_x;
+	}
+	
+	
+	/**
+	 * Return the image height
+	 * 
+	 * @access public
+	 * @return int The width of the image
+	 */
+	function getImageHeight()
+	{
+		return $this->img_y;
+	}
 
     /**
      * This looks at the current image type and attempts to determin which
@@ -465,6 +501,51 @@ Class Image_Transform
     function colorarray2colorhex($color) {
         $color = '#'.dechex($color[0]).dechex($color[1]).dechex($color[2]);
         return strlen($color)>6?false:$color;
+    }
+    
+    
+    /*** These snitched from the File package.  Saves including another class! ***/
+    /**
+    * Returns the temp directory according to either the TMP, TMPDIR, or TEMP env
+    * variables. If these are not set it will also check for the existence of
+    * /tmp, %WINDIR%\temp
+    *
+    * @access public
+    * @return string The system tmp directory
+    */
+    function getTempDir()
+    {
+        if (OS_WINDOWS){
+            if (isset($_ENV['TEMP'])) {
+                return $_ENV['TEMP'];
+            }
+            if (isset($_ENV['TMP'])) {
+                return $_ENV['TMP'];
+            }
+            if (isset($_ENV['windir'])) {
+                return $_ENV['windir'] . '\temp';
+            }
+            return $_ENV['SystemRoot'] . '\temp';
+        }
+        if (isset($_ENV['TMPDIR'])) {
+            return $_ENV['TMPDIR'];
+        }
+        return '/tmp';
+    }
+
+    /**
+    * Returns a temporary filename using tempnam() and the above getTmpDir() function.
+    *
+    * @access public
+    * @param  string $dirname Optional directory name for the tmp file
+    * @return string          Filename and path of the tmp file
+    */
+    function getTempFile($dirname = NULL)
+    {
+		if (is_null($dirname)) {
+			$dirname = File::getTempDir();
+		}
+        return tempnam($dirname, 'temp.');
     }
 
 
