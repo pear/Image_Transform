@@ -86,7 +86,9 @@ Class Image_Transform
      */
     var $_options = array(
         'quality'     => 75,
-        'scaleMethod' => 'smooth');
+        'scaleMethod' => 'smooth',
+        'canvasColor' => array(255, 255, 255)
+        );
 
 	/**
 	 * Flag for whether settings should be discarded on saving/display of image
@@ -798,6 +800,15 @@ Class Image_Transform
         $g = hexdec(substr($colorhex, 3, 2));
         $b = hexdec(substr($colorhex, 5, 2));
         return array($r, $g, $b, 'type' => 'RGB');
+    }
+    
+    function _send_display_headers($type)
+    {
+        // Find the filename of the original image:
+        $filename = explode('.', basename($this->image));
+        $filename = $filename[0];
+        header('Content-type: ' . $this->getMimeType($type));
+        header ('Content-Disposition: inline; filename=' . $filename . '.' . $type );
     }
 
     /**
