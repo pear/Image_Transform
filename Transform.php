@@ -22,8 +22,6 @@
 // Image Transformation interface
 //
 
-# TODO
-# Make scaleMaxX and scaleMaxY accept all the various dimensions (factor % etc)
 require_once 'PEAR.php';
 
 /*
@@ -111,7 +109,7 @@ Class Image_Transform
      */
     function &factory($driver)
     {
-        include_once "Transform/$driver.php" ;
+        include_once "Transform/$driver.php";
 
         $classname = "Image_Transform_{$driver}";
         $obj =& new $classname;
@@ -359,7 +357,18 @@ Class Image_Transform
     function save($filename) {
         return PEAR::raiseError("No Save method exists", true);
     }
-    
+
+    /**
+     * Place holder for the real free method
+     * used by extended methods to do the resizing
+     *
+     * @access public
+     * @return PEAR_error
+     */
+    function free() {
+        return PEAR::raiseError("No Save method exists", true);
+    }
+        
     /* Methods to add to the driver classes in the future */
     function addText()
     {
