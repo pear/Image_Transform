@@ -320,7 +320,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
             IMAGE_TRANSFORM_IM_PATH,
             'convert',
             implode(' ', $this->command)
-               . ' -flatten -quality ' . ((int) $quality) . ' '
+               . ' -quality ' . ((int) $quality) . ' '
                . escapeshellarg($this->image) . ' ' . $type . ':' . escapeshellarg($filename)
                 . ' 2>&1');
         exec($cmd, $res, $exit);
@@ -345,13 +345,15 @@ Class Image_Transform_Driver_IM extends Image_Transform
         $type    = strtoupper(($type == '') ? $type : $this->type);
         $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
 
-        header('Content-type: ' . $this->getMimeType($type));
+        $this->_send_display_headers($type);
+        
         $cmd = $this->_prepare_cmd(
             IMAGE_TRANSFORM_IM_PATH,
             'convert',
-            implode(' ', $this->command)
-               . ' -flatten -quality ' . ((int) $quality) . ' '
-               . escapeshellarg($this->image . ' ' . $type) . ':-');
+            implode(' ', $this->command) . " -quality $quality "  . 
+                   $this->image . ' ' . 
+                   strtoupper($this->type) . ":-");
+                   
         passthru($cmd);
 
 		if (!$this->keep_settings_on_save) {
