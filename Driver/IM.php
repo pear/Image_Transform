@@ -20,7 +20,7 @@
 // Image Transformation interface using command line ImageMagick
 //
 
-require_once "Image/Image_Transform.php";
+require_once "Image/Transform.php";
 
 Class Image_Transform_IM extends Image_Transform
 {

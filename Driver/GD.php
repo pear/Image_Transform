@@ -90,7 +90,7 @@ Class Image_Transform_GD extends Image_Transform
                                 'font' => 'Arial.ttf',
 								'size' => '12',
 								'angle' => 0,
-                                'resize_first' => false // Carry out the scaling of the image before annotation?
+                                'resize_first' => false // Carry out the scaling of the image before annotation?  Not used for GD
                                 );
 		$params = array_merge($default_params, $params);
         extract($params);
@@ -116,7 +116,7 @@ Class Image_Transform_GD extends Image_Transform
      * @param array     $options    array(  'autoresize'=>true|false,
      *                                      'color_mask'=>array(r,g,b)
      *                                   )
-     *
+     * @author Pierre-Alain Joye
      * @return mixed none or a PEAR error object on error
      * @see PEAR::isError()
      */
@@ -277,7 +277,7 @@ Class Image_Transform_GD extends Image_Transform
     * Resize Action
     *
     * For GD 2.01+ the new copyresampled function is used
-    * It uses a bicubic interpolation algorythm to get far
+    * It uses a bicubic interpolation algorithm to get far
     * better result.
     *
     * @param $new_x int  new width
