@@ -109,7 +109,7 @@ Class Image_Transform
      */
     function &factory($driver)
     {
-        include_once "Transform/Drivers/$driver.php";
+        include_once "Image/Transform/Drivers/$driver.php";
 
         $classname = "Image_Transform_{$driver}";
         $obj =& new $classname;
