@@ -233,6 +233,56 @@ Class Image_Transform
     
     
     /**
+     *
+     * @access public
+     * @return void 
+     */
+    function _get_image_details($image)
+    {
+    	$data = GetImageSize($image);
+        #1 = GIF, 2 = JPG, 3 = PNG, 4 = SWF, 5 = PSD, 6 = BMP, 7 = TIFF(intel byte order), 8 = TIFF(motorola byte order, 
+        # 9 = JPC, 10 = JP2, 11 = JPX, 12 = JB2, 13 = SWC
+        switch($data[2]){
+            case 1:
+                $type = 'gif';
+                break;
+            case 2:
+                $type = 'jpeg';
+                break;
+            case 3:
+                $type = 'png';
+                break;
+            case 4:
+                $type = 'swf';
+                break;
+            case 5:
+                $type = 'psd';
+            case 6:
+                $type = 'bmp';
+            case 7:
+            case 8:
+                $type = 'tiff';
+            default:
+                return PEAR::raiseError("We do not recognize this image format", true);
+        }
+        
+        $this->img_x = $data[0];
+        $this->img_y = $data[1];
+        $this->type = $type;
+        
+        return true;
+        /*
+        $output = array(
+                        'width' => $data[0],
+                        'height' => $data[1],
+                        'type' => $type
+                        );
+        return $output;
+        */
+    }
+    
+    
+    /**
      * Parse input and convert
      * If either is 0 it will be scaled proportionally
      *
@@ -243,7 +293,8 @@ Class Image_Transform
      *
      * @return mixed none or PEAR_error
      */
-    function _parse_size($new_size, $old_size) {
+    function _parse_size($new_size, $old_size)
+    {
         if ('%' == $new_size) {
             $new_size = str_replace('%','',$new_size);
             $new_size = $new_size / 100;
@@ -263,7 +314,8 @@ Class Image_Transform
      * @since 29/05/02 13:36:31
      * @return 
      */
-    function _set_img_x($size){
+    function _set_img_x($size)
+    {
     	$this->img_x = $size;
     }
     
@@ -273,7 +325,8 @@ Class Image_Transform
      * @since 29/05/02 13:36:31
      * @return 
      */
-    function _set_img_y($size){
+    function _set_img_y($size)
+    {
     	$this->img_y = $size;
     }
     
@@ -283,7 +336,8 @@ Class Image_Transform
      * @since 29/05/02 13:36:31
      * @return 
      */
-    function _set_new_x($size){
+    function _set_new_x($size)
+    {
     	$this->new_x = $size;
     }
     
@@ -293,19 +347,32 @@ Class Image_Transform
      * @since 29/05/02 13:36:31
      * @return 
      */
-    function _set_new_y($size){
+    function _set_new_y($size)
+    {
     	$this->new_y = $size;
     }
+    
+    /**
+     * Get the type of the image being manipulated
+     * 
+     * @return string $this->type the image type
+     */
+    function getImageType()
+    {
+        return $this->type;
+    }
+    
     /**
      *
      * @access public
      * @return string web-safe image type
-     **/
-    function getWebSafeFormat(){
+     */
+    function getWebSafeFormat()
+    {
     	switch($this->type){
     		case 'gif': 
-    #        case 'png':
-    			return 'gif';
+            case 'png':
+    			return 'png';
     			break;
     		default:
     			return 'jpeg';
