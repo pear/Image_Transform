@@ -128,9 +128,10 @@ Class Image_Transform_Driver_IM extends Image_Transform
     } // End rotate
     
     /**
-	 * Crop image
+     * Crop image
      *
      * @author Ian Eure <ieure@websprockets.com>
+     * @since 0.8
      *
      * @param int height Cropped image height
      * @param int width Cropped image width
@@ -143,6 +144,11 @@ Class Image_Transform_Driver_IM extends Image_Transform
         // Do we want a safety check - i.e. if $width+$x > $this->img_x then we
         // raise a warning? [and obviously same for $height+$y]
         $this->command['crop'] = "-crop {$width}x{$height}+{$x}+{$y}";
+
+        // I think that setting img_x/y is wrong, but scaleByLength() & friends
+        // mess up the aspect after a crop otherwise.
+        $this->new_x = $this->img_x = $width - $x;
+        $this->new_y = $this->img_y = $height - $y;
     }
 
     /**
