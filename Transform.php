@@ -298,6 +298,21 @@ Class Image_Transform
     function _set_new_y($size){
     	$this->new_y = $size;
     }
+    /**
+     *
+     * @access public
+     * @return string web-safe image type
+     **/
+    function getWebSafeFormat(){
+    	switch($this->type){
+    		case 'gif': 
+    #        case 'png':
+    			return 'gif';
+    			break;
+    		default:
+    			return 'jpeg';
+    	} // switch
+    }
     
     /**
      * Place holder for the real resize method

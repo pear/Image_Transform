@@ -207,6 +207,10 @@ Class Image_Transform_NetPBM extends Image_Transform
             case '3':
                 $type = 'png';
                 break;
+            case 7:
+            case 8:
+                $type='tiff';
+                break;
         }
         return $type;
     }
