@@ -173,7 +173,6 @@ Class Image_Transform
      */
     function scale($size)
     {
-        $strlen = strlen($size);
         if ((strlen($size) > 1) && (substr($size,-1) == '%')) {
             return $this->scaleByPercentage(substr($size, 0, -1));
         } elseif ($size < 1) {
@@ -425,7 +424,7 @@ Class Image_Transform
      * @param string filename
      * @return PEAR_error
      */
-    function save($filename) {
+    function save($filename, $type, $quality) {
         return PEAR::raiseError("No Save method exists", true);
     }
 
