@@ -37,7 +37,7 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
      *
      * @see PEAR::isError()
      */
-    function Image_Transform_GD1()
+    function Image_Transform_Driver_GD1()
     {
         $this->Image_Transform_GD();
     } // End function Image

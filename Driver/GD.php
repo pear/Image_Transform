@@ -56,7 +56,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
      *
      * @see PEAR::isError()
      */
-    function Image_Transform_GD()
+    function Image_Transform_Driver_GD()
     {
         if (!function_exists("ImageTypes"))
             return PEAR::raiseError("libgd not compiled into PHP", true);
