@@ -186,7 +186,7 @@ Class Image_Transform_Driver_Imagick2 extends Image_Transform
             imagick_convert($this->imageHandle,$type);
         }
         imagick_write($this->imageHandle,$filename);
-        imagick_free($handle);
+        imagick_free($this->imageHandle);
     } // End save
 
     /**
