@@ -142,16 +142,17 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
         $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
         $arg = "";
         switch($type){
+        	case 'gif':
+        		$cmd .= IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|".
+                        IMAGE_TRANSFORM_LIB_PATH . 'ppmtogif >' .  $filename;
+        		break;
         	case 'jpeg':
         		$arg = "--quality=$quality";
-        		break;
-        	case 'gif':
-        		$cmd .=  IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|";
-        		break;
-        	default:
+            default:
+                $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type .
+                        ' ' . $arg . '>' . $filename;
                 break;
         } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg . '>' . $filename;
         exec($cmd);
         $this->command = array();
     } // End save
