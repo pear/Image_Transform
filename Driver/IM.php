@@ -200,7 +200,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
     function save($filename, $type='', $quality = 75)
     {
         $type = $type ? $type : $this->type;
-        $cmd = 'ulimit -t 1;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
+        $cmd = IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
                 implode(' ', $this->command) . 
                 " -flatten -quality $quality " .
                 escapeshellarg($this->image) . ' ' . 
