@@ -4,7 +4,7 @@
  * is designed to be used as a test of your setup.
  */
 error_reporting(E_ALL);
-require_once 'Image/Image_Transform.php';
+require_once 'Image/Transform.php';
 define('IMAGE_TRANSFORM_LIB_PATH', '/usr/local/ImageMagick/bin/');
 // Change 'IM' to 'GD' to test using the GD library.
 $im = Image_Transform::factory('IM');
