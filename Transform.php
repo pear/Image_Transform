@@ -77,7 +77,15 @@ Class Image_Transform
      * Flag to warn if image has been resized more than once before displaying
      * or saving.
      */
-     var $resized = false;
+    var $resized = false;
+	
+	/**
+	 * Flag for whether settings should be discarded on saving/display of image
+	 * @var bool
+	 * @see Image_Transform::keepSettingsOnSave
+	 */
+	 var $keep_settings_on_save = false;
+	 
      
      /**
       * Default parameters used in the addText methods.
@@ -331,7 +339,7 @@ Class Image_Transform
      * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return
+     * @return null
      */
     function _set_img_x($size)
     {
@@ -344,7 +352,7 @@ Class Image_Transform
      * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return
+     * @return null
      */
     function _set_img_y($size)
     {
@@ -357,7 +365,7 @@ Class Image_Transform
      * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return
+     * @return null
      */
     function _set_new_x($size)
     {
@@ -370,7 +378,7 @@ Class Image_Transform
      * @access private
      * @param int $size dimension to set
      * @since 29/05/02 13:36:31
-     * @return
+     * @return null
      */
     function _set_new_y($size)
     {
@@ -521,13 +529,13 @@ Class Image_Transform
     
     /*** These snitched from the File package.  Saves including another class! ***/
     /**
-    * Returns the temp directory according to either the TMP, TMPDIR, or TEMP env
-    * variables. If these are not set it will also check for the existence of
-    * /tmp, %WINDIR%\temp
-    *
-    * @access public
-    * @return string The system tmp directory
-    */
+     * Returns the temp directory according to either the TMP, TMPDIR, or TEMP env
+     * variables. If these are not set it will also check for the existence of
+     * /tmp, %WINDIR%\temp
+     *
+     * @access public
+     * @return string The system tmp directory
+     */
     function getTempDir()
     {
         if (OS_WINDOWS){
@@ -549,12 +557,12 @@ Class Image_Transform
     }
 
     /**
-    * Returns a temporary filename using tempnam() and the above getTmpDir() function.
-    *
-    * @access public
-    * @param  string $dirname Optional directory name for the tmp file
-    * @return string          Filename and path of the tmp file
-    */
+     * Returns a temporary filename using tempnam() and the above getTmpDir() function.
+     *
+     * @access public
+     * @param  string $dirname Optional directory name for the tmp file
+     * @return string          Filename and path of the tmp file
+     */
     function getTempFile($dirname = NULL)
     {
 		if (is_null($dirname)) {
@@ -562,6 +570,11 @@ Class Image_Transform
 		}
         return tempnam($dirname, 'temp.');
     }
+	
+	function keepSettingsOnSave($bool)
+	{
+		$this->keep_settings_on_save = $bool;
+	}
 
 
     /* Methods to add to the driver classes in the future */
