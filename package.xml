@@ -32,11 +32,13 @@ Actually it provides :
     <filelist>
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
-        <dir name="Drivers">
-          <file role="php">GD.php</file>
-          <file role="php">IM.php</file>
-          <file role="php">NetPBM.php</file>
-        </dir>
+	<dir name="" baseinstalldir="Image/Transform">
+          <dir name="Drivers">
+            <file role="php">GD.php</file>
+            <file role="php">IM.php</file>
+            <file role="php">NetPBM.php</file>
+          </dir>
+	</dir>
         <dir name="Examples" role="doc">
           <file>test.php</file>
           <file>test.jpg</file>
