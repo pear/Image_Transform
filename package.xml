@@ -37,15 +37,13 @@ It provides :
     <filelist>
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
-	<dir name="" baseinstalldir="Image/Transform">
-          <dir name="Driver">
+          <dir name="Driver" baseinstalldir="Image/Transform">
             <file role="php">GD.php</file>
             <file role="php">IM.php</file>
             <file role="php">NetPBM.php</file>
 	    <file role="php">Imagick.php</file>
 	    <file role="php">ColorsDefs.php</file>
           </dir>
-	</dir>
         <dir name="Examples" role="doc">
           <file>test.php</file>
           <file>test.jpg</file>
