@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE package SYSTEM "../package.dtd">
-<!-- do not use the "Type" attribute here, that one is only for
-     generated package.xml files -->
 <package version="1.0">
   <name>Image_Transform</name>
   <summary>Provides a standard interface to manipulate images using different libraries</summary>
-  <description>
-    This package was written because I needed a simpler interface to the image manipulations, and wanted a cross-library interface because it was necessary for me to develop and run under different libraries.
-  </description>
+  <description>This package was written to provide a simpler and cross-library interface to the image manipulations.
+Actually it provides :
+* supports GD
+* supports Image Magick
+* supports NetPBM
+* files related functions
+* addText
+* Scale (by length, percentage, maximum X/Y)
+* Resize
+* Rotate (custom angle)
+* Add border
+* Add shadow
+</description>
   <maintainers>
     <maintainer>
       <user>reywob</user>
@@ -15,33 +22,27 @@
       <email>peter@mapledesign.co.uk</email>
       <role>lead</role>
     </maintainer>
+  </maintainers>
   <release>
-    <version>0.1</version>
-    <date>2002/08/20</date>
-    <state>alpha</state>
-    <notes></notes>
+    <version>1.0</version>
+    <date>2002-08-20</date>
+    <license>PHP License</license>
+    <state>beta</state>
+    <notes>Added rotates method to GD driver</notes>
     <filelist>
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
-        <dir name="Transform">
+        <dir name="Drivers">
           <file role="php">GD.php</file>
           <file role="php">IM.php</file>
           <file role="php">NetPBM.php</file>
         </dir>
         <dir name="Examples" role="doc">
           <file>test.php</file>
-		  <file>test_netpbm.php</file>
+          <file>test.jpg</file>
+          <file>test.png</file>
         </dir>
       </dir>
     </filelist>
   </release>
-  <changelog>
-    <release>
-      <version>1.0</version>
-      <date>2002/08/20</date>
-      <notes>
-        This is the initial release of the Image_Transform package.
-      </notes>
-    </release>
-  </changelog>
 </package>
