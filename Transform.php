@@ -43,37 +43,44 @@ Class Image_Transform
      * @var string
      */
     var $image = '';
+
     /**
      * Type of the image file (eg. jpg, gif png ...)
      * @var string
      */
     var $type = '';
+
     /**
      * Original image width in x direction
      * @var int
      */
     var $img_x = '';
+
     /**
      * Original image width in y direction
      * @var int
      */
     var $img_y = '';
+
     /**
      * New image width in x direction
      * @var int
      */
     var $new_x = '';
+
     /**
      * New image width in y direction
      * @var int
      */
     var $new_y = '';
+
     /**
      * Path to the library used
      * e.g. /usr/local/ImageMagick/bin/ or
      * /usr/local/netpbm/
      */
     var $lib_path = '';
+
     /**
      * Flag to warn if image has been resized more than once before displaying
      * or saving.
@@ -208,8 +215,13 @@ Class Image_Transform
     function resize($new_x = 0, $new_y = 0, $options = null)
     {
         // 0 means keep original size
-        $new_x = (0 == $new_x) ? $this->img_x : $this->_parse_size($new_x, $this->img_x);
-        $new_y = (0 == $new_y) ? $this->img_y : $this->_parse_size($new_y, $this->img_y);
+        $new_x = (0 == $new_x)
+                 ? $this->img_x
+                 : $this->_parse_size($new_x, $this->img_x);
+        $new_y = (0 == $new_y)
+                 ? $this->img_y
+                 : $this->_parse_size($new_y, $this->img_y);
+
         // Now do the library specific resizing.
         return $this->_resize($new_x, $new_y);
     } // End resize
@@ -338,9 +350,9 @@ Class Image_Transform
     {
     	return $this->scaleMaxLength($size);
     }
-    
+
     /**
-     * Fit the image in the specified box
+     * Fits the image in the specified box
      *
      * If the image is bigger than the box specified by $width and $height,
      * it will be scaled down to fit inside of it.
@@ -351,13 +363,18 @@ Class Image_Transform
      */
     function fit($width, $height)
     {
-        if ($this->img_x <= $width
-            && $this->img_y <= height) {
-            return true;
+        if ($width <= 0 || $height <= 0) {
+            return PEAR::raiseError("Invalid arguments.", true)
         }
-        return ($this->img_y <= $height)
-                ? $this->scaleByX($width)
-                : $this->scaleByY($height);
+        $x = $this->img_x / $width;
+        $y = $this->img_y / $height;
+        if ($x <= 1 && $y <= 1) {
+            return true;
+        } elseif ($x > $y) {
+            return $this->scaleByX($width);
+        } else {
+            return $this->scaleByY($height);
+        }
     }
 
     /**
@@ -822,7 +839,7 @@ Class Image_Transform
         $b = hexdec(substr($colorhex, 5, 2));
         return array($r, $g, $b, 'type' => 'RGB');
     }
-    
+
     function _send_display_headers($type)
     {
         // Find the filename of the original image:
