@@ -42,6 +42,7 @@ It provides :
             <file role="php">IM.php</file>
             <file role="php">NetPBM.php</file>
 	    <file role="php">Imagick.php</file>
+	    <file role="php">Imagick2.php</file>
 	    <file role="php">ColorsDefs.php</file>
           </dir>
         <dir name="Examples" role="doc">
