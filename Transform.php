@@ -489,5 +489,10 @@ Class Image_Transform
     {
         return PEAR::raiseError("No crop method exists", true);
     }
+
+    function gamma()
+    {
+        return PEAR::raiseError("No gamma method exists", true);
+    }
 }
 ?>
