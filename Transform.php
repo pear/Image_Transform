@@ -509,7 +509,7 @@ Class Image_Transform
     function colorhex2colorarray($colorhex) {
         $r = hexdec(substr($colorhex, 1, 2));
         $g = hexdec(substr($colorhex, 3, 2));
-        $b = hexdec(substr($colorhex, 4, 2));
+        $b = hexdec(substr($colorhex, 5, 2));
         return array($r,$g,$b);
     }
 
