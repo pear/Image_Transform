@@ -36,7 +36,7 @@
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_GD extends Image_Transform
+Class Image_Transform_Drivers_GD extends Image_Transform
 {
 	/**
 	 * Holds the image file for manipulation
@@ -104,7 +104,6 @@ Class Image_Transform_GD extends Image_Transform
         }
         //imagestring($this->imageHandle,5,$x,$y,$text,$color);
 	} // End addText
-
 
 
     /**
@@ -283,7 +282,7 @@ Class Image_Transform_GD extends Image_Transform
     * @param $new_x int  new width
     * @param $new_y int  new height
     *
-    * @return none
+    * @return true on success or pear error
     * @see PEAR::isError()
     */
     function _resize($new_x, $new_y) {
