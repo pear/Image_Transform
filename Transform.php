@@ -364,7 +364,7 @@ Class Image_Transform
     function fit($width, $height)
     {
         if ($width <= 0 || $height <= 0) {
-            return PEAR::raiseError("Invalid arguments.", true)
+            return PEAR::raiseError("Invalid arguments.", true);
         }
         $x = $this->img_x / $width;
         $y = $this->img_y / $height;
