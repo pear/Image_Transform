@@ -152,7 +152,6 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
                 break;
         } // switch
         $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg . '>' . $filename;
-        echo "<pre>$cmd</pre>";
         exec($cmd);
         $this->command = array();
     } // End save
