@@ -112,7 +112,7 @@ Class Image_Transform
 		}
         include_once "Image/Transform/Drivers/$driver.php";
 
-        $classname = "Image_Transform_{$driver}";
+        $classname = "Image_Transform_Drivers_{$driver}";
         $obj =& new $classname;
         return $obj;
     }
@@ -439,6 +439,35 @@ Class Image_Transform
     function free() {
         return PEAR::raiseError("No Save method exists", true);
     }
+
+    /**
+     * Reverse of rgb2colorname.
+     *
+     * @access public
+     * @return PEAR_error
+     *
+     * @see rgb2colorname
+     */
+    function colorhex2colorarray($colorhex) {
+        $r = hexdec(substr($colorhex, 1, 2));
+        $g = hexdec(substr($colorhex, 3, 2));
+        $b = hexdec(substr($colorhex, 4, 2));
+        return array($r,$g,$b);
+    }
+
+    /**
+     * Reverse of rgb2colorname.
+     *
+     * @access public
+     * @return PEAR_error
+     *
+     * @see rgb2colorname
+     */
+    function colorarray2colorhex($color) {
+        $color = '#'.dechex($color[0]).dechex($color[1]).dechex($color[2]);
+        return strlen($color)>6?false:$color;
+    }
+
 
     /* Methods to add to the driver classes in the future */
     function addText()
