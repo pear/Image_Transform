@@ -97,18 +97,19 @@ Class Image_Transform
     /**
      * Create a new Image_resize object
      *
-     * @param mixed $options An associative array of option names and
-     * their values. See Image_Resize::setOption for more information on
-     * setup options.
+     * @param string $driver name of driver class to initialize
      *
-     * @return mixed a newly created Image_Resize object, or a PEAR
+     * @return mixed a newly created Image_Transform object, or a PEAR
      * error object on error
      *
      * @see PEAR::isError()
-     * @see Image_Resize::setOption()
+     * @see Image_Transform::setOption()
      */
     function &factory($driver)
     {
+		if ('' == $driver) {
+		    return PEAR::raiseError("No image library specified... aborting.  You must call ::factory() with one parameter, the library to load.", true);
+		}
         include_once "Image/Transform/Drivers/$driver.php";
 
         $classname = "Image_Transform_{$driver}";
