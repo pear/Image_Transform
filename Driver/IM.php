@@ -22,17 +22,16 @@
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_IM extends Image_Transform
+Class Image_Transform_Drivers_IM extends Image_Transform
 {
-
     /**
      * associative array commands to be executed
      * @var array
      */
     var $command = array();
-    
+
     /**
-     * 
+     *
      *
      */
     function Image_Transform_IM()
@@ -43,15 +42,15 @@ Class Image_Transform_IM extends Image_Transform
         }
         return true;
     } // End Image_IM
-    
+
     /**
-     * Load image 
+     * Load image
      *
      * @param string filename
      *
      * @return mixed none or a PEAR error object on error
      * @see PEAR::isError()
-     */ 
+     */
     function load($image)
     {
         if (!file_exists($image)) {
@@ -60,7 +59,7 @@ Class Image_Transform_IM extends Image_Transform
         $this->image = $image;
         $this->_get_image_details($image);
     } // End load
-    
+
     /**
      * Resize Action
      *
@@ -73,9 +72,9 @@ Class Image_Transform_IM extends Image_Transform
             return PEAR::raiseError("You cannot scale or resize an image more than once without calling save or display", true);
         }
         $this->command['resize'] = "-geometry ${new_x}x${new_y}!";
-        
+
         $this->new_x = $new_x;
-        $this->new_y = $new_y;   
+        $this->new_y = $new_y;
     } // End resize
 
     /**
@@ -87,9 +86,10 @@ Class Image_Transform_IM extends Image_Transform
         if ('-' == $angle{0}) {
     		$angle = 360 - substr($angle, 1);
     	}
+        // convert -mattecolor red -frame 20x20+12+8 magick.png magick2.png
          $this->command['rotate'] = "-rotate $angle";
     } // End rotate
-    
+
     /**
      * addText
      *
@@ -113,12 +113,12 @@ Class Image_Transform_IM extends Image_Transform
             $key = 'text';
          }
          $this->command[$key] = "-font $font -fill $color -draw 'text $x,$y \"$text\"'";
-         // Producing error: gs: not found gs: not found convert: Postscript delegate failed [No such file or directory]. 
+         // Producing error: gs: not found gs: not found convert: Postscript delegate failed [No such file or directory].
     } // End addText
 
     /**
      * Save the image file
-     * 
+     *
      * @param $filename string the name of the file to write to
      * @return none
      */
@@ -129,7 +129,7 @@ Class Image_Transform_IM extends Image_Transform
         passthru($cmd);
 		#print $cmd;
     } // End save
-    
+
     /**
      * Display image without saving and lose changes
      *
@@ -149,7 +149,7 @@ Class Image_Transform_IM extends Image_Transform
         }
     }
 
-    
+
     /**
      * Destroy image handle
      *

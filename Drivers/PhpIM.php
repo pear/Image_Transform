@@ -23,7 +23,7 @@
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_PhpIM extends Image_Transform
+Class Image_Transform_Drivers_PhpIM extends Image_Transform
 {
     /**
      * Handler of the imagick image ressource
@@ -96,7 +96,7 @@ Class Image_Transform_PhpIM extends Image_Transform
      * rotate
      *
      */
-    function rotate($angle)
+    function rotate($angle,$options=null)
     {
         if ($img2 = imagick_copy_rotate ($this->ImageHandle, $angle)){
             $this->oldImage     = $this->ImageHandle;
