@@ -22,7 +22,7 @@
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_NetPBM extends Image_Transform
+Class Image_Transform_Driver_NetPBM extends Image_Transform
 {
 
     /**
@@ -30,34 +30,35 @@ Class Image_Transform_NetPBM extends Image_Transform
      * @var array
      */
     var $command = array();
-    
+
     /**
-     * 
+     *
      *
      */
-    function Image_Transform_NetPBM()
+    function Image_Transform_Driver_NetPBM()
     {
+        if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
+            include_once 'System/Command.php';
+            $path = str_replace('pnmscale','',escapeshellcmd(System_Command::which('pnmscale') ));
+            define('IMAGE_TRANSFORM_LIB_PATH', $path);
+        }
         return true;
     } // End function Image_NetPBM
-    
+
     /**
-     * Load image 
+     * Load image
      *
      * @param string filename
      *
      * @return mixed none or a PEAR error object on error
      * @see PEAR::isError()
-     */ 
+     */
     function load($image)
     {
-        if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
-            include_once 'System/Command.php';
-            define('IMAGE_TRANSFORM_LIB_PATH', escapeshellcmd(System_Command::which('pnmscale')) . '/');
-        }
         $this->image = $image;
         $this->_get_image_details($image);
     } // End load
-    
+
     /**
      * Resize Action
      *
@@ -70,15 +71,15 @@ Class Image_Transform_NetPBM extends Image_Transform
             return PEAR::raiseError("You cannot scale or resize an image more than once without calling save or display", true);
         }
         $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmscale -width $new_x -height $new_y";
-        
+
         $this->_set_new_x($new_x);
         $this->_set_new_y($new_y);
     } // End resize
-    
+
     /**
      * rotate
-     * 
-     * @since 
+     *
+     * @since
      * @param int $angle The angle to rotate the image through
      */
     function rotate($angle)
@@ -86,12 +87,28 @@ Class Image_Transform_NetPBM extends Image_Transform
         if ('-' == $angle{0}) {
     		$angle = 360 - substr($angle, 1);
     	}
-        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmflip -r$angle";
+        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmrotate $angle";
     } // End rotate
-    
+
     /**
      * addText
      *
+     * TODO: Fix the position of the text
+     *       Actually, ppmlabel draw the string in hor. middle
+     * @param   array   options     Array contains options
+     *                              array(
+     *                                  'text'  The string to draw
+     *                                  'x'     Horizontal position
+     *                                  'y'     Vertical Position
+     *                                  'Color' Font color
+     *                                  'font'  Font to be used
+     *                                  'size'  Size of the fonts in pixel
+     *                                  'resize_first'  Tell if the image has to be resized
+     *                                                  before drawing the text
+     *                              )
+     *
+     * @return none
+     * @see PEAR::isError()
      */
     function addText($params)
     {
@@ -107,34 +124,38 @@ Class Image_Transform_NetPBM extends Image_Transform
                                 );
          $params = array_merge($default_params, $params);
          extract($params);
-         $this->command[] = "ppmlabel -angle $angle -colour $color -size $size -text $text -x $x -y $y";
+         $this->command[] = 'ppmlabel -angle '.$angle.' -colour '.$color.' -size '.$size.' -text "'.$text.'" -x '.$x.' -y '.$y;
     } // End addText
 
     /**
      * Save the image file
-     * 
+     *
      * @param $filename string the name of the file to write to
      * @return none
      */
     function save($filename, $quality = 75, $type = '')
     {
+        if ($type == '') {
+            $type = $this->type;
+        }
         $type == '' ? $this->type : $type;
         $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
+        $arg = "";
         switch($type){
-        	case 'jpeg': 
+        	case 'jpeg':
         		$arg = "--quality=$quality";
         		break;
-        	case 'gif': 
+        	case 'gif':
         		$cmd .=  IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|";
         		break;
         	default:
                 break;
         } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $type . ' ' . $arg . ' > ' . $filename . ' 2>&1';
-        passthru($cmd);
+        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg . '>' . $filename;
+        exec($cmd);
         $this->command = array();
     } // End save
-    
+
     /**
      * Display image without saving and lose changes
      *
@@ -149,23 +170,25 @@ Class Image_Transform_NetPBM extends Image_Transform
             $type = $this->type;
         }
         header('Content-type: image/' . $type);
-        $cmd = IMAGE_TRANSFORM_LIB_PATH . $type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
+        $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
+        $arg = '';
         switch($type){
-        	case 'jpeg': 
+        	case 'jpeg':
         		$arg = "--quality=$quality";
         		break;
-        	case 'gif': 
+        	case 'gif':
         		$cmd .=  IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|";
         		break;
         	default:
                 break;
         } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'ppmto' . $type . ' ' . $arg . ' 2>&1';
+        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg;
+        //echo $cmd ."\n";
         passthru($cmd);
         $this->command = array();
     }
 
-    
+
     /**
      * Destroy image handle
      *
@@ -175,7 +198,7 @@ Class Image_Transform_NetPBM extends Image_Transform
     {
         return true;
     }
-    
+
 
 } // End class ImageIM
 ?>
