@@ -18,6 +18,7 @@
 // $Id$
 //
 // Image Transformation interface using command line ImageMagick
+// Use the latest cvs version of imagick PECL
 //
 
 require_once "Image/Transform.php";
