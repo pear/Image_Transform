@@ -158,7 +158,7 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function rotate($angle, $options = null)
     {
-        if (!($angle = $this->_rotation_angle($angle))) {
+        if (!($angle == $this->_rotation_angle($angle))) {
             // No rotation needed
             return true;
         }
@@ -191,16 +191,17 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
             }
 
             $options = array_merge($this->_options, $options);
+            $bgcolor = $this->colorarray2colorhex($options['canvasColor']);
             if ($options['scaleMethod'] != 'pixel') {
                 $this->command[] = $this->_prepare_cmd(
                     IMAGE_TRANSFORM_NETPBM_PATH,
                     'pnmrotate',
-                    '-' . (float) $angle);
+                    '-background=' . $bgcolor . ' -' . (float) $angle);
             } else {
                 $this->command[] = $this->_prepare_cmd(
                     IMAGE_TRANSFORM_NETPBM_PATH,
                     'pnmrotate',
-                    '-noantialias -' . (float) $angle);
+                    '-background=' . $bgcolor . ' -noantialias -' . (float) $angle);
             }
         }
         return true;
@@ -549,4 +550,5 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
 
 
 } // End class ImageIM
+
 ?>
