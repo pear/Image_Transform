@@ -126,6 +126,24 @@ Class Image_Transform_Driver_IM extends Image_Transform
     	}
          $this->command['rotate'] = "-rotate $angle";
     } // End rotate
+    
+    /**
+	 * Crop image
+     *
+     * @author Ian Eure <ieure@websprockets.com>
+     *
+     * @param int height Cropped image height
+     * @param int width Cropped image width
+     * @param int x X-coordinate to crop at
+     * @param int y Y-coordinate to crop at
+     *
+     * @return none
+     */
+    function crop($height, $width, $x = 0, $y = 0) {
+        // Do we want a safety check - i.e. if $width+$x > $this->img_x then we
+        // raise a warning? [and obviously same for $height+$y]
+        $this->command['crop'] = "-crop {$width}x{$height}+{$x}+{$y}";
+    }
 
     /**
      * addText
@@ -211,6 +229,9 @@ Class Image_Transform_Driver_IM extends Image_Transform
             header('Content-type: image/' . $type);
             passthru(IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . strtoupper($type) . ":-");
         }
+		if (!$this->keep_settings_on_save) {
+		    $this->free();
+		}
     }
 
 
@@ -221,7 +242,9 @@ Class Image_Transform_Driver_IM extends Image_Transform
      */
     function free()
     {
-        return true;
+	    $this->command = array();
+        $this->image = '';
+        $this->type = '';
     }
 
 } // End class ImageIM
