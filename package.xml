@@ -33,7 +33,7 @@ Actually it provides :
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
 	<dir name="" baseinstalldir="Image/Transform">
-          <dir name="Drivers">
+          <dir name="Driver">
             <file role="php">GD.php</file>
             <file role="php">IM.php</file>
             <file role="php">NetPBM.php</file>
