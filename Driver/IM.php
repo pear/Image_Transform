@@ -119,7 +119,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
      * @param   array   options no option allowed
      *
      */
-    function rotate($angle, $options=null)
+    function rotate($angle, $options = null)
     {
         if ('-' == $angle{0}) {
             $angle = 360 - substr($angle, 1);
@@ -147,15 +147,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
      */
     function addText($params)
     {
-        $default_params = array(
-                                'text' => 'This is Text',
-                                'x' => 10,
-                                'y' => 20,
-                                'color' => 'red',
-                                'font' => 'Arial.ttf',
-                                'resize_first' => false // Carry out the scaling of the image before annotation?
-                                );
-         $params = array_merge($default_params, $params);
+         $params = array_merge($this->_get_default_text_params(), $params);
          extract($params);
          if (true === $resize_first) {
              // Set the key so that this will be the last item in the array
@@ -190,7 +182,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
     function save($filename, $type='', $quality = 75)
     {
         $type = $type ? $type : $this->type;
-        $cmd = 'ulimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
+        $cmd = 'ulimit -t 1;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
                 implode(' ', $this->command) . 
                 " -flatten -quality $quality " .
                 escapeshellarg($this->image) . ' ' . 
@@ -210,7 +202,11 @@ Class Image_Transform_Driver_IM extends Image_Transform
     {
         if ($type == '') {
             header('Content-type: image/' . $this->type);
-            passthru(IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . strtoupper($this->type) . ":-");
+			$cmd = IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
+                   implode(' ', $this->command) . " -quality $quality "  . 
+                   escapeshellarg($this->image) . ' ' . 
+                   strtoupper($this->type) . ":-";
+            passthru($cmd);
         } else {
             header('Content-type: image/' . $type);
             passthru(IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . strtoupper($type) . ":-");
