@@ -15,8 +15,8 @@ Quick rundown - more in the Examples folder:
 
 define('IMAGE_TRANSFORM_LIB_PATH', '/usr/local/ImageMagick/bin');
 require_once "Image_Transform/Image_Transform.php";
-$im = Image_Transform::setup('IM');
-$im->load('Foobar.jpg');
+$im = Image_Transform::factory('IM');
+$im->load('/path/to/Foobar.jpg');
 
 $im->resize('600', '480');
 // next will resize so that the largest length is 300px - height or width
