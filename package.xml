@@ -30,10 +30,10 @@ It provides :
   </maintainers>
   <release>
     <version>0.8</version>
-    <date>2002-09-08</date>
+    <date>2003-12-29</date>
     <license>PHP License</license>
     <state>alpha</state>
-    <notes>Second public release, hopefully much more stable.  API nearly fixed</notes>
+    <notes>Second public release, hopefully much more stable.  API nearly fixed.  NOT NECESSARILY COMPATIBLE WITH 0.1 - be warned!</notes>
     <filelist>
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
@@ -42,10 +42,10 @@ It provides :
             <file role="php">GD1.php</file>
             <file role="php">IM.php</file>
             <file role="php">NetPBM.php</file>
-	    	<file role="php">Imagick.php</file>
-	    	<file role="php">Imagick2.php</file>
-	    	<file role="php">Imlib.php</file>
-	    	<file role="php">ColorsDefs.php</file>
+	    <file role="php">Imagick.php</file>
+	    <file role="php">Imagick2.php</file>
+	    <file role="php">Imlib.php</file>
+	    <file role="php">ColorsDefs.php</file>
         </dir>
 <!--        <dir name="Examples" role="doc">
           <file>test.php</file>
