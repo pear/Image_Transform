@@ -46,7 +46,7 @@ Class Image_Transform_Driver_Imagick2 extends Image_Transform
      *
      *
      */
-    function Image_Transform_Driver_Imagick()
+    function Image_Transform_Driver_Imagick2()
     {
         if (!extension_loaded('imagick')) {
             if (!PEAR::loadExtension('imagick')) {
