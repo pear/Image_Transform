@@ -114,8 +114,9 @@ Class Image_Transform_Driver_GD extends Image_Transform
         extract($params);
 
         if( !is_array($color) ){
-            if ($color[0]=='#'){
-                $this->colorhex2colorarray( $color );
+            if ($color{0}=='#'){
+				// Not already in numberical format, so we convert it.
+                $color = $this->colorhex2colorarray( $color );
             } else {
                 include_once('Image/Transform/Driver/ColorsDefs.php');
                 $color = isset($colornames[$color])?$colornames[$color]:false;
@@ -165,11 +166,12 @@ Class Image_Transform_Driver_GD extends Image_Transform
         $t      = deg2rad($angle);
 
         if( !is_array($color_mask) ){
-            if ($color[0]=='#'){
-                $this->colorhex2colorarray( $color_mask );
+			// Not already in numberical format, so we convert it.
+            if ($color_mask{0}=='#'){
+                $color_mask = $this->colorhex2colorarray( $color_mask );
             } else {
                 include_once('Image/Transform/Driver/ColorsDefs.php');
-                $color = isset($colornames[$color_mask])?$colornames[$color_mask]:false;
+                $color_mask = isset($colornames[$color_mask])?$colornames[$color_mask]:false;
             }
         }
 
