@@ -25,13 +25,6 @@ require_once "Image/Transform.php";
 
 Class Image_Transform_PhpIM extends Image_Transform
 {
-
-    /**
-     * associative array commands to be executed
-     * @var array
-     */
-    var $command = array();
-
     /**
      * Handler of the imagick image ressource
      * @var array
