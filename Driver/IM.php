@@ -22,7 +22,7 @@
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_Drivers_IM extends Image_Transform
+Class Image_Transform_Driver_IM extends Image_Transform
 {
     /**
      * associative array commands to be executed
@@ -34,12 +34,15 @@ Class Image_Transform_Drivers_IM extends Image_Transform
      *
      *
      */
-    function Image_Transform_IM()
+    function Image_Transform_Driver_IM()
     {
         include_once 'System/Command.php';
         if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
-            define('IMAGE_TRANSFORM_LIB_PATH', escapeshellcmd(System_Command::which('convert')) . '/');
+            include_once 'System/Command.php';
+            $path = str_replace('convert','',escapeshellcmd(System_Command::which('convert') ));
+            define('IMAGE_TRANSFORM_LIB_PATH', $path);
         }
+        return true;
         return true;
     } // End Image_IM
 
@@ -63,6 +66,9 @@ Class Image_Transform_Drivers_IM extends Image_Transform
     /**
      * Resize Action
      *
+     * @param int   new_x   new width
+     * @param int   new_y   new height
+     *
      * @return none
      * @see PEAR::isError()
      */
@@ -80,19 +86,35 @@ Class Image_Transform_Drivers_IM extends Image_Transform
     /**
      * rotate
      *
+     * @param   int     angle   rotation angle
+     * @param   array   options no option allowed
+     *
      */
-    function rotate($angle)
+    function rotate($angle, $options=null)
     {
         if ('-' == $angle{0}) {
     		$angle = 360 - substr($angle, 1);
     	}
-        // convert -mattecolor red -frame 20x20+12+8 magick.png magick2.png
          $this->command['rotate'] = "-rotate $angle";
     } // End rotate
 
     /**
      * addText
      *
+     * @param   array   options     Array contains options
+     *                              array(
+     *                                  'text'  The string to draw
+     *                                  'x'     Horizontal position
+     *                                  'y'     Vertical Position
+     *                                  'Color' Font color
+     *                                  'font'  Font to be used
+     *                                  'size'  Size of the fonts in pixel
+     *                                  'resize_first'  Tell if the image has to be resized
+     *                                                  before drawing the text
+     *                              )
+     *
+     * @return none
+     * @see PEAR::isError()
      */
     function addText($params)
     {
@@ -119,15 +141,17 @@ Class Image_Transform_Drivers_IM extends Image_Transform
     /**
      * Save the image file
      *
-     * @param $filename string the name of the file to write to
+     * @param $filename string  the name of the file to write to
+     * @param $quality  quality image dpi, default=75
+     * @param $type     string  (JPG,PNG...)
+     *
      * @return none
      */
     function save($filename, $quality = 75, $type = '')
     {
         $type == '' ? $this->type : $type;
         $cmd = 'ulimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . escapeshellarg($filename) . ' 2>&1';
-        passthru($cmd);
-		#print $cmd;
+        exec($cmd);
     } // End save
 
     /**
