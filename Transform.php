@@ -24,7 +24,7 @@
 
 # TODO
 # Make scaleMaxX and scaleMaxY accept all the various dimensions (factor % etc)
-require_once "PEAR.php";
+require_once 'PEAR.php';
 
 /*
 if(!defined(IMAGE_TRANSFORM_LIB_PATH)){
@@ -109,15 +109,14 @@ Class Image_Transform
      * @see PEAR::isError()
      * @see Image_Resize::setOption()
      */
-    function setup($image_lib)
+    function &factory($driver)
     {
-        include_once "Image_Transform/Image_Transform_$image_lib.php" ;
-        
-        $classname = "Image_Transform_${image_lib}";
+        include_once "Transform/$driver.php" ;
+
+        $classname = "Image_Transform_{$driver}";
         $obj =& new $classname;
         return $obj;
-        
-    } // End setup
+    }
     
     
     /**
@@ -261,6 +260,46 @@ Class Image_Transform
     }
 
     /**
+     * Set the image width
+     * @param int $size dimension to set
+     * @since 29/05/02 13:36:31
+     * @return 
+     */
+    function _set_img_x($size){
+    	$this->img_x = $size;
+    }
+    
+    /**
+     * Set the image height
+     * @param int $size dimension to set
+     * @since 29/05/02 13:36:31
+     * @return 
+     */
+    function _set_img_y($size){
+    	$this->img_y = $size;
+    }
+    
+    /**
+     * Set the image width
+     * @param int $size dimension to set
+     * @since 29/05/02 13:36:31
+     * @return 
+     */
+    function _set_new_x($size){
+    	$this->new_x = $size;
+    }
+    
+    /**
+     * Set the image height
+     * @param int $size dimension to set
+     * @since 29/05/02 13:36:31
+     * @return 
+     */
+    function _set_new_y($size){
+    	$this->new_y = $size;
+    }
+    
+    /**
      * Place holder for the real resize method
      * used by extended methods to do the resizing
      *
@@ -309,7 +348,7 @@ Class Image_Transform
     /* Methods to add to the driver classes in the future */
     function addText()
     {
-    
+        /* Should be nearly implemented now!) */
     }
     
     function addDropShadow()
