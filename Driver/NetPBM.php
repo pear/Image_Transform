@@ -18,7 +18,6 @@
 // $Id$
 //
 // Image Transformation interface using command line NetPBM
-//
 
 require_once "Image/Transform.php";
 
@@ -32,14 +31,14 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
     var $command = array();
 
     /**
-     *
-     *
+     * Class Constructor
      */
     function Image_Transform_Driver_NetPBM()
     {
         if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
             include_once 'System/Command.php';
-            $path = str_replace('pnmscale','',escapeshellcmd(System_Command::which('pnmscale') ));
+            $path = str_replace('pnmscale','',
+                         escapeshellcmd(System_Command::which('pnmscale')));
             define('IMAGE_TRANSFORM_LIB_PATH', $path);
         }
         return true;
@@ -60,26 +59,26 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
     } // End load
 
     /**
-     * Resize Action
+     * Resizes the image
      *
      * @return none
      * @see PEAR::isError()
      */
     function _resize($new_x, $new_y)
     {
-        if (isset($this->command['resize'])) {
-            return PEAR::raiseError("You cannot scale or resize an image more than once without calling save or display", true);
-        }
-        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmscale -width $new_x -height $new_y";
+        // there's no technical reason why resize can't be called multiple
+        // times...it's just silly to do so
+
+        $this->command[] = IMAGE_TRANSFORM_LIB_PATH .
+                           "pnmscale -width $new_x -height $new_y";
 
         $this->_set_new_x($new_x);
         $this->_set_new_y($new_y);
     } // End resize
 
     /**
-     * rotate
+     * Rotates the image
      *
-     * @since
      * @param int $angle The angle to rotate the image through
      */
     function rotate($angle)
@@ -91,104 +90,6 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
     } // End rotate
 
     /**
-     * addText
-     *
-     * TODO: Fix the position of the text
-     *       Actually, ppmlabel draw the string in hor. middle
-     * @param   array   options     Array contains options
-     *                              array(
-     *                                  'text'  The string to draw
-     *                                  'x'     Horizontal position
-     *                                  'y'     Vertical Position
-     *                                  'Color' Font color
-     *                                  'font'  Font to be used
-     *                                  'size'  Size of the fonts in pixel
-     *                                  'resize_first'  Tell if the image has to be resized
-     *                                                  before drawing the text
-     *                              )
-     *
-     * @return none
-     * @see PEAR::isError()
-     */
-    function addText($params)
-    {
-        $default_params = array(
-                                'text' => 'This is Text',
-                                'x' => 10,
-                                'y' => 20,
-                                'color' => 'red',
-                                'font' => 'Arial.ttf',
-								'size' => '12',
-								'angle' => 0,
-                                'resize_first' => false // Carry out the scaling of the image before annotation?
-                                );
-         $params = array_merge($default_params, $params);
-         extract($params);
-         $this->command[] = "ppmlabel -angle $angle -colour $color -size $size -x $x -y $y -text \"$text\"";
-    } // End addText
-
-    /**
-     * Save the image file
-     *
-     * @param $filename string the name of the file to write to
-     * @return none
-     */
-    function save($filename, $quality = 75, $type = '')
-    {
-        if ($type == '') {
-            $type = $this->type;
-        }
-        $type == '' ? $this->type : $type;
-        $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
-        $arg = "";
-        switch($type){
-        	case 'jpeg':
-        		$arg = "--quality=$quality";
-        		break;
-        	case 'gif':
-        		$cmd .=  IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|";
-        		break;
-        	default:
-                break;
-        } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg . '>' . $filename;
-        exec($cmd);
-        $this->command = array();
-    } // End save
-
-    /**
-     * Display image without saving and lose changes
-     *
-     * @param string $type (JPG,PNG...);
-     * @param int $quality 75
-     *
-     * @return none
-     */
-    function display($type = '', $quality = 75)
-    {
-        if ($type == '') {
-            $type = $this->type;
-        }
-        header('Content-type: image/' . $type);
-        $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
-        $arg = '';
-        switch($type){
-        	case 'jpeg':
-        		$arg = "--quality=$quality";
-        		break;
-        	case 'gif':
-        		$cmd .=  IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|";
-        		break;
-        	default:
-                break;
-        } // switch
-        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg;
-        //echo $cmd ."\n";
-        passthru($cmd);
-        $this->command = array();
-    }
-
-    /**
      * Adjust the image gamma
      *
      * @param float $outputgamma
@@ -196,7 +97,92 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      * @return none
      */
     function gamma($outputgamma = 1.0) {
-        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmgamma $outputgamma";
+        $this->command[13] = IMAGE_TRANSFORM_LIB_PATH . "pnmgamma $outputgamma";
+    }
+
+    /**
+     * adds text to an image
+     *
+     * @param   array   options     Array contains options
+     *             array(
+     *                  'text'          // The string to draw
+     *                  'x'             // Horizontal position
+     *                  'y'             // Vertical Position
+     *                  'Color'         // Font color
+     *                  'font'          // Font to be used
+     *                  'size'          // Size of the fonts in pixel
+     *                  'resize_first'  // Tell if the image has to be resized
+     *                                  // before drawing the text
+     *                   )
+     *
+     * @return none
+     */
+    function addText($params)
+    {
+        $default_params = array('text' => 'This is Text',
+                                'x' => 10,
+                                'y' => 20,
+                                'color' => 'red',
+                                'font' => 'Arial.ttf',
+								'size' => '12',
+								'angle' => 0,
+                                'resize_first' => false);
+        // we ignore 'resize_first' since the more logical approach would be
+        // for the user to just call $this->_resize() _first_ ;)
+        extract(array_merge($default_params, $params));
+        $this->command[] = "ppmlabel -angle $angle -colour $color -size "
+                           ."$size -x $x -y ".$y+$size." -text \"$text\"";
+    } // End addText
+
+    function _postProcess($type, $quality)
+    {
+        $type = is_null($type) ? $this->type : $type;
+        array_unshift($this->command, IMAGE_TRANSFORM_LIB_PATH
+                      . $type.'topnm '. $this->image);
+        $arg = '';
+        switch(strtolower($type)){
+        	case 'gif':
+                $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256";
+                $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "ppmto$type";
+                break;
+        	case 'jpg':
+        	case 'jpeg':
+                $arg = "--quality=$quality";
+        	default:
+                $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmto$type $arg";
+                break;
+        } // switch
+        return implode('|', $this->command);
+    } 
+
+    /**
+     * Save the image file
+     *
+     * @param $filename string the name of the file to write to
+     * @param string $type (jpeg,png...);
+     * @param int $quality 75
+     * @return none
+     */
+    function save($filename, $type=null, $quality = 75)
+    {
+        $cmd = $this->_postProcess($type, $quality) . ">$filename";
+        exec($cmd);
+        $this->command = array();
+    } // End save
+
+    /**
+     * Display image without saving and lose changes
+     *
+     * @param string $type (jpeg,png...);
+     * @param int $quality 75
+     * @return none
+     */
+    function display($type = null, $quality = 75)
+    {
+        header('Content-type: image/' . $type);
+        $cmd = $this->_postProcess($type, $quality);
+        passthru($cmd);
+        $this->command = array();
     }
 
     /**
@@ -206,6 +192,7 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function free()
     {
+        // there is no image handle here
         return true;
     }
 
