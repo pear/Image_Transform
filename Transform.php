@@ -112,7 +112,7 @@ Class Image_Transform
 		}
         include_once "Image/Transform/Drivers/$driver.php";
 
-        $classname = "Image_Transform_Drivers_{$driver}";
+        $classname = "Image_Transform_Driver_{$driver}";
         $obj =& new $classname;
         return $obj;
     }
@@ -135,7 +135,7 @@ Class Image_Transform
         $new_x = (0 == $new_x) ? $this->img_x : $this->_parse_size($new_x, $this->img_x);
         $new_y = (0 == $new_y) ? $this->img_y : $this->_parse_size($new_y, $this->img_y);
         // Now do the library specific resizing.
-        $this->_resize($new_x, $new_y);
+        return $this->_resize($new_x, $new_y);
     } // End resize
 
 
@@ -148,7 +148,7 @@ Class Image_Transform
     function scaleMaxX($new_x)
     {
         $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
-        $this->_resize($new_x, $new_y);
+        return $this->_resize($new_x, $new_y);
     } // End resizeX
 
     /**
@@ -161,7 +161,7 @@ Class Image_Transform
     function scaleMaxY($new_y)
     {
         $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
-        $this->_resize($new_x, $new_y);
+        return $this->_resize($new_x, $new_y);
     } // End resizeY
 
     /**
@@ -175,11 +175,11 @@ Class Image_Transform
     {
         $strlen = strlen($size);
         if ($strlen > 0 && '%' == $size{-1}) {
-            $this->scaleByPercentage(substr($size, 0, -1));
+            return $this->scaleByPercentage(substr($size, 0, -1));
         } elseif ($size < 1) {
-            $this->scaleByFactor($size);
+            return $this->scaleByFactor($size);
         } else {
-            $this->scaleByLength($size);
+            return $this->scaleByLength($size);
         }
     } // End scale
 
@@ -194,7 +194,7 @@ Class Image_Transform
      */
     function scaleByPercentage($size)
     {
-        $this->scaleByFactor($size / 100);
+        return $this->scaleByFactor($size / 100);
     } // End scaleByPercentage
 
     /**
@@ -210,7 +210,7 @@ Class Image_Transform
     {
         $new_x = round($size * $this->img_x, 0);
         $new_y = round($size * $this->img_y, 0);
-        $this->_resize($new_x, $new_y);
+        return $this->_resize($new_x, $new_y);
     } // End scaleByFactor
 
     /**
@@ -229,7 +229,7 @@ Class Image_Transform
             $new_y = $size;
             $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
         }
-        $this->_resize($new_x, $new_y);
+        return $this->_resize($new_x, $new_y);
     } // End scaleByLength
 
 
@@ -437,7 +437,7 @@ Class Image_Transform
      * @return PEAR_error
      */
     function free() {
-        return PEAR::raiseError("No Save method exists", true);
+        return PEAR::raiseError("No Free method exists", true);
     }
 
     /**
@@ -472,22 +472,22 @@ Class Image_Transform
     /* Methods to add to the driver classes in the future */
     function addText()
     {
-        /* Should be nearly implemented now!) */
+        return PEAR::raiseError("No addText method exists", true);
     }
 
     function addDropShadow()
     {
-
+        return PEAR::raiseError("No AddDropShadow method exists", true);
     }
 
     function addBorder()
     {
-
+        return PEAR::raiseError("No addBorder method exists", true);
     }
 
     function crop()
     {
-
+        return PEAR::raiseError("No crop method exists", true);
     }
 }
 ?>
