@@ -1,0 +1,6 @@
+- Add borders method
+- Add AddDropShadow
+- Add ConvertToGrayScale
+- Returning true on success or PEAR::Error
+- Win32 tests
+- Fix AddText in NetPBM driver
