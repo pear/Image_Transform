@@ -174,7 +174,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
      * or lines copy for multiple of 90 degrees
      *
      * @param int   $angle   Rotation angle
-     * @param array $options array('autoresize' => true|false,
+     * @param array $options array(
      *                             'color_mask' => array(r ,g, b), named color or #rrggbb
      *                            )
      * @author Pierre-Alain Joye
@@ -186,11 +186,9 @@ Class Image_Transform_Driver_GD extends Image_Transform
         if (($angle % 360) == 0) {
             return true;
         }
-        if ($options == null) {
-            $color_mask = array(255, 255, 0);
-        } else {
-            extract($options);
-        }
+        
+        $options = array_merge($this->_options, $options);
+        $color_mask = $options['canvasColor'];
 
         if (!is_array($color_mask)) {
             // Not already in numberical format, so we convert it.
@@ -275,17 +273,18 @@ Class Image_Transform_Driver_GD extends Image_Transform
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
-        if (function_exists('ImageCreateTrueColor') && @ImageCreateTrueColor()) {
+        
+        if (function_exists('ImageCreateTrueColor')) {
             $new_img =ImageCreateTrueColor($new_x, $new_y);
-        } else {
+        }
+        if (!$new_img) {
             $new_img =ImageCreate($new_x, $new_y);
         }
-        if ($options['scaleMethod'] != 'pixel'
-            && function_exists('ImageCopyResampled')
-            && @ImageCopyResampled()) {
-            ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
-
-        } else {
+        
+        if ($options['scaleMethod'] != 'pixel' && function_exists('ImageCopyResampled')) {
+            $icr_res = ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
+        } 
+        if (!$icr_res) {
             ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         }
         $this->old_image = $this->imageHandle;
