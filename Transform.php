@@ -134,17 +134,10 @@ Class Image_Transform
     function resize($new_x = 0, $new_y = 0)
     {
         // 0 means keep original size
-        if (0 == $new_x) {
-            $new_x = $this->img_x;
-        }
-        if (0 == $new_y) {
-            $new_y = $this->img_y;
-        }
-        // Record the new size of the image
-        $this->new_x = $this->_parse_size($new_x, $this->img_x);
-        $this->new_y = $this->_parse_size($new_y, $this->img_y);
+        $new_x = (0 == $new_x) ? $this->img_x : $this->_parse_size($new_x, $this->img_x);
+        $new_y = (0 == $new_y) ? $this->img_y : $this->_parse_size($new_y, $this->img_y);
         // Now do the library specific resizing.
-        $this->_resize($this->new_x, $this->new_y);
+        $this->_resize($new_x, $new_y);
     } // End resize
     
     
@@ -192,19 +185,6 @@ Class Image_Transform
         }
     } // End scale
 
-    /* The old scale function!
-     function scale($size)
-    {
-        if ($this->img_x >= $this->img_y) {
-            $new_x = _parse_size($size, $this->img_x);
-            $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
-        } else {
-            $new_y = _parse_size($size, $this->img_y);
-            $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
-        }
-        $this->_resize($new_x, $new_y);
-    } // End scale
-    */
     /**
      * Scales an image to a percentage of its original size.  For example, if
      * my image was 640x480 and I called scaleByPercentage(10) then the image
@@ -326,6 +306,7 @@ Class Image_Transform
         return PEAR::raiseError("No Save method exists", true);
     }
     
+    /* Methods to add to the driver classes in the future */
     function addText()
     {
     

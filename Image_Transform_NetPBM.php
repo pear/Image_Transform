@@ -68,6 +68,8 @@ Class Image_Transform_NetPBM extends Image_Transform
         }
         $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmscale -width $new_x -height $new_y";
         
+        $this->new_x = $new_x;
+        $this->new_y = $new_y;        
     } // End resize
     
     /**

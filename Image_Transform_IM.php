@@ -56,7 +56,7 @@ Class Image_Transform_IM extends Image_Transform
         $this->image = $image;
         $this->_get_size();
         // Should the image type be lower or upper case?
-        exec($this->lib_path . 'identify -format "%m" ' . $image, $data);
+        exec(IMAGE_TRANSFORM_LIB_PATH . 'identify -format "%m" ' . $image, $data);
         $this->type = strtolower($data[0]);
     } // End load
     
@@ -73,33 +73,10 @@ Class Image_Transform_IM extends Image_Transform
         }
         $this->command['resize'] = "-geometry ${new_x}x${new_y}!";
         
-    } // End resize
-    
-    /*
-    function resize($new_x, $new_y = '')
-    {
-        if ($new_y == '') {
-            $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
-        }
-        // Record the new size of the image
         $this->new_x = $new_x;
-        $this->new_y = $new_y;
-        $this->command = "convert -geometry ${new_x}x${new_y}!";
-        
+        $this->new_y = $new_y;   
     } // End resize
-    
-    function scale($size)
-    {
-        if ($this->img_x >= $this->img_y) {
-            $new_x = $size;
-            $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
-        } else {
-            $new_y = $size;
-            $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
-        }
-        $this->resize($new_x, $new_y);
-    } // End scale
-    */
+
     /**
      * rotate
      *
@@ -153,7 +130,7 @@ Class Image_Transform_IM extends Image_Transform
      */
     function save($filename, $quality = 75)
     {
-        $cmd = 'unlimit;' . $this->lib_path . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . $this->image . ' ' . $filename . ' 2>&1';
+        $cmd = 'unlimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . $this->image . ' ' . $filename . ' 2>&1';
         passthru($cmd);
 		print $cmd;
     } // End save
@@ -170,10 +147,10 @@ Class Image_Transform_IM extends Image_Transform
     {
         if ($type == '') {
             header('Content-type: image/' . $this->type);
-            passthru($this->lib_path . 'convert ' . implode(' ', $this->command) . " -quality $quality " . $this->image . ' ' . strtoupper($this->type) . ":-");
+            passthru(IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality " . $this->image . ' ' . strtoupper($this->type) . ":-");
         } else {
             header('Content-type: image/' . $type);
-            passthru($this->lib_path . 'convert ' . implode(' ', $this->command) . " -quality $quality " . $this->image . ' ' . strtoupper($type) . ":-");
+            passthru(IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality " . $this->image . ' ' . strtoupper($type) . ":-");
         }
     }
 
@@ -195,7 +172,7 @@ Class Image_Transform_IM extends Image_Transform
      */
     function _get_size()
     {
-        $str = exec($this->lib_path . "identify -format \"%w::%h\" " . $this->image, $data);
+        $str = exec(IMAGE_TRANSFORM_LIB_PATH . "identify -format \"%w::%h\" " . $this->image, $data);
         $str = split('::', $data[0]);
         $this->img_x = $str[0];
         $this->img_y = $str[1];

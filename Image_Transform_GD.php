@@ -135,6 +135,9 @@ Class Image_Transform_GD extends Image_Transform
         $this->old_image = $this->imageHandle;
         $this->imageHandle = $new_img;
         $this->resized = true;
+        
+        $this->new_x = $new_x;
+        $this->new_y = $new_y;   
     }
     
     /**
