@@ -44,7 +44,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
     } // End Image_IM
 
     /**
-     * Load image
+     * Load an image.
      *
      * @param string filename
      *
@@ -61,6 +61,12 @@ Class Image_Transform_Driver_IM extends Image_Transform
     } // End load
 
 
+    /**
+     * Image_Transform_Driver_IM::_get_image_details()
+     * 
+     * @param string $image the path and name of the image file
+     * @return none
+     */
     function _get_image_details($image)
     {  
         $retval = Image_Transform::_get_image_details($image);
@@ -87,7 +93,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
     }
 
     /**
-     * Resize Action
+     * Resize the image.
      *
      * @param int   new_x   new width
      * @param int   new_y   new height
@@ -163,7 +169,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
 
     /**
      * Adjust the image gamma
-    {       *
+     *
      * @param float $outputgamma
      *
      * @return none
