@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE package SYSTEM "../package.dtd">
+<!-- do not use the "Type" attribute here, that one is only for
+     generated package.xml files -->
+<package version="1.0">
+  <name>Image_Transform</name>
+  <summary>Provides a standard interface to manipulate images using different libraries</summary>
+  <description>
+    This package was written because I needed a simpler interface to the image manipulations, and wanted a cross-library interface because it was necessary for me to develop and run under different libraries.
+  </description>
+  <maintainers>
+    <maintainer>
+      <user>reywob</user>
+      <name>Peter Bowyer</name>
+      <email>peter@mapledesign.co.uk</email>
+      <role>lead</role>
+    </maintainer>
+  <release>
+    <version>0.1</version>
+    <date>2002/08/20</date>
+    <state>alpha</state>
+    <notes></notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Image">
+        <file role="php">Transform.php</file>
+        <dir name="Transform">
+          <file role="php">GD.php</file>
+          <file role="php">IM.php</file>
+          <file role="php">NetPBM.php</file>
+        </dir>
+        <dir name="Examples" role="doc">
+          <file>test.php</file>
+		  <file>test_netpbm.php</file>
+        </dir>
+      </dir>
+    </filelist>
+  </release>
+  <changelog>
+    <release>
+      <version>1.0</version>
+      <date>2002/08/20</date>
+      <notes>
+        This is the initial release of the Image_Transform package.
+      </notes>
+    </release>
+  </changelog>
+</package>
