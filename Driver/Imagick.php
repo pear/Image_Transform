@@ -17,8 +17,9 @@
 //
 // $Id$
 //
-// Image Transformation interface using command line ImageMagick
-// Use the latest cvs version of imagick PECL
+// Image Transformation interface using old ImageMagick extension
+// DEPRECIATED - current CVS/release imagick extension should use 
+// the Imagick2 driver.
 //
 
 require_once "Image/Transform.php";
