@@ -124,7 +124,7 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
                                 );
          $params = array_merge($default_params, $params);
          extract($params);
-         $this->command[] = 'ppmlabel -angle '.$angle.' -colour '.$color.' -size '.$size.' -text "'.$text.'" -x '.$x.' -y '.$y;
+         $this->command[] = "ppmlabel -angle $angle -colour $color -size $size -x $x -y $y -text \"$text\"";
     } // End addText
 
     /**
@@ -142,17 +142,17 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
         $cmd = IMAGE_TRANSFORM_LIB_PATH . $this->type . 'topnm ' . $this->image  . '|' . implode('|', $this->command) . '|';
         $arg = "";
         switch($type){
-        	case 'gif':
-        		$cmd .= IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|".
-                        IMAGE_TRANSFORM_LIB_PATH . 'ppmtogif >' .  $filename;
-        		break;
         	case 'jpeg':
         		$arg = "--quality=$quality";
-            default:
-                $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type .
-                        ' ' . $arg . '>' . $filename;
+        		break;
+        	case 'gif':
+        		$cmd .=  IMAGE_TRANSFORM_LIB_PATH . "ppmquant 256|";
+        		break;
+        	default:
                 break;
         } // switch
+        $cmd .= IMAGE_TRANSFORM_LIB_PATH . 'pnmto' . $type . ' ' . $arg . '>' . $filename;
+        echo "<pre>$cmd</pre>";
         exec($cmd);
         $this->command = array();
     } // End save
@@ -189,6 +189,16 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
         $this->command = array();
     }
 
+    /**
+     * Adjust the image gamma
+     *
+     * @param float $outputgamma
+     *
+     * @return none
+     */
+    function gamma($outputgamma = 1.0) {
+        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmgamma $outputgamma";
+    }
 
     /**
      * Destroy image handle
