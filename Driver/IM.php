@@ -42,7 +42,6 @@ Class Image_Transform_Driver_IM extends Image_Transform
             define('IMAGE_TRANSFORM_LIB_PATH', $path);
         }
         return true;
-        return true;
     } // End Image_IM
 
     /**
@@ -74,14 +73,14 @@ Class Image_Transform_Driver_IM extends Image_Transform
             exec($cmd, $res, $exit);
             
             if ($exit == 0) {
-               $data  = explode(':', $res[0]);
-               $this->img_x = $data[0];
-               $this->img_y = $data[1];
-               $this->type  = strtolower($data[2]);
-               $retval = true;
-           } else {
-               $retval = PEAR::raiseError("Cannot fetch image or images details.", true);
-           }
+                $data  = explode(':', $res[0]);
+                $this->img_x = $data[0];
+                $this->img_y = $data[1];
+                $this->type  = strtolower($data[2]);
+                $retval = true;
+            } else {
+                $retval = PEAR::raiseError("Cannot fetch image or images details.", true);
+            }
 
         }
 
@@ -118,7 +117,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
     function rotate($angle, $options=null)
     {
         if ('-' == $angle{0}) {
-    		$angle = 360 - substr($angle, 1);
+            $angle = 360 - substr($angle, 1);
     	}
          $this->command['rotate'] = "-rotate $angle";
     } // End rotate
