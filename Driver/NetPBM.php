@@ -4,7 +4,7 @@
 // +----------------------------------------------------------------------+
 // | Copyright (c) 1997-2003 The PHP Group                                |
 // +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
+// | This source file is subFject to version 2.02 of the PHP license,     |
 // | that is bundled with this package in the file LICENSE, and is        |
 // | available at through the world-wide-web at                           |
 // | http://www.php.net/license/2_02.txt.                                 |
@@ -81,12 +81,26 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      *
      * @param int $angle The angle to rotate the image through
      */
-    function rotate($angle)
+    function rotate($angle, $options = null)
     {
-        if ('-' == $angle{0}) {
-    		$angle = 360 - substr($angle, 1);
-    	}
-        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmrotate $angle";
+        // Right, now we have a positive angle.
+        if (($angle >= 90 || $angle <= -90) && $angle != 360) {
+            if ($angle < 0) {
+        		$angle = 360 + $angle;
+        	}
+            $remainder = $angle % 90;
+            $quarters = round($angle/90, 1);
+            #print "Angle: $angle<br>Remainder: $remainder<br>Quarters: $quarters";
+            if ($quarters > 0) {
+                // We have 1 or more 90 degree components
+                $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmflip -rotate" . (360 - $quarters * 90);
+            }
+            $angle = $remainder;
+        }
+        
+        if ($angle != 0) {
+            $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmrotate -$angle";
+        }
     } // End rotate
 
     /**
@@ -97,7 +111,7 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      * @return none
      */
     function gamma($outputgamma = 1.0) {
-        $this->command[13] = IMAGE_TRANSFORM_LIB_PATH . "pnmgamma $outputgamma";
+        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "pnmgamma $outputgamma";
     }
 
     /**
@@ -119,21 +133,20 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function addText($params)
     {
-        $default_params = array('text' => 'This is Text',
-                                'x' => 10,
-                                'y' => 20,
-                                'color' => 'red',
-                                'font' => 'Arial.ttf',
-								'size' => '12',
-								'angle' => 0,
-                                'resize_first' => false);
         // we ignore 'resize_first' since the more logical approach would be
         // for the user to just call $this->_resize() _first_ ;)
-        extract(array_merge($default_params, $params));
-        $this->command[] = "ppmlabel -angle $angle -colour $color -size "
-                           ."$size -x $x -y ".$y+$size." -text \"$text\"";
+        extract(array_merge($this->_get_default_text_params(), $params));
+        
+        $this->command[] = IMAGE_TRANSFORM_LIB_PATH . "ppmlabel -angle $angle -colour $color -size $size -x $x -y " . ($y+$size) . " -text \"$text\"";
     } // End addText
 
+    /**
+     * Image_Transform_Driver_NetPBM::_postProcess()
+     * 
+     * @param $type
+     * @param $quality
+     * @return null
+	 */
     function _postProcess($type, $quality)
     {
         $type = is_null($type) ? $this->type : $type;
@@ -165,9 +178,12 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function save($filename, $type=null, $quality = 75)
     {
+        $type = is_null($type) ? $this->type : $type;
         $cmd = $this->_postProcess($type, $quality) . ">$filename";
-        exec($cmd);
-        $this->command = array();
+        exec($cmd . ' 2>&1');
+        if (!$this->keep_settings_on_save) {
+            $this->free();
+        }
     } // End save
 
     /**
@@ -179,10 +195,13 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function display($type = null, $quality = 75)
     {
+        $type = is_null($type) ? $this->type : $type;
         header('Content-type: image/' . $type);
         $cmd = $this->_postProcess($type, $quality);
-        passthru($cmd);
-        $this->command = array();
+        passthru($cmd . ' 2>&1');
+        if (!$this->keep_settings_on_save) {
+		    $this->free();
+		}
     }
 
     /**
@@ -192,7 +211,7 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     function free()
     {
-        // there is no image handle here
+        $this->command = array();
         return true;
     }
 
