@@ -2,18 +2,17 @@
 <package version="1.0">
   <name>Image_Transform</name>
   <summary>Provides a standard interface to manipulate images using different libraries</summary>
-  <description>This package was written to provide a simpler and cross-library interface to the image manipulations.
-Actually it provides :
-* supports GD
-* supports Image Magick
-* supports NetPBM
+  <description>This package was written to provide a simpler and cross-library interface to doing image transformations and manipulations.
+It provides :
+
+* support for GD, ImageMagick, Imagick and NetPBM
 * files related functions
 * addText
 * Scale (by length, percentage, maximum X/Y)
 * Resize
 * Rotate (custom angle)
-* Add border
-* Add shadow
+* Add border (soon)
+* Add shadow (soon)
 </description>
   <maintainers>
     <maintainer>
@@ -22,13 +21,19 @@ Actually it provides :
       <email>peter@mapledesign.co.uk</email>
       <role>lead</role>
     </maintainer>
+      <maintainer>
+        <user>pajoye</user>
+        <name>Pierre-Alain Joye</name>
+        <email>paj@pearfr.org</email>
+        <role>lead</role>
+      </maintainer>
   </maintainers>
   <release>
-    <version>0.9</version>
-    <date>2002-08-20</date>
+    <version>0.2</version>
+    <date>2002-09-08</date>
     <license>PHP License</license>
     <state>beta</state>
-    <notes>Added rotates method to GD driver</notes>
+    <notes>First public release</notes>
     <filelist>
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
