@@ -41,7 +41,6 @@ Class Image_Transform_Driver_IM extends Image_Transform
             $path = str_replace('convert','',escapeshellcmd(System_Command::which('convert') ));
             define('IMAGE_TRANSFORM_LIB_PATH', $path);
         }
-        return true;
     } // End Image_IM
 
     /**
@@ -186,9 +185,10 @@ Class Image_Transform_Driver_IM extends Image_Transform
     {
         $type == '' ? $this->type : $type;
         $cmd = 'ulimit;' . IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
-                implode(' ', $this->command) . " -flatten -quality $quality " .
+                implode(' ', $this->command) . 
+                " -flatten -quality $quality " .
                 escapeshellarg($this->image) . ' ' . 
-                escapeshellarg($filename) . ' 2>&1';
+                escapeshellarg("$type:" . $filename) . ' 2>&1';
         exec($cmd);
     } // End save
 
