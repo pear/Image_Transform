@@ -139,6 +139,17 @@ Class Image_Transform_Driver_IM extends Image_Transform
     } // End addText
 
     /**
+     * Adjust the image gamma
+     *
+     * @param float $outputgamma
+     *
+     * @return none
+     */
+    function gamma($outputgamma=1.0) {
+        $this->command['gamma'] = "-gamma $outputgamma";
+    }
+
+    /**
      * Save the image file
      *
      * @param $filename string  the name of the file to write to

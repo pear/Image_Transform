@@ -347,6 +347,16 @@ Class Image_Transform_Driver_GD extends Image_Transform
         return true;
     }
 
+    /**
+     * Adjust the image gamma
+     *
+     * @param float $outputgamma
+     *
+     * @return none
+     */
+    function gamma($outputgamma=1.0) {
+        ImageGammaCorrect($this->imageHandle, 1.0, $outputgamma);
+    }
 
     /**
      * Save the image file
