@@ -46,11 +46,10 @@ Class Image_Transform_Driver_Imagick extends Image_Transform
      */
     function Image_Transform_Driver_Imagick()
     {
-        if (!extension_loaded('imagick')) {
-            if (!PEAR::loadExtension('imagick')) {
-                return PEAR::raiseError('The imagick extension can not be found.', true);
-            }
+        if (!PEAR::loadExtension('imagick')) {
+            return PEAR::raiseError('The imagick extension can not be found.', true);
         }
+        include('Image/Transform/Driver/Imagick/ImageTypes.php');
         return true;
     } // End Image_IM
 
@@ -73,7 +72,10 @@ Class Image_Transform_Driver_Imagick extends Image_Transform
             return PEAR::raiseError('The image file ' . $image . ' does\'t exist', true);
         }
         $this->image = $image;
-        $this->_get_image_details($image);
+        $result = $this->_get_image_details($image);
+        if (PEAR::isError($result)) {
+            return $result;
+        }
     } // End load
 
     /**
@@ -87,7 +89,7 @@ Class Image_Transform_Driver_Imagick extends Image_Transform
      */
     function _resize($new_x, $new_y)
     {
-        if ($img2 = imagick_copy_resize ($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_CUBIC, 1)){
+        if ($img2 = imagick_copy_resize($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_CUBIC, 1)){
             $this->oldImage = $this->imageHandle;
             $this->imageHandle =$img2;
             $this->new_x = $new_x;
@@ -173,9 +175,9 @@ Class Image_Transform_Driver_Imagick extends Image_Transform
     {
         if ($type == '') {
             $type = strtoupper($type);
-            imagick_write($this->imageHandle,$filename,$type);
+            imagick_write($this->imageHandle, $filename, $type);
         } else {
-            imagick_write($this->imageHandle,$filename);
+            imagick_write($this->imageHandle, $filename);
         }
         imagick_free($handle);
     } // End save
@@ -192,10 +194,10 @@ Class Image_Transform_Driver_Imagick extends Image_Transform
     {
         if ($type == '') {
             header('Content-type: image/' . $this->type);
-            if (!imagick_dump ($this->imageHandle));
+            if (!imagick_dump($this->imageHandle));
         } else {
             header('Content-type: image/' . $type);
-            if (!imagick_dump ($this->imageHandle, $this->type));
+            if (!imagick_dump($this->imageHandle, $this->type));
         }
         $this->free();
     }

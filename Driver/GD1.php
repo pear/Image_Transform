@@ -16,13 +16,12 @@
 // |          Alan Knowles <alan@akbkhome.com>                            |
 // +----------------------------------------------------------------------+
 
-require_once "Image/Transform.php";
 require_once "Image/Transform/Driver/GD.php";
 
 /**
  * This driver is for GD1 or the non-bundled version of GD2
- * 
- * @package 
+ *
+ * @package
  * @author NAWAL ASWAN
  * @copyright Copyright (c) 2003
  * @version $Id$
@@ -39,10 +38,22 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
      */
     function Image_Transform_Driver_GD1()
     {
-        $this->Image_Transform_GD();
+        $this->__construct();
     } // End function Image
 
-    
+    /**
+     * Check settings
+     *
+     * @return mixed true or  or a PEAR error object on error
+     *
+     * @see PEAR::isError()
+     */
+    function __construct()
+    {
+        parent::__construct();
+    } // End function Image
+
+
    /**
     * Resize Action
     *
@@ -53,7 +64,7 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
     * @param $new_x int  new width
     * @param $new_y int  new height
     *
-    * @return true on success or pear error
+    * @return true on success or PEAR Error object on error
     * @see PEAR::isError()
     */
     function _resize($new_x, $new_y) {
@@ -70,10 +81,10 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
         $this->new_y = $new_y;
         return true;
     }
-    
-    
-    
-        function rotate($angle, $options = null)
+
+
+
+    function rotate($angle, $options = null)
     {
         if ($options == null){
             $autoresize = true;
@@ -233,7 +244,7 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
                 }
                 break;
         }
-        
+
         $this->imageHandle  =  $img2;
         return true;
     }

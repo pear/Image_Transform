@@ -2,12 +2,12 @@
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2003 The PHP Group                                |
+// | Copyright (c) 1997-2004 The PHP Group                                |
 // +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
+// | This source file is subject to version 3.0 of the PHP license,       |
 // | that is bundled with this package in the file LICENSE, and is        |
 // | available at through the world-wide-web at                           |
-// | http://www.php.net/license/2_02.txt.                                 |
+// | http://www.php.net/license/3_0.txt.                                  |
 // | If you did not receive a copy of the PHP license and are unable to   |
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
@@ -22,61 +22,103 @@
 
 require_once "Image/Transform.php";
 
+/**
+ * @package Image_Transform
+ * @subpackage Image_Transform_Driver_IM
+ * @link http://www.imagemagick.org/
+ **/
 Class Image_Transform_Driver_IM extends Image_Transform
 {
     /**
      * associative array commands to be executed
      * @var array
+     * @access private
      */
-    var $command = array();
+    var $command;
 
     /**
-     *
-     *
+     * Class constructor
      */
     function Image_Transform_Driver_IM()
     {
-        if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
-            include_once 'System/Command.php';
-            $path = str_replace('convert','',escapeshellcmd(System_Command::which('convert') ));
-            define('IMAGE_TRANSFORM_LIB_PATH', $path);
+        $this->__construct();
+    } // End Image_IM
+
+
+    /**
+     * Class constructor
+     */
+    function __construct()
+    {
+        $this->_init();
+        require_once 'System.php';
+        if (!defined('IMAGE_TRANSFORM_IM_PATH')) {
+            $path = dirname(System::which('convert'))
+                    . DIRECTORY_SEPARATOR;
+            define('IMAGE_TRANSFORM_IM_PATH', $path);
+        }
+        if (System::which(IMAGE_TRANSFORM_IM_PATH . 'convert' . ((OS_WINDOWS) ? '.exe' : ''))) {
+            include 'Image/Transform/Driver/Imagick/ImageTypes.php';
+        } else {
+            $this->isError(PEAR::raiseError('Couldn\'t find "convert" binary'));
         }
     } // End Image_IM
+
+
+    /**
+     * Initialize the state of the object
+     **/
+    function _init()
+    {
+        $this->command = array();
+    }
 
     /**
      * Load an image.
      *
+     * This method doesn't support remote files.
+     *
      * @param string filename
      *
-     * @return mixed none or a PEAR error object on error
+     * @return mixed TRUE or a PEAR error object on error
      * @see PEAR::isError()
      */
     function load($image)
     {
+        $this->_init();
         if (!file_exists($image)) {
-            return PEAR::raiseError('The image file ' . $image . ' does\'t exist', true);
+            return PEAR::raiseError('The image file ' . $image . ' doesn\'t exist', true);
         }
         $this->image = $image;
-        $this->_get_image_details($image);
+        $result = $this->_get_image_details($image);
+        if (PEAR::isError($result)) {
+            return $result;
+        }
+        return true;
+
     } // End load
 
 
     /**
      * Image_Transform_Driver_IM::_get_image_details()
-     * 
+     *
      * @param string $image the path and name of the image file
      * @return none
      */
     function _get_image_details($image)
-    {  
+    {
         $retval = Image_Transform::_get_image_details($image);
         if (PEAR::isError($retval)) {
-            unset($retval); 
+            unset($retval);
 
-            $cmd = IMAGE_TRANSFORM_LIB_PATH . 'identify -format %w:%h:%m ' . 
-                   escapeshellarg($image);
+            if (!System::which(IMAGE_TRANSFORM_IM_PATH . 'identify' . ((OS_WINDOWS) ? '.exe' : ''))) {
+                $this->isError(PEAR::raiseError('Couldn\'t find "identify" binary'));
+            }
+            $cmd = $this->_prepare_cmd(IMAGE_TRANSFORM_IM_PATH,
+                'identify',
+                '-format %w:%h:%m ' . escapeshellarg($image));
             exec($cmd, $res, $exit);
-            
+
             if ($exit == 0) {
                 $data  = explode(':', $res[0]);
                 $this->img_x = $data[0];
@@ -84,32 +126,38 @@ Class Image_Transform_Driver_IM extends Image_Transform
                 $this->type  = strtolower($data[2]);
                 $retval = true;
             } else {
-                $retval = PEAR::raiseError("Cannot fetch image or images details.", true);
+                return PEAR::raiseError("Cannot fetch image or images details.", true);
             }
 
         }
 
-        return($retval);
+        return $retval;
     }
 
     /**
      * Resize the image.
      *
-     * @param int   new_x   new width
-     * @param int   new_y   new height
+     * @access private
      *
-     * @return none
+     * @param int   $new_x   New width
+     * @param int   $new_y   New height
+     * @param mixed $options Optional parameters
+     *
+     * @return true on success or PEAR Error object on error
      * @see PEAR::isError()
      */
-    function _resize($new_x, $new_y)
+    function _resize($new_x, $new_y, $options = null)
     {
         if (isset($this->command['resize'])) {
-            return PEAR::raiseError("You cannot scale or resize an image more than once without calling save or display", true);
+            return PEAR::raiseError('You cannot scale or resize an image more than once without calling save() or display()', true);
         }
-        $this->command['resize'] = "-geometry ${new_x}x${new_y}!";
+        $this->command['resize'] = '-geometry '
+            . ((int) $new_x) . 'x' . ((int) $new_y) . '!';
 
         $this->new_x = $new_x;
         $this->new_y = $new_y;
+
+        return true;
     } // End resize
 
     /**
@@ -117,38 +165,45 @@ Class Image_Transform_Driver_IM extends Image_Transform
      *
      * @param   int     angle   rotation angle
      * @param   array   options no option allowed
-     *
+     * @return mixed TRUE or a PEAR error object on error
      */
     function rotate($angle, $options = null)
     {
-        if ('-' == $angle{0}) {
-            $angle = 360 - substr($angle, 1);
-    	}
-         $this->command['rotate'] = "-rotate $angle";
+        $angle = $this->_rotation_angle($angle);
+        if ($angle % 360) {
+            $this->command['rotate'] = '-rotate ' . (float) $angle;
+        }
+        return true;
+
     } // End rotate
-    
+
+
     /**
      * Crop image
      *
      * @author Ian Eure <ieure@websprockets.com>
      * @since 0.8
      *
-     * @param int height Cropped image height
      * @param int width Cropped image width
+     * @param int height Cropped image height
      * @param int x X-coordinate to crop at
      * @param int y Y-coordinate to crop at
      *
-     * @return none
+     * @return mixed TRUE or a PEAR error object on error
      */
-    function crop($height, $width, $x = 0, $y = 0) {
+    function crop($width, $height, $x = 0, $y = 0) {
         // Do we want a safety check - i.e. if $width+$x > $this->img_x then we
         // raise a warning? [and obviously same for $height+$y]
-        $this->command['crop'] = "-crop {$width}x{$height}+{$x}+{$y}";
+        $this->command['crop'] = '-crop '
+            . ((int) $width)  . 'x' . ((int) $height)
+            . '+' . ((int) $x) . '+' . ((int) $y);
 
         // I think that setting img_x/y is wrong, but scaleByLength() & friends
         // mess up the aspect after a crop otherwise.
         $this->new_x = $this->img_x = $width - $x;
         $this->new_y = $this->img_y = $height - $y;
+
+        return true;
     }
 
     /**
@@ -166,7 +221,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
      *                                                  before drawing the text
      *                              )
      *
-     * @return none
+     * @return mixed TRUE or a PEAR error object on error
      * @see PEAR::isError()
      */
     function addText($params)
@@ -179,72 +234,136 @@ Class Image_Transform_Driver_IM extends Image_Transform
          } else {
             $key = 'text';
          }
-         $this->command[$key] = "-font $font -fill $color -draw 'text $x,$y \"$text\"'";
+         $this->command[$key] = '-font ' . escapeshellarg($font)
+            . ' -fill ' . escapeshellarg($color)
+            . ' -draw \'text ' . escapeshellarg($x . ',' . $y)
+            . ' "' . escapeshellarg($text) . '"\'';
          // Producing error: gs: not found gs: not found convert: Postscript delegate failed [No such file or directory].
+        return true;
+
     } // End addText
 
     /**
      * Adjust the image gamma
      *
+     * @access public
      * @param float $outputgamma
-     *
-     * @return none
+     * @return mixed TRUE or a PEAR error object on error
      */
-    function gamma($outputgamma=1.0) {
-        $this->command['gamma'] = "-gamma $outputgamma";
+    function gamma($outputgamma = 1.0) {
+        if ($outputgamme != 1.0) {
+            $this->command['gamma'] = '-gamma ' . (float) $outputgamma;
+        }
+        return true;
+    }
+
+    /**
+     * Convert the image to greyscale
+     *
+     * @access public
+     * @return mixed TRUE or a PEAR error object on error
+     */
+    function greyscale() {
+        $this->command['type'] = '-type Grayscale';
+        return true;
+    }
+
+    /**
+     * Horizontal mirroring
+     *
+     * @access public
+     * @return TRUE or PEAR Error object on error
+     */
+    function mirror() {
+        // We can only apply "flop" once
+        if (isset($this->command['flop'])) {
+            unset($this->command['flop']);
+        } else {
+            $this->command['flop'] = '-flop';
+        }
+        return true;
+    }
+
+    /**
+     * Vertical mirroring
+     *
+     * @access public
+     * @return TRUE or PEAR Error object on error
+     */
+    function flip() {
+        // We can only apply "flip" once
+        if (isset($this->command['flip'])) {
+            unset($this->command['flip']);
+        } else {
+            $this->command['flip'] = '-flip';
+        }
+        return true;
     }
 
     /**
      * Save the image file
      *
+     * @access public
+     *
      * @param $filename string  the name of the file to write to
      * @param $quality  quality image dpi, default=75
      * @param $type     string  (JPG,PNG...)
      *
-     * @return none
+     * @return mixed TRUE or a PEAR error object on error
      */
-    function save($filename, $type='', $quality = 75)
+    function save($filename, $type = '', $quality = null)
     {
-        $type = $type ? $type : $this->type;
-        $cmd = IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
-                implode(' ', $this->command) . 
-                " -flatten -quality $quality " .
-                escapeshellarg($this->image) . ' ' . 
-                escapeshellarg("$type:" . $filename) . ' 2>&1';
-        exec($cmd);
+        $type = strtoupper(($type == '') ? $this->type : $type);
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
+
+        $cmd = $this->_prepare_cmd(
+            IMAGE_TRANSFORM_IM_PATH,
+            'convert',
+            implode(' ', $this->command)
+               . ' -flatten -quality ' . ((int) $quality) . ' '
+               . escapeshellarg($this->image) . ' ' . $type . ':' . escapeshellarg($filename)
+                . ' 2>&1');
+        exec($cmd, $res, $exit);
+
+        return ($exit == 0) ? true : PEAR::raiseError(implode('. ', $res), true);
     } // End save
 
     /**
      * Display image without saving and lose changes
      *
+     * This method adds the Content-type HTTP header
+     *
+     * @access public
+     *
      * @param string type (JPG,PNG...);
      * @param int quality 75
      *
-     * @return none
+     * @return mixed TRUE or a PEAR error object on error
      */
-    function display($type = '', $quality = 75)
+    function display($type = '', $quality = null)
     {
-        if ($type == '') {
-            header('Content-type: image/' . $this->type);
-			$cmd = IMAGE_TRANSFORM_LIB_PATH . 'convert ' . 
-                   implode(' ', $this->command) . " -quality $quality "  . 
-                   escapeshellarg($this->image) . ' ' . 
-                   strtoupper($this->type) . ":-";
-            passthru($cmd);
-        } else {
-            header('Content-type: image/' . $type);
-            passthru(IMAGE_TRANSFORM_LIB_PATH . 'convert ' . implode(' ', $this->command) . " -quality $quality "  . escapeshellarg($this->image) . ' ' . strtoupper($type) . ":-");
-        }
+        $type    = strtoupper(($type == '') ? $type : $this->type);
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
+
+        header('Content-type: ' . $this->getMimeType($type));
+        $cmd = $this->_prepare_cmd(
+            IMAGE_TRANSFORM_IM_PATH,
+            'convert',
+            implode(' ', $this->command)
+               . ' -flatten -quality ' . ((int) $quality) . ' '
+               . escapeshellarg($this->image . ' ' . $type) . ':-');
+        passthru($cmd);
+
 		if (!$this->keep_settings_on_save) {
 		    $this->free();
 		}
+        return true;
     }
-
 
     /**
      * Destroy image handle
      *
-     * @return none
+     * @return void
      */
     function free()
     {
@@ -254,4 +373,5 @@ Class Image_Transform_Driver_IM extends Image_Transform
     }
 
 } // End class ImageIM
+
 ?>

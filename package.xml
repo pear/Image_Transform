@@ -11,6 +11,9 @@ It provides :
 * Scale (by length, percentage, maximum X/Y)
 * Resize
 * Rotate (custom angle)
+* Crop
+* Mirror (Most drivers)
+* Flip (Most drivers)
 * Add border (soon)
 * Add shadow (soon)
 </description>
@@ -29,7 +32,7 @@ It provides :
       </maintainer>
   </maintainers>
   <release>
-    <version>0.8</version>
+    <version>1.0</version>
     <date>2003-12-29</date>
     <license>PHP License</license>
     <state>alpha</state>
@@ -37,15 +40,22 @@ It provides :
     <filelist>
       <dir name="/" baseinstalldir="Image">
         <file role="php">Transform.php</file>
-        <dir name="Driver" baseinstalldir="Image/Transform">
-            <file role="php">GD.php</file>
-            <file role="php">GD1.php</file>
-            <file role="php">IM.php</file>
-            <file role="php">NetPBM.php</file>
-	    <file role="php">Imagick.php</file>
-	    <file role="php">Imagick2.php</file>
-	    <file role="php">Imlib.php</file>
-	    <file role="php">ColorsDefs.php</file>
+        <dir name="Transform">
+            <file role="php">IMAGETYPE.php</file>
+            <file role="php">image_type_to_mime_type.php</file>
+			<dir name="Driver" role="php">
+				<file>GD.php</file>
+				<file>GD1.php</file>
+				<file>IM.php</file>
+				<file>NetPBM.php</file>
+				<file>Imagick.php</file>
+				<file>Imagick2.php</file>
+				<file>Imlib.php</file>
+				<file>ColorsDefs.php</file>
+				<dir name="Imagick" role="php">
+					<file>ImageTypes.php</file>
+				</dir>
+			</dir>
         </dir>
 <!--        <dir name="Examples" role="doc">
           <file>test.php</file>

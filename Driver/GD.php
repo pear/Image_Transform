@@ -14,6 +14,7 @@
 // +----------------------------------------------------------------------+
 // | Authors: Peter Bowyer <peter@mapledesign.co.uk>                      |
 // |          Alan Knowles <alan@akbkhome.com>                            |
+// |          Philippe Jausions <Philippe.Jausions@11abacus.com>          |
 // +----------------------------------------------------------------------+
 //
 //    Usage :
@@ -52,33 +53,75 @@ Class Image_Transform_Driver_GD extends Image_Transform
     /**
      * Check settings
      *
-     * @return mixed true or  or a PEAR error object on error
+     * @return mixed true or a PEAR error object on error
      *
      * @see PEAR::isError()
      */
     function Image_Transform_Driver_GD()
     {
-        if (!function_exists("ImageTypes"))
-            return PEAR::raiseError("libgd not compiled into PHP", true);
-        if (!ImageTypes())
-            return PEAR::raiseError("No supported image types available", true);
-        return;
+        $this->__construct();
     } // End function Image
+
+
+    /**
+     * Check settings
+     *
+     * @return mixed true or a PEAR error object on error
+     *
+     * @see PEAR::isError()
+     */
+    function __construct()
+    {
+        if (!PEAR::loadExtension('gd')) {
+            $this->isError(PEAR::raiseError("GD library is not available.", true));
+        } else {
+            $types = ImageTypes();
+            if ($types & IMG_PNG) {
+                $this->_supported_image_types['png'] = 'rw';
+            }
+            if (($types & IMG_GIF)
+                || function_exists('imagegif')) {
+                $this->_supported_image_types['gif'] = 'rw';
+            } elseif (function_exists('imagecreatefromgif')) {
+                $this->_supported_image_types['gif'] = 'r';
+            }
+            if ($types & IMG_JPG) {
+                $this->_supported_image_types['jpeg'] = 'rw';
+            }
+            if ($types & IMG_WBMP) {
+                $this->_supported_image_types['wbmp'] = 'rw';
+            }
+            if (!$this->_supported_image_types) {
+                $this->isError(PEAR::raiseError("No supported image types available", true));
+            }
+        }
+
+    } // End function Image
+
 
     /**
      * Load image
      *
-     * @param string filename
+     * @param string $image filename
      *
-     * @return mixed none or a PEAR error object on error
+     * @return mixed TRUE or a PEAR error object on error
      * @see PEAR::isError()
      */
     function load($image)
     {
         $this->image = $image;
-        $this->_get_image_details($image);
+        $result = $this->_get_image_details($image);
+        if (PEAR::isError($result)) {
+            return $result;
+        }
+        if (!$this->supportsType($this->type, 'r')) {
+            return PEAR::raiseError('Image type not supported for input', true);
+        }
+
         $functionName = 'ImageCreateFrom' . $this->type;
         $this->imageHandle = $functionName($this->image);
+        return true;
+
     } // End load
 
     /**
@@ -96,7 +139,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
      *                                                  before drawing the text
      *                              )
      *
-     * @return none
+     * @return TRUE or a PEAR error object on error
      * @see PEAR::isError()
      */
 	function addText($params)
@@ -104,12 +147,12 @@ Class Image_Transform_Driver_GD extends Image_Transform
 		$params = array_merge($this->_get_default_text_params(), $params);
         extract($params);
 
-        if( !is_array($color) ){
-            if ($color{0}=='#'){
+        if (!is_array($color)) {
+            if ($color{0} == '#') {
 				// Not already in numberical format, so we convert it.
-                $color = $this->colorhex2colorarray( $color );
+                $color = $this->colorhex2colorarray($color);
             } else {
-                include_once('Image/Transform/Driver/ColorsDefs.php');
+                include_once 'Image/Transform/Driver/ColorsDefs.php';
                 $color = isset($colornames[$color])?$colornames[$color]:false;
             }
         }
@@ -130,39 +173,81 @@ Class Image_Transform_Driver_GD extends Image_Transform
      * Uses a fast rotation algorythm for custom angles
      * or lines copy for multiple of 90 degrees
      *
-     * @param int       $angle      Rotation angle
-     * @param array     $options    array(  'autoresize'=>true|false,
-     *                                      'color_mask'=>array(r,g,b), named color or #rrggbb
-     *                                   )
+     * @param int   $angle   Rotation angle
+     * @param array $options array('autoresize' => true|false,
+     *                             'color_mask' => array(r ,g, b), named color or #rrggbb
+     *                            )
      * @author Pierre-Alain Joye
-     * @return mixed none or a PEAR error object on error
+     * @return mixed TRUE or a PEAR error object on error
      * @see PEAR::isError()
      */
     function rotate($angle, $options = null)
     {
-        if ($options == null){
-            $color_mask = array(255,255,0);
+        if (($angle % 360) == 0) {
+            return true;
+        }
+        if ($options == null) {
+            $color_mask = array(255, 255, 0);
         } else {
             extract($options);
         }
-        
-        if(!is_array($color_mask)){
-			// Not already in numberical format, so we convert it.
+
+        if (!is_array($color_mask)) {
+            // Not already in numberical format, so we convert it.
             if ($color_mask{0} == '#'){
                 $color_mask = $this->colorhex2colorarray($color_mask);
             } else {
                 include_once('Image/Transform/Driver/ColorsDefs.php');
-                $color_mask = isset($colornames[$color_mask])?$colornames[$color_mask]:false;
+                $color_mask = (isset($colornames[$color_mask])) ? $colornames[$color_mask] : false;
             }
         }
-        
+
         $mask   = imagecolorresolve($this->imageHandle, $color_mask[0], $color_mask[1], $color_mask[2]);
 
+        $this->old_image   = $this->imageHandle;
+
         // Multiply by -1 to change the sign, so the image is rotated clockwise
-        $angle = $angle * -1;
-        
-        $this->old_image    = $this->imageHandle;
-        $this->imageHandle = ImageRotate($this->imageHandle, $angle, $mask);
+        $this->imageHandle = ImageRotate($this->imageHandle, $angle * -1, $mask);
+        return true;
+    }
+
+
+    /**
+     * Crop image by size and start coordinates
+     *
+     * @param int width Cropped image width
+     * @param int height Cropped image height
+     * @param int x X-coordinate to crop at
+     * @param int y Y-coordinate to crop at
+     *
+     * @return mixed TRUE or a PEAR error object on error
+     */
+    function crop($width, $height, $x = 0, $y = 0)
+    {
+        if (function_exists('ImageCreateTrueColor') && @ImageCreateTrueColor()) {
+            $new_img = ImageCreateTrueColor($width, $height);
+        } else {
+            $new_img = ImageCreate($width, $height);
+        }
+        imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height);
+
+        $this->old_image = $this->imageHandle;
+        $this->imageHandle = $new_img;
+        $this->resized = true;
+
+        $this->new_x = $width;
+        $this->new_y = $height;
+        return true;
+    }
+
+
+    /**
+     * Convert the image to greyscale
+     *
+     * @return mixed TRUE or a PEAR error object on error
+     */
+    function greyscale() {
+        imagecopymergegray($this->imageHandle, $this->imageHandle, 0, 0, 0, 0, $this->new_x, $this->new_y, 0);
         return true;
     }
 
@@ -174,23 +259,32 @@ Class Image_Transform_Driver_GD extends Image_Transform
     * It uses a bicubic interpolation algorithm to get far
     * better result.
     *
-    * @param $new_x int  new width
-    * @param $new_y int  new height
+    * @access private
     *
-    * @return true on success or pear error
+    * @param int   $new_x   New width
+    * @param int   $new_y   New height
+    * @param mixed $options Optional parameters
+    *
+    * @return TRUE on success or PEAR Error object on error
     * @see PEAR::isError()
     */
-    function _resize($new_x, $new_y) {
+    function _resize($new_x, $new_y, $options = null)
+    {
+        $options = array_merge($this->_options, $options);
+
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
         if (function_exists('ImageCreateTrueColor') && @ImageCreateTrueColor()) {
-            $new_img =ImageCreateTrueColor($new_x,$new_y);
+            $new_img =ImageCreateTrueColor($new_x, $new_y);
         } else {
-            $new_img =ImageCreate($new_x,$new_y);
+            $new_img =ImageCreate($new_x, $new_y);
         }
-        if (function_exists('ImageCopyResampled') && @ImageCopyResampled()) {
+        if ($options['scaleMethod'] != 'pixel'
+            && function_exists('ImageCopyResampled')
+            && @ImageCopyResampled()) {
             ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
+
         } else {
             ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         }
@@ -208,69 +302,84 @@ Class Image_Transform_Driver_GD extends Image_Transform
      *
      * @param float $outputgamma
      *
-     * @return none
+     * @return mixed TRUE or a PEAR error object on error
      */
-    function gamma($outputgamma=1.0) {
-        ImageGammaCorrect($this->imageHandle, 1.0, $outputgamma);
+    function gamma($outputgamma = 1.0)
+    {
+        if ($outputgamma != 1.0) {
+            ImageGammaCorrect($this->imageHandle, 1.0, $outputgamma);
+        }
+        return true;
     }
 
     /**
      * Save the image file
      *
-     * @param $filename string  the name of the file to write to
-     * @param $quality  int     output DPI, default is 75
-     * @param $types    string  define the output format, default
+     * @param string $filename the name of the file to write to
+     * @param string $types    define the output format, default
      *                          is the current used format
+     * @param int    $quality  output DPI, default is 75
      *
-     * @return none
+     * @return TRUE on success or PEAR error object on error
      */
-    function save($filename, $type = '', $quality = 75)
+    function save($filename, $type = '', $quality = null)
     {
-        $type           = $type==''? $this->type : $type;
+        $type = ($type == '') ? $this->type : $type;
+        if (!$this->supportsType($type, 'w')) {
+            return PEAR::raiseError('Image type not supported for output', true);
+        }
+
         $functionName   = 'image' . $type;
-        $functionName($this->imageHandle, $filename) ;
+        $functionName($this->imageHandle, $filename, $quality) ;
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
+        return true;
+
     } // End save
 
 
     /**
-     * Display image without saving and lose changes
+     * Display image without saving and lose changes.
      *
-     * @param string type (JPG,PNG...);
-     * @param int quality 75
+     * This method adds the Content-type HTTP header
      *
-     * @return none
+     * @param string $type (JPG, PNG...);
+     * @param int    $quality 75
+     *
+     * @return TRUE or PEAR Error object on error
      */
-    function display($type = '', $quality = 75)
+    function display($type = '', $quality = null)
     {
-        if ($type != '') {
-            $this->type = $type;
+        $type    = ($type == '') ? $this->type : $type;
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
+        if (!$this->supportsType($type, 'w')) {
+            return PEAR::raiseError('Image type not supported for output', true);
         }
-        $functionName = 'Image' . $this->type;
-        header('Content-type: image/' . strtolower($this->type));
+        $functionName = 'Image' . $type;
+        header('Content-type: ' . $this->getMimeType($type));
         $functionName($this->imageHandle, '', $quality);
         $this->imageHandle = $this->old_image;
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
+        return true;
     }
 
     /**
      * Destroy image handle
      *
-     * @return none
+     * @return void
      */
     function free()
     {
-        $this->imageHandle = $this->old_image;
         $this->resized = false;
-        ImageDestroy($this->old_image);
-        if ($this->imageHandle){
-            ImageDestroy($this->imageHandle);
+        ImageDestroy($this->imageHandle);
+        if ($this->old_image){
+            ImageDestroy($this->old_image);
         }
     }
 
 } // End class ImageGD
+
 ?>

@@ -61,14 +61,24 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Check settings
      *
+     * @see __construct()
+     */
+    function Image_Transform_Imlib()
+    {
+        $this->__construct();
+    }
+
+    /**
+     * Check settings
+     *
      * @return mixed true or  or a PEAR error object on error
      *
      * @see PEAR::isError()
      */
-    function Image_Transform_Imlib()
+    function __construct()
     {
         if (!PEAR::loadExtension('imlib')) {
-            return PEAR::raiseError('imlib not compiled into PHP', true);
+            $this->isError(PEAR::raiseError('Couldn\'t find the imlib extension.', true));
         }
     }
 
@@ -80,14 +90,19 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @param string filename
      *
-     * @return mixed none or a PEAR error object on error
+     * @return mixed TRUE or a PEAR error object on error
      * @see PEAR::isError()
      */
     function load($image)
     {
         $this->image = $image;
         $this->imageHandle = imlib_load_image($this->image);
-        $this->_get_image_details();
+        $result =& $this->_get_image_details($image);
+        if (PEAR::isError($result)) {
+            return $result;
+        }
+
+        return true;
     }
 
     // }}}
@@ -109,7 +124,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *                                  'angle' A imlib direction constant
      *                              )
      *
-     * @return none
+     * @return TRUE or PEAR Error object on error 
      * @see PEAR::isError()
      */
 	function addText($params)
@@ -136,7 +151,8 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         }
 
         $fontResource = imlib_load_font($font . '/' . $size);
-        return imlib_text_draw($this->imageHandle, $fontResource, $x, $y, $text, $angle, $color[0], $color[1], $color[2], 255);
+        imlib_text_draw($this->imageHandle, $fontResource, $x, $y, $text, $angle, $color[0], $color[1], $color[2], 255);
+        return true;
 	}
 
     // }}}
@@ -147,7 +163,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @param int       $angle      Rotation angle
      *
-     * @return void 
+     * @return TRUE or PEAR Error object on error 
      */
     function rotate($angle)
     {
@@ -175,6 +191,8 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
             $this->img_x = $new_x;
             $this->img_y = $new_y;
         }
+        
+        return true;
     }
 
     // }}}
@@ -189,7 +207,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      * @param int $in_cropY The Y coordinate on the image to start the crop 
      *
      * @access public
-     * @return void
+     * @return TRUE or PEAR Error object on error 
      */
     function crop($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)
     {
@@ -197,6 +215,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         $this->imageHandle = imlib_create_cropped_image($this->imageHandle, $in_cropX, $in_cropY, $in_cropWidth, $in_cropHeight);
         $this->img_x = $in_cropWidth; 
         $this->img_y = $in_cropHeight;
+        return true;
     }
     
     // }}}
@@ -210,21 +229,25 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *                          is the current used format
      * @param $quality  int     (optional) output DPI, default is 75
      *
-     * @return bool True if it succeeds, false otherwise 
+     * @return TRUE on success or PEAR Error object on error
      */
-    function save($filename, $type = '', $quality = 75)
+    function save($filename, $type = '', $quality = null)
     {
         if (!is_resource($this->imageHandle)) {
-            return false;
+            return PEAR::raiseError('Invalid image', true);
         }
 
         $err = 0;
-        $type = $type == '' ? $this->type : $type;
+        $type    = ($type == '') ? $this->type : $type;
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
         imlib_image_set_format($this->imageHandle, $type);
-        $return = imlib_save_image($this->imageHandle, $filename, &$err, $quality);
+        $return = imlib_save_image($this->imageHandle, $filename, $err, $quality);
         $this->imageHandle = $this->oldHandle;
         $this->resized = false;
-        return $return;
+        if (!$return) {
+            return PEAR::raiseError('Couldn\'t save image. Reason: ' . $err, true);
+        }
+        return true;
     }
 
     // }}}
@@ -233,26 +256,32 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Display image without saving and lose changes
      *
+     * This method adds the Content-type HTTP header
+     *
      * @param string $type (optional) (JPG,PNG...);
      * @param int $quality (optional) 75
      *
-     * @return bool True if it succeeds, false otherwise 
+     * @return TRUE on success or PEAR Error object on error
      */
-    function display($type = '', $quality = 75)
+    function display($type = '', $quality = null)
     {
         if (!is_resource($this->imageHandle)) {
-            return false;
+            return PEAR::raiseError('Invalid image', true);
         }
 
-        $type = $type == '' ? $this->type : $type;
+        $type    = ($type == '') ? $this->type : $type;
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
         imlib_image_set_format($this->imageHandle, $type);
         $err = 0;
-        header('Content-type: image/' . strtolower($type));
-        $return = imlib_dump_image($this->imageHandle, &$err, $quality);
+        header('Content-type: ' . $this->getMimeType($type));
+        $return = imlib_dump_image($this->imageHandle, $err, $quality);
         $this->imageHandle = $this->oldHandle;
         $this->resized = false;
         imlib_free_image($this->oldHandle);
-        return $return;
+        if (!$return) {
+            return PEAR::raiseError('Couldn\'t output image. Reason: ' . $err, true);
+        }
+        return true;
     }
 
     // }}}
@@ -261,7 +290,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Destroy image handle
      *
-     * @return none
+     * @return void
      */
     function free()
     {
@@ -274,16 +303,18 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     // {{{ _resize()
 
     /**
-     * Resize Action
-     *
-     * @param $new_x int  new width
-     * @param $new_y int  new height
+     * Resize the image.
      *
      * @access private
+     *
+     * @param int   $new_x   New width
+     * @param int   $new_y   New height
+     * @param mixed $options Optional parameters
+     *
+     * @return TRUE on success or PEAR Error object on error
      * @see PEAR::isError()
-     * @return true on success or pear error
      */
-    function _resize($new_x, $new_y) 
+    function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
@@ -303,17 +334,41 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Gets the image details
      *
-     * @access public
-     * @return void
+     * @access private
+     * @return TRUE on success or PEAR Error object on error
      */
     function _get_image_details()
     {
         $this->img_x = imlib_image_get_width($this->imageHandle);
         $this->img_y = imlib_image_get_height($this->imageHandle);
         $this->type = imlib_image_format($this->imageHandle);
-        $this->type = $this->type == '' ? 'png' : $this->type; 
+        $this->type = ($this->type == '') ? 'png' : $this->type; 
+        return true;
     }
 
     // }}}
+
+    /**
+     * Horizontal mirroring
+     *
+     * @return TRUE on success, PEAR Error object on error
+     */
+    function mirror() 
+    {
+        imlib_image_flip_horizontal($this->imageHandle);
+        return true;
+    }
+
+    /**
+     * Vertical mirroring
+     *
+     * @return TRUE on success, PEAR Error object on error
+     */
+    function flip() 
+    {
+        imlib_image_flip_vertical($this->imageHandle);
+        return true;
+    }
 }
+
 ?>
