@@ -368,7 +368,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
      *
      * @return none
      */
-    function save($filename, $quality = 75, $type = '')
+    function save($filename, $type = '', $quality = 75)
     {
         $type           = $type==''? $this->type : $type;
         $functionName   = 'image' . $type;

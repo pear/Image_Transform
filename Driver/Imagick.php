@@ -168,7 +168,7 @@ Class Image_Transform_Driver_Imagick extends Image_Transform
      *
      * @return none
      */
-    function save($filename, $quality = 75, $type = '')
+    function save($filename, $type='', $quality = 75)
     {
         if ($type == '') {
             $type = strtoupper($type);
