@@ -110,7 +110,7 @@ Class Image_Transform
 		if ('' == $driver) {
 		    return PEAR::raiseError("No image library specified... aborting.  You must call ::factory() with one parameter, the library to load.", true);
 		}
-        include_once "Image/Transform/Drivers/$driver.php";
+        include_once "Image/Transform/Driver/$driver.php";
 
         $classname = "Image_Transform_Driver_{$driver}";
         $obj =& new $classname;
