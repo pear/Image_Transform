@@ -36,7 +36,6 @@ Class Image_Transform_Driver_IM extends Image_Transform
      */
     function Image_Transform_Driver_IM()
     {
-        include_once 'System/Command.php';
         if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
             include_once 'System/Command.php';
             $path = str_replace('convert','',escapeshellcmd(System_Command::which('convert') ));
