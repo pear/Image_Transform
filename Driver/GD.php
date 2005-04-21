@@ -1,44 +1,65 @@
 <?php
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2003 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/2_02.txt.                                 |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Authors: Peter Bowyer <peter@mapledesign.co.uk>                      |
-// |          Alan Knowles <alan@akbkhome.com>                            |
-// |          Philippe Jausions <Philippe.Jausions@11abacus.com>          |
-// +----------------------------------------------------------------------+
-//
-//    Usage :
-//    $img    = Image_Transform::factory('GD');
-//    $angle  = -78;
-//    $img->load('magick.png');
-//
-//    if($img->rotate($angle,array('autoresize'=>true,'color_mask'=>array(255,0,0)))){
-//        $img->addText(array('text'=>"Rotation $angle",'x'=>0,'y'=>100,'font'=>'/usr/share/fonts/default/TrueType/cogb____.ttf'));
-//        $img->display();
-//        $img->free();
-//    } else {
-//        echo "Error";
-//    }
-//
-//
-// $Id$
-//
-// Image Transformation interface using the GD library
-//
+
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+
+/**
+ * GD implementation for Image_Transform package
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: This source file is subject to version 3.0 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Image
+ * @package    Image_Transform
+ * @author     Alan Knowles <alan@akbkhome.com>
+ * @author     Peter Bowyer <peter@mapledesign.co.uk>
+ * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
+ * @copyright  2002-2005 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    CVS: $Id$
+ * @link       http://pear.php.net/package/Image_Transform
+ */
 
 require_once "Image/Transform.php";
 
-Class Image_Transform_Driver_GD extends Image_Transform
+/**
+ * GD implementation for Image_Transform package
+ *
+ * Usage :
+ *    $img    =& Image_Transform::factory('GD');
+ *    $angle  = -78;
+ *    $img->load('magick.png');
+ *
+ *    if ($img->rotate($angle, array(
+ *               'autoresize' => true,
+ *               'color_mask' => array(255, 0, 0)))) {
+ *        $img->addText(array(
+ *               'text' => 'Rotation ' . $angle,
+ *               'x' => 0,
+ *               'y' => 100,
+ *               'font' => '/usr/share/fonts/default/TrueType/cogb____.ttf'));
+ *        $img->display();
+ *    } else {
+ *        echo "Error";
+ *    }
+ *    $img->free();
+ *
+ * @category   Image
+ * @package    Image_Transform
+ * @author     Alan Knowles <alan@akbkhome.com>
+ * @author     Peter Bowyer <peter@mapledesign.co.uk>
+ * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
+ * @copyright  2002-2005 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    Release: @package_version@
+ * @link       http://pear.php.net/package/Image_Transform
+ * @since      PHP 4.0
+ */
+class Image_Transform_Driver_GD extends Image_Transform
 {
 	/**
 	 * Holds the image file for manipulation
@@ -52,10 +73,6 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
     /**
      * Check settings
-     *
-     * @return mixed true or a PEAR error object on error
-     *
-     * @see PEAR::isError()
      */
     function Image_Transform_Driver_GD()
     {
@@ -66,14 +83,13 @@ Class Image_Transform_Driver_GD extends Image_Transform
     /**
      * Check settings
      *
-     * @return mixed true or a PEAR error object on error
-     *
-     * @see PEAR::isError()
+     * @since PHP 5
      */
     function __construct()
     {
         if (!PEAR::loadExtension('gd')) {
-            $this->isError(PEAR::raiseError("GD library is not available.", true));
+            $this->isError(PEAR::raiseError("GD library is not available.",
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
         } else {
             $types = ImageTypes();
             if ($types & IMG_PNG) {
@@ -92,7 +108,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
                 $this->_supported_image_types['wbmp'] = 'rw';
             }
             if (!$this->_supported_image_types) {
-                $this->isError(PEAR::raiseError("No supported image types available", true));
+                $this->isError(PEAR::raiseError("No supported image types available", IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
             }
         }
 
@@ -100,12 +116,11 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
 
     /**
-     * Load image
+     * Loads an image from file
      *
      * @param string $image filename
-     *
-     * @return mixed TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
      */
     function load($image)
     {
@@ -115,7 +130,8 @@ Class Image_Transform_Driver_GD extends Image_Transform
             return $result;
         }
         if (!$this->supportsType($this->type, 'r')) {
-            return PEAR::raiseError('Image type not supported for input', true);
+            return PEAR::raiseError('Image type not supported for input',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
         $functionName = 'ImageCreateFrom' . $this->type;
@@ -124,19 +140,20 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
     } // End load
 
-    
+
     /**
-     * Add a border of constant width around an image
+     * Adds a border of constant width around an image
      *
      * @param int $border_width Width of border to add
      * @author Peter Bowyer
-     * @return bool true
+     * @return bool TRUE
+     * @access public
      */
     function addBorder($border_width, $color = '')
     {
         $this->new_x = $this->img_x + 2*$border_width;
         $this->new_y = $this->img_y + 2*$border_width;
-        
+
         if (function_exists('ImageCreateTrueColor') && $this->true_color) {
             $new_img =ImageCreateTrueColor($new_x, $new_y);
         }
@@ -144,7 +161,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
             $new_img =ImageCreate($new_x, $new_y);
             imagepalettecopy($new_img, $this->imageHandle);
         }
-        
+
         if ($color) {
             if (!is_array($color)) {
                 if ($color{0} == '#') {
@@ -166,14 +183,14 @@ Class Image_Transform_Driver_GD extends Image_Transform
         $this->imageHandle = $new_img;
         $this->resized = true;
 
-        return true;    
+        return true;
     }
-    
-    
+
+
     /**
      * addText
      *
-     * @param   array   options     Array contains options
+     * @param   array   $params     Array contains options
      *                              array(
      *                                  'text'  The string to draw
      *                                  'x'     Horizontal position
@@ -185,8 +202,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
      *                                                  before drawing the text
      *                              )
      *
-     * @return TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
      */
 	function addText($params)
     {
@@ -215,7 +231,8 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
 
     /**
-     * Rotate image by the given angle
+     * Rotates image by the given angle
+     *
      * Uses a fast rotation algorythm for custom angles
      * or lines copy for multiple of 90 degrees
      *
@@ -224,15 +241,15 @@ Class Image_Transform_Driver_GD extends Image_Transform
      *                             'color_mask' => array(r ,g, b), named color or #rrggbb
      *                            )
      * @author Pierre-Alain Joye
-     * @return mixed TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
      */
     function rotate($angle, $options = null)
     {
         if (($angle % 360) == 0) {
             return true;
         }
-        
+
         $options = array_merge($this->_options, $options);
         $color_mask = $options['canvasColor'];
 
@@ -257,14 +274,15 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
 
     /**
-     * Crop image by size and start coordinates
+     * Crops image by size and start coordinates
      *
      * @param int width Cropped image width
      * @param int height Cropped image height
      * @param int x X-coordinate to crop at
      * @param int y Y-coordinate to crop at
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
@@ -287,9 +305,10 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
 
     /**
-     * Convert the image to greyscale
+     * Converts the image to greyscale
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
      */
     function greyscale() {
         imagecopymergegray($this->imageHandle, $this->imageHandle, 0, 0, 0, 0, $this->new_x, $this->new_y, 0);
@@ -304,14 +323,12 @@ Class Image_Transform_Driver_GD extends Image_Transform
     * It uses a bicubic interpolation algorithm to get far
     * better result.
     *
-    * @access private
-    *
     * @param int   $new_x   New width
     * @param int   $new_y   New height
     * @param mixed $options Optional parameters
     *
-    * @return TRUE on success or PEAR Error object on error
-    * @see PEAR::isError()
+    * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+    * @access private
     */
     function _resize($new_x, $new_y, $options = null)
     {
@@ -320,17 +337,17 @@ Class Image_Transform_Driver_GD extends Image_Transform
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
-        
+
         if (function_exists('ImageCreateTrueColor')) {
             $new_img =ImageCreateTrueColor($new_x, $new_y);
         }
         if (!$new_img) {
             $new_img =ImageCreate($new_x, $new_y);
         }
-        
+
         if ($options['scaleMethod'] != 'pixel' && function_exists('ImageCopyResampled')) {
             $icr_res = ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
-        } 
+        }
         if (!$icr_res) {
             ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         }
@@ -344,11 +361,12 @@ Class Image_Transform_Driver_GD extends Image_Transform
     }
 
     /**
-     * Adjust the image gamma
+     * Adjusts the image gamma
      *
      * @param float $outputgamma
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
      */
     function gamma($outputgamma = 1.0)
     {
@@ -359,20 +377,22 @@ Class Image_Transform_Driver_GD extends Image_Transform
     }
 
     /**
-     * Save the image file
+     * Saves the image to a file
      *
      * @param string $filename the name of the file to write to
      * @param string $types    define the output format, default
      *                          is the current used format
      * @param int    $quality  output DPI, default is 75
      *
-     * @return TRUE on success or PEAR error object on error
+     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @access public
      */
     function save($filename, $type = '', $quality = null)
     {
         $type = ($type == '') ? $this->type : $type;
         if (!$this->supportsType($type, 'w')) {
-            return PEAR::raiseError('Image type not supported for output', true);
+            return PEAR::raiseError('Image type not supported for output',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
         $functionName   = 'image' . $type;
@@ -386,21 +406,23 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
 
     /**
-     * Display image without saving and lose changes.
+     * Displays image without saving and lose changes.
      *
      * This method adds the Content-type HTTP header
      *
      * @param string $type (JPG, PNG...);
      * @param int    $quality 75
      *
-     * @return TRUE or PEAR Error object on error
+     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @access public
      */
     function display($type = '', $quality = null)
     {
         $type    = ($type == '') ? $this->type : $type;
         $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
         if (!$this->supportsType($type, 'w')) {
-            return PEAR::raiseError('Image type not supported for output', true);
+            return PEAR::raiseError('Image type not supported for output',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $functionName = 'Image' . $type;
         header('Content-type: ' . $this->getMimeType($type));
@@ -413,9 +435,9 @@ Class Image_Transform_Driver_GD extends Image_Transform
     }
 
     /**
-     * Destroy image handle
+     * Destroys image handle
      *
-     * @return void
+     * @access public
      */
     function free()
     {
@@ -426,6 +448,6 @@ Class Image_Transform_Driver_GD extends Image_Transform
         }
     }
 
-} // End class ImageGD
+}
 
 ?>

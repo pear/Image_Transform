@@ -26,7 +26,17 @@
  * @link       http://pear.php.net/package/Image_Transform
  */
 
+/**
+ * Include for error handling
+ */
 require_once 'PEAR.php';
+
+/**
+ * Error code for unsupported library, image format or methods
+ *
+ * @name IMAGE_TRANSFORM_ERROR_UNSUPPORTED
+ */
+define('IMAGE_TRANSFORM_ERROR_UNSUPPORTED', 1);
 
 /**
  * Base class with factory method for backend driver
@@ -36,6 +46,7 @@ require_once 'PEAR.php';
  * some utility functions (maths) common to all parts of Image_Transform.
  *
  * @category   Image
+ * @package    Image_Transform
  * @author     Alan Knowles <alan@akbkhome.com>
  * @author     Peter Bowyer <peter@mapledesign.co.uk>
  * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
@@ -43,7 +54,7 @@ require_once 'PEAR.php';
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
  * @version    Release: @package_version@
  * @link       http://pear.php.net/package/Image_Transform
- * @since    PHP 4.0
+ * @since      PHP 4.0
  */
 class Image_Transform
 {
@@ -182,7 +193,8 @@ class Image_Transform
 
         $classname = "Image_Transform_Driver_{$driver}";
         if (!class_exists($classname)) {
-            return PEAR::raiseError('Image library not supported... aborting.', true);
+            return PEAR::raiseError('Image library not supported... aborting.',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $obj =& new $classname;
 
@@ -479,7 +491,8 @@ class Image_Transform
                 $type = 'xbm';
                 break;
             default:
-                return PEAR::raiseError("Cannot recognize image format", true);
+                return PEAR::raiseError("Cannot recognize image format",
+                    IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->img_x = $this->new_x = $data[0];
         $this->img_y = $this->new_y = $data[1];
@@ -751,7 +764,8 @@ class Image_Transform
      */
     function _resize()
     {
-        return PEAR::raiseError('Resize method not supported by driver', true);
+        return PEAR::raiseError('Resize method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -764,7 +778,8 @@ class Image_Transform
      * @access public
      */
     function load($filename) {
-        return PEAR::raiseError('load() method not supported by driver', true);
+        return PEAR::raiseError('load() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -779,7 +794,8 @@ class Image_Transform
      * @access public
      */
     function display($type, $quality = null) {
-        return PEAR::raiseError('display() method not supported by driver', true);
+        return PEAR::raiseError('display() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -807,7 +823,8 @@ class Image_Transform
      * @access public
      */
     function save($filename, $type, $quality = null) {
-        return PEAR::raiseError('save() method not supported by driver', true);
+        return PEAR::raiseError('save() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -820,7 +837,8 @@ class Image_Transform
      * @access public
      */
     function free() {
-        return PEAR::raiseError('free() method not supported by driver', true);
+        return PEAR::raiseError('free() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -907,17 +925,20 @@ class Image_Transform
     /* Methods to add to the driver classes in the future */
     function addText()
     {
-        return PEAR::raiseError('addText() method not supported by driver', true);
+        return PEAR::raiseError('addText() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function addDropShadow()
     {
-        return PEAR::raiseError('addDropShadow() method not supported by driver', true);
+        return PEAR::raiseError('addDropShadow() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function addBorder()
     {
-        return PEAR::raiseError('addBorder() method not supported by driver', true);
+        return PEAR::raiseError('addBorder() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -933,12 +954,14 @@ class Image_Transform
      **/
     function crop($width, $height, $x = 0, $y = 0)
     {
-        return PEAR::raiseError('crop() method not supported by driver', true);
+        return PEAR::raiseError('crop() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function canvasResize()
     {
-        return PEAR::raiseError('canvasResize() method not supported by driver', true);
+        return PEAR::raiseError('canvasResize() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -950,12 +973,14 @@ class Image_Transform
      **/
     function gamma($outputgamma = 1.0)
     {
-        return PEAR::raiseError('gamma() method not supported by driver', true);
+        return PEAR::raiseError('gamma() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function rotate($angle, $options = null)
     {
-        return PEAR::raiseError('rotate() method not supported by driver', true);
+        return PEAR::raiseError('rotate() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -967,7 +992,8 @@ class Image_Transform
      **/
     function mirror()
     {
-        return PEAR::raiseError('mirror() method not supported by driver', true);
+        return PEAR::raiseError('mirror() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -979,7 +1005,8 @@ class Image_Transform
      **/
     function flip()
     {
-        return PEAR::raiseError('flip() method not supported by driver', true);
+        return PEAR::raiseError('flip() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
@@ -990,7 +1017,8 @@ class Image_Transform
      **/
     function greyscale()
     {
-        return PEAR::raiseError('greyscale() method not supported by driver', true);
+        return PEAR::raiseError('greyscale() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
