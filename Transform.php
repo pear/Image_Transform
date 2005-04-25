@@ -39,6 +39,22 @@ require_once 'PEAR.php';
 define('IMAGE_TRANSFORM_ERROR_UNSUPPORTED', 1);
 
 /**
+ * Error code for failed transformation operations
+ *
+ * @name IMAGE_TRANSFORM_ERROR_FAILED
+ */
+define('IMAGE_TRANSFORM_ERROR_FAILED', 2);
+
+/**
+ * Error code for failed i/o (Input/Output) operations
+ *
+ * @name IMAGE_TRANSFORM_ERROR_IO
+ */
+define('IMAGE_TRANSFORM_ERROR_IO', 3);
+
+
+
+/**
  * Base class with factory method for backend driver
  *
  * The main "Image_Transform" class is a container and base class which
