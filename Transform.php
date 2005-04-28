@@ -52,6 +52,13 @@ define('IMAGE_TRANSFORM_ERROR_FAILED', 2);
  */
 define('IMAGE_TRANSFORM_ERROR_IO', 3);
 
+/**
+ * Error code for invalid arguments
+ *
+ * @name IMAGE_TRANSFORM_ERROR_ARGUMENT
+ */
+define('IMAGE_TRANSFORM_ERROR_ARGUMENT', 4);
+
 
 
 /**
@@ -203,7 +210,8 @@ class Image_Transform
                 }
             }
             if (!$driver) {
-                return PEAR::raiseError('No image library specified... aborting.  You must call ::factory() with a proper library to load.', true);
+                return PEAR::raiseError('No image library specified... aborting.  You must call ::factory() with a proper library to load.',
+                    IMAGE_TRANSFORM_ERROR_ARGUMENT);
             }
 		}
         @include_once 'Image/Transform/Driver/' . basename($driver) . '.php';
@@ -400,7 +408,8 @@ class Image_Transform
     function fit($width, $height)
     {
         if ($width <= 0 || $height <= 0) {
-            return PEAR::raiseError("Invalid arguments.", true);
+            return PEAR::raiseError("Invalid arguments.",
+                IMAGE_TRANSFORM_ERROR_ARGUMENT);
         }
         $x = $this->img_x / $width;
         $y = $this->img_y / $height;
@@ -582,8 +591,8 @@ class Image_Transform
      */
     function _parse_size($new_size, $old_size)
     {
-        if ('%' == $new_size) {
-            $new_size = str_replace('%', '', $new_size);
+        if (substr($new_size, -1) == '%') {
+            $new_size = substr($new_size, 0, -1);
             $new_size = $new_size / 100;
         }
         if ($new_size > 1) {
