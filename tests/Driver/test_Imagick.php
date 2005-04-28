@@ -3,7 +3,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * Unit tests for Image_Transform package - GD driver
+ * Unit tests for Image_Transform package - Imagick driver
  *
  * PHP versions 4 and 5
  *
@@ -19,7 +19,7 @@
  * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Image_Transform
  */
-class Image_TransformTestGD extends Image_TransformTest
+class Image_TransformTestImagick extends Image_TransformTest
 {
     /**
      * Holds driver's name
@@ -27,14 +27,14 @@ class Image_TransformTestGD extends Image_TransformTest
      * @var string $driver
      * @access protected
      */
-    var $driver = 'GD';
+    var $driver = 'Imagick';
 
     /**
      * Constructor
      *
      * @see __construct()
      **/
-    function Image_TransformTestGD($name)
+    function Image_TransformTestImagick($name)
     {
         $this->__construct($name);
     }

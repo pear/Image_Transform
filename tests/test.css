@@ -1,0 +1,11 @@
+pre.elisp {
+    background-color: #EEEEEE;
+}
+
+table thead {
+    background-color: #CCCCCC;
+}
+
+td.image {
+	background-image: url('images/bggrid.png');
+}
