@@ -391,7 +391,7 @@ class Image_TransformTest extends PHPUnit_TestCase
         Image_TransformTestHelper::log('Scale by Percentage "31.5%"',
             'scalePct31_5s.jpg', 'mixed.jpg');
         $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mixed.jpg'))
-                  && (true === $this->imager->scale('31.5%'))
+                  && (true === $this->imager->resize('31.5%', '31.5%'))
                   && (true === $this->imager->save(TEST_TMP_DIR
                       . $this->prepend  . 'scalePct31_5s.jpg', 'jpeg'));
         return $this->assertEquals(true, $result);

@@ -80,9 +80,8 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      * Load image
      *
      * @param string filename
-     *
-     * @return mixed TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
      */
     function load($image)
     {
