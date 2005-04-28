@@ -17,7 +17,7 @@
    <a href="http://pear.php.net/"><img src="http://pear.php.net/gifs/pearsmall.gif" style="border: 0; margin: 5px;" width="104" height="50" alt="PEAR :: The PHP Extension and Application Repository"  /></a><br />
   </td>
   <td class="head-menu"><small class="menuWhite">Image_Transform</small><br />
-  <a href="http://pear.php.net/package/Image_Transform" class="menuBlack">Home</a>&nbsp;|&nbsp;<a href="http://pear.php.net/package/Image_Transform/docs" class="menuBlack">Documentation</a>&nbsp;|&nbsp;<a href="http://cvs.php.net/pear/Image_Transform/" class="menuBlack">Browse Source</a>&nbsp;|&nbsp;<a href="http://pear.php.net/package/Image_Transform/bugs" class="menuBlack">Bugs</a>
+  <a href="http://pear.php.net/package/Image_Transform" class="menuBlack">Package Home</a>&nbsp;|&nbsp;<a href="http://pear.php.net/package/Image_Transform/docs" class="menuBlack">Documentation</a>&nbsp;|&nbsp;<a href="http://cvs.php.net/pear/Image_Transform/" class="menuBlack">Browse Source</a>&nbsp;|&nbsp;<a href="http://pear.php.net/package/Image_Transform/bugs" class="menuBlack">Bugs</a>
   </td>
  </tr>
  <tr>
