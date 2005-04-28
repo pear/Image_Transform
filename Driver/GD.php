@@ -15,6 +15,7 @@
  *
  * @category   Image
  * @package    Image_Transform
+ * @subpackage Image_Transform_Driver_GD
  * @author     Alan Knowles <alan@akbkhome.com>
  * @author     Peter Bowyer <peter@mapledesign.co.uk>
  * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
@@ -50,6 +51,7 @@ require_once "Image/Transform.php";
  *
  * @category   Image
  * @package    Image_Transform
+ * @subpackage Image_Transform_Driver_GD
  * @author     Alan Knowles <alan@akbkhome.com>
  * @author     Peter Bowyer <peter@mapledesign.co.uk>
  * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
@@ -401,6 +403,9 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         if ($filename == '') {
             header('Content-type: ' . $this->getMimeType($type));
+            $action = 'save image to file';
+        } else {
+            $action = 'output image';
         }
 
         $functionName = 'image' . $type;
@@ -412,7 +417,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 $result = $functionName($this->imageHandle, $filename);
         }
         if (!$result) {
-            return PEAR::raiseError('Couldn\'t save image to file',
+            return PEAR::raiseError('Couldn\'t ' . $action,
                 IMAGE_TRANSFORM_ERROR_IO);
         }
         $this->imageHandle = $this->old_image;

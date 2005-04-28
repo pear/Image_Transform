@@ -11,38 +11,66 @@
 
 //ini_set('include_path', '.:/home/reywob/sites/it.mapledesign.co.uk/pear:/usr/lib/php');
 
-// Pick which drivers to test
+// Pick which driver(s) to test
 $drivers = array(
-//    'Imagick',
-//    'Imagick2',
+//    'Imagick'
+    'Imagick2',
 //    'Imlib',
-//    'NetPBM',
-//    'IM',
+    'NetPBM',
+    'IM',
     'GD'
     );
 
+/**
+ * Specifies the file system path to the ImageMagick binaries
+ * ends with trailing slash
+ *
+ * @name IMAGE_TRANSFORM_IM_PATH
+ */
 if (!defined('IMAGE_TRANSFORM_IM_PATH')) {
-    define('IMAGE_TRANSFORM_IM_PATH', 'C:\\Program Files\\ImageMagick-6.0.2-Q16\\');
+    define('IMAGE_TRANSFORM_IM_PATH', 'C:\\Program Files\\ImageMagick-5.5.7-Q8\\');
 }
+
+/**
+ * Specifies the file system path to the NetPBM binaries
+ * ends with trailing slash
+ *
+ * @name IMAGE_TRANSFORM_NETPMB_PATH
+ */
 if (!defined('IMAGE_TRANSFORM_NETPBM_PATH')) {
     define('IMAGE_TRANSFORM_NETPBM_PATH', 'C:\\cygwin\\usr\\local\\bin\\netpbm\\');
 }
 
-if (!defined('IMAGE_TRANSFORM_LIB_PATH')) {
-    define('IMAGE_TRANSFORM_LIB_PATH', '/usr/bin/');
-}
-
-// Where we'll put resulting image and HTML files...
+/**
+ * Base directory for tests
+ *
+ * @name TEST_DIR
+ */
 define('TEST_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+
+/**
+ * Where the original and expected result images are
+ *
+ * @name TEST_IMAGE_DIR
+ */
 define('TEST_IMAGE_DIR', TEST_DIR . 'images' . DIRECTORY_SEPARATOR);
+
+/**
+ * Where the result image and HTML files will be created
+ *
+ * This folder needs to be writable by the user running this script
+ *
+ * @name TEST_IMAGE_DIR
+ */
 define('TEST_TMP_DIR', TEST_DIR . 'tmp' . DIRECTORY_SEPARATOR);
 
 
 
 /**
+ *
  * You shouldn't have to modify anything below this point
+ *
  */
-
 if (isset($_REQUEST['drivers'])) {
     $drivers = $_REQUEST['drivers'];
 }
