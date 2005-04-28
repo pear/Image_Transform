@@ -1,33 +1,46 @@
 <?php
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2004 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 3.0 of the PHP license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/3_0.txt.                                  |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Authors: Peter Bowyer <peter@mapledesign.co.uk>                      |
-// +----------------------------------------------------------------------+
-//
-// $Id$
-//
-// Image Transformation interface using command line ImageMagick
-//
 
-require_once "Image/Transform.php";
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * @package Image_Transform
+ * ImageMagick binaries implementation for Image_Transform package
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: This source file is subject to version 3.0 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Image
+ * @package    Image_Transform
+ * @author     Peter Bowyer <peter@mapledesign.co.uk>
+ * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
+ * @copyright  2002-2005 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    CVS: $Id$
+ * @link       http://pear.php.net/package/Image_Transform
+ */
+
+require_once 'Image/Transform.php';
+require_once 'System.php';
+
+/**
+ * ImageMagick binaries implementation for Image_Transform package
+ *
+ * @category   Image
+ * @package    Image_Transform
  * @subpackage Image_Transform_Driver_IM
+ * @author     Peter Bowyer <peter@mapledesign.co.uk>
+ * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
+ * @copyright  2002-2005 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    Release: @package_version@
+ * @link       http://pear.php.net/package/Image_Transform
  * @link http://www.imagemagick.org/
  **/
-Class Image_Transform_Driver_IM extends Image_Transform
+class Image_Transform_Driver_IM extends Image_Transform
 {
     /**
      * associative array commands to be executed
@@ -60,7 +73,8 @@ Class Image_Transform_Driver_IM extends Image_Transform
         if (System::which(IMAGE_TRANSFORM_IM_PATH . 'convert' . ((OS_WINDOWS) ? '.exe' : ''))) {
             include 'Image/Transform/Driver/Imagick/ImageTypes.php';
         } else {
-            $this->isError(PEAR::raiseError('Couldn\'t find "convert" binary'));
+            $this->isError(PEAR::raiseError('Couldn\'t find "convert" binary',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
         }
     } // End Image_IM
 
@@ -87,7 +101,8 @@ Class Image_Transform_Driver_IM extends Image_Transform
     {
         $this->_init();
         if (!file_exists($image)) {
-            return PEAR::raiseError('The image file ' . $image . ' doesn\'t exist', true);
+            return PEAR::raiseError('The image file ' . $image
+                . ' doesn\'t exist', IMAGE_TRANSFORM_ERROR_IO);
         }
         $this->image = $image;
         $result = $this->_get_image_details($image);
@@ -112,7 +127,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
             unset($retval);
 
             if (!System::which(IMAGE_TRANSFORM_IM_PATH . 'identify' . ((OS_WINDOWS) ? '.exe' : ''))) {
-                $this->isError(PEAR::raiseError('Couldn\'t find "identify" binary'));
+                $this->isError(PEAR::raiseError('Couldn\'t find "identify" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
             }
             $cmd = $this->_prepare_cmd(IMAGE_TRANSFORM_IM_PATH,
                 'identify',
@@ -307,25 +322,35 @@ Class Image_Transform_Driver_IM extends Image_Transform
      *
      * @param $filename string  the name of the file to write to
      * @param $quality  quality image dpi, default=75
-     * @param $type     string  (JPG,PNG...)
+     * @param $type     string  (JPEG, PNG...)
      *
      * @return mixed TRUE or a PEAR error object on error
      */
     function save($filename, $type = '', $quality = null)
     {
         $type = strtoupper(($type == '') ? $this->type : $type);
-        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
+        switch ($type) {
+            case 'JPEG':
+                $type = 'JPG';
+                break;
+        }
+        $options = array();
+        if (!is_null($quality)) {
+            $options['quality'] = $quality;
+        }
+        $quality = $this->_getOption('quality', $options, 75);
 
         $cmd = $this->_prepare_cmd(
             IMAGE_TRANSFORM_IM_PATH,
             'convert',
             implode(' ', $this->command)
                . ' -quality ' . ((int) $quality) . ' '
-               . escapeshellarg($this->image) . ' ' . $type . ':' . escapeshellarg($filename)
-                . ' 2>&1');
+               . escapeshellarg($this->image) . ' ' . $type . ':'
+               . escapeshellarg($filename) . ' 2>&1');
         exec($cmd, $res, $exit);
 
-        return ($exit == 0) ? true : PEAR::raiseError(implode('. ', $res), true);
+        return ($exit == 0) ? true : PEAR::raiseError(implode('. ', $res),
+            IMAGE_TRANSFORM_ERROR_IO);
     } // End save
 
     /**
@@ -335,7 +360,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
      *
      * @access public
      *
-     * @param string type (JPG,PNG...);
+     * @param string type (JPEG,PNG...);
      * @param int quality 75
      *
      * @return mixed TRUE or a PEAR error object on error
@@ -343,17 +368,24 @@ Class Image_Transform_Driver_IM extends Image_Transform
     function display($type = '', $quality = null)
     {
         $type    = strtoupper(($type == '') ? $type : $this->type);
-        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
+        switch ($type) {
+            case 'JPEG':
+                $type = 'JPG';
+                break;
+        }
+        $options = array();
+        if (!is_null($quality)) {
+            $options['quality'] = $quality;
+        }
+        $quality = $this->_getOption('quality', $options, 75);
 
         $this->_send_display_headers($type);
-        
+
         $cmd = $this->_prepare_cmd(
             IMAGE_TRANSFORM_IM_PATH,
             'convert',
-            implode(' ', $this->command) . " -quality $quality "  . 
-                   $this->image . ' ' . 
-                   strtoupper($this->type) . ":-");
-                   
+            implode(' ', $this->command) . " -quality $quality "  .
+                   $this->image . ' ' . $type . ":-");
         passthru($cmd);
 
 		if (!$this->keep_settings_on_save) {

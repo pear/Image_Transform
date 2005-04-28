@@ -62,14 +62,20 @@ require_once "Image/Transform.php";
 class Image_Transform_Driver_GD extends Image_Transform
 {
 	/**
-	 * Holds the image file for manipulation
+	 * Holds the image resource for manipulation
+     *
+     * @var resource $imageHandle
+     * @access protected
 	 */
-    var $imageHandle = '';
+    var $imageHandle = null;
 
 	/**
 	 * Holds the original image file
+     *
+     * @var resource $imageHandle
+     * @access protected
 	 */
-    var $old_image = '';
+    var $old_image = null;
 
     /**
      * Check settings
@@ -124,6 +130,8 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function load($image)
     {
+        $this->free();
+
         $this->image = $image;
         $result = $this->_get_image_details($image);
         if (PEAR::isError($result)) {
@@ -136,6 +144,11 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         $functionName = 'ImageCreateFrom' . $this->type;
         $this->imageHandle = $functionName($this->image);
+        if (!$this->imageHandle) {
+            $this->imageHandle = null;
+            return PEAR::raiseError('Error while loading image file.',
+                IMAGE_TRANSFORM_ERROR_IO);
+        }
         return true;
 
     } // End load
@@ -151,27 +164,20 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function addBorder($border_width, $color = '')
     {
-        $this->new_x = $this->img_x + 2*$border_width;
-        $this->new_y = $this->img_y + 2*$border_width;
+        $this->new_x = $this->img_x + 2 * $border_width;
+        $this->new_y = $this->img_y + 2 * $border_width;
 
         if (function_exists('ImageCreateTrueColor') && $this->true_color) {
-            $new_img =ImageCreateTrueColor($new_x, $new_y);
+            $new_img = @ImageCreateTrueColor($new_x, $new_y);
         }
         if (!$new_img) {
-            $new_img =ImageCreate($new_x, $new_y);
+            $new_img = ImageCreate($new_x, $new_y);
             imagepalettecopy($new_img, $this->imageHandle);
         }
 
+        $options = array('pencilColor', $color);
+        $color = $this->_getColor('pencilColor', $options, array(0, 0, 0));
         if ($color) {
-            if (!is_array($color)) {
-                if ($color{0} == '#') {
-    				// Not already in numberical format, so we convert it.
-                    $color = $this->colorhex2colorarray($color);
-                } else {
-                    include_once 'Image/Transform/Driver/ColorsDefs.php';
-                    $color = isset($colornames[$color])?$colornames[$color]:false;
-                }
-            }
             if ($this->true_color) {
                 $c = imagecolorresolve($this->imageHandle, $color[0], $color[1], $color[2]);
                 imagefill($new_img, 0, 0, $c);
@@ -195,7 +201,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      *                                  'text'  The string to draw
      *                                  'x'     Horizontal position
      *                                  'y'     Vertical Position
-     *                                  'Color' Font color
+     *                                  'color' Font color
      *                                  'font'  Font to be used
      *                                  'size'  Size of the fonts in pixel
      *                                  'resize_first'  Tell if the image has to be resized
@@ -209,15 +215,8 @@ class Image_Transform_Driver_GD extends Image_Transform
 		$params = array_merge($this->_get_default_text_params(), $params);
         extract($params);
 
-        if (!is_array($color)) {
-            if ($color{0} == '#') {
-				// Not already in numberical format, so we convert it.
-                $color = $this->colorhex2colorarray($color);
-            } else {
-                include_once 'Image/Transform/Driver/ColorsDefs.php';
-                $color = isset($colornames[$color])?$colornames[$color]:false;
-            }
-        }
+        $options = array('fontColor' => $color);
+        $color = $this->_getColor('fontColor', $options, array(0, 0, 0));
 
         $c = imagecolorresolve ($this->imageHandle, $color[0], $color[1], $color[2]);
 
@@ -238,7 +237,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      *
      * @param int   $angle   Rotation angle
      * @param array $options array(
-     *                             'color_mask' => array(r ,g, b), named color or #rrggbb
+     *                             'canvasColor' => array(r ,g, b), named color or #rrggbb
      *                            )
      * @author Pierre-Alain Joye
      * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
@@ -250,18 +249,8 @@ class Image_Transform_Driver_GD extends Image_Transform
             return true;
         }
 
-        $options = array_merge($this->_options, $options);
-        $color_mask = $options['canvasColor'];
-
-        if (!is_array($color_mask)) {
-            // Not already in numberical format, so we convert it.
-            if ($color_mask{0} == '#'){
-                $color_mask = $this->colorhex2colorarray($color_mask);
-            } else {
-                include_once('Image/Transform/Driver/ColorsDefs.php');
-                $color_mask = (isset($colornames[$color_mask])) ? $colornames[$color_mask] : false;
-            }
-        }
+        $color_mask = $this->_getColor('canvasColor', $options,
+                                        array(255, 255, 255));
 
         $mask   = imagecolorresolve($this->imageHandle, $color_mask[0], $color_mask[1], $color_mask[2]);
 
@@ -287,12 +276,16 @@ class Image_Transform_Driver_GD extends Image_Transform
     function crop($width, $height, $x = 0, $y = 0)
     {
         if (function_exists('ImageCreateTrueColor')) {
-            $new_img =ImageCreateTrueColor($new_x, $new_y);
+            $new_img = @ImageCreateTrueColor($width, $height);
         }
         if (!$new_img) {
-            $new_img =ImageCreate($new_x, $new_y);
+            $new_img = ImageCreate($width, $height);
         }
-        imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height);
+        if (!imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height)) {
+            imagedestroy($new_img);
+            return PEAR::raiseError('Failed transformation: crop()',
+                IMAGE_TRANSFORM_ERROR_FAILED);
+        }
 
         $this->old_image = $this->imageHandle;
         $this->imageHandle = $new_img;
@@ -328,24 +321,24 @@ class Image_Transform_Driver_GD extends Image_Transform
     * @param mixed $options Optional parameters
     *
     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
-    * @access private
+    * @access protected
     */
     function _resize($new_x, $new_y, $options = null)
     {
-        $options = array_merge($this->_options, $options);
-
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
 
         if (function_exists('ImageCreateTrueColor')) {
-            $new_img =ImageCreateTrueColor($new_x, $new_y);
+            $new_img = @ImageCreateTrueColor($new_x, $new_y);
         }
         if (!$new_img) {
-            $new_img =ImageCreate($new_x, $new_y);
+            $new_img = ImageCreate($new_x, $new_y);
         }
 
-        if ($options['scaleMethod'] != 'pixel' && function_exists('ImageCopyResampled')) {
+        $scaleMethod = $this->_getOption('scaleMethod', $options, 'smooth');
+        $icr_res = null;
+        if ($scaleMethod != 'pixel' && function_exists('ImageCopyResampled')) {
             $icr_res = ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         }
         if (!$icr_res) {
@@ -389,14 +382,28 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function save($filename, $type = '', $quality = null)
     {
-        $type = ($type == '') ? $this->type : $type;
+        $type = strtolower(($type == '') ? $this->type : $type);
+        switch ($type) {
+            case 'jpg':
+                $type = 'jpeg';
+                break;
+        }
         if (!$this->supportsType($type, 'w')) {
             return PEAR::raiseError('Image type not supported for output',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
+        $options = array();
+        if (!is_null($quality)) {
+            $options['quality'] = $quality;
+        }
+        $quality = $this->_getOption('quality', $options, 75);
+
         $functionName   = 'image' . $type;
-        $functionName($this->imageHandle, $filename, $quality) ;
+        if (!$functionName($this->imageHandle, $filename, $quality)) {
+            return PEAR::raiseError('Couldn\'t save image to file',
+                IMAGE_TRANSFORM_ERROR_IO);
+        }
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
@@ -410,7 +417,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      *
      * This method adds the Content-type HTTP header
      *
-     * @param string $type (JPG, PNG...);
+     * @param string $type (JPEG, PNG...);
      * @param int    $quality 75
      *
      * @return bool|PEAR_Error TRUE or PEAR_Error object on error
@@ -418,15 +425,28 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function display($type = '', $quality = null)
     {
-        $type    = ($type == '') ? $this->type : $type;
-        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
+        $type    = strtolower(($type == '') ? $this->type : $type);
+        switch ($type) {
+            case 'jpg':
+                $type = 'jpeg';
+                break;
+        }
+        $options = array();
+        if (!is_null($quality)) {
+            $options['quality'] = $quality;
+        }
+        $quality = $this->_getOption('quality', $options, 75);
         if (!$this->supportsType($type, 'w')) {
             return PEAR::raiseError('Image type not supported for output',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $functionName = 'Image' . $type;
         header('Content-type: ' . $this->getMimeType($type));
-        $functionName($this->imageHandle, '', $quality);
+        if (!$functionName($this->imageHandle, '', $quality)) {
+            return PEAR::raiseError('Couldn\'t output image.',
+                IMAGE_TRANSFORM_ERROR_IO);
+        }
+
         $this->imageHandle = $this->old_image;
         if (!$this->keep_settings_on_save) {
             $this->free();
@@ -442,12 +462,16 @@ class Image_Transform_Driver_GD extends Image_Transform
     function free()
     {
         $this->resized = false;
-        ImageDestroy($this->imageHandle);
-        if ($this->old_image){
-            ImageDestroy($this->old_image);
+        if (is_resource($this->imageHandle)) {
+            ImageDestroy($this->imageHandle);
+            $this->imageHandle = null;
+
+            if ($this->old_image){
+                ImageDestroy($this->old_image);
+                $this->old_image = null;
+            }
         }
     }
-
 }
 
 ?>
