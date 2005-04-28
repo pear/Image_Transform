@@ -370,22 +370,28 @@ class Image_Transform_Driver_GD extends Image_Transform
     }
 
     /**
-     * Saves the image to a file
+     * Helper method to save to a file or output the image
      *
-     * @param string $filename the name of the file to write to
+     * @param string $filename the name of the file to write to (blank to output)
      * @param string $types    define the output format, default
      *                          is the current used format
      * @param int    $quality  output DPI, default is 75
      *
      * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
-     * @access public
+     * @access protected
      */
-    function save($filename, $type = '', $quality = null)
+    function _generate($filename, $type = '', $quality = null)
     {
         $type = strtolower(($type == '') ? $this->type : $type);
+        $options = (is_array($quality)) ? $quality : array();
         switch ($type) {
             case 'jpg':
                 $type = 'jpeg';
+            case 'jpeg':
+                if (is_numeric($quality)) {
+                    $options['quality'] = $quality;
+                }
+                $quality = $this->_getOption('quality', $options, 75);
                 break;
         }
         if (!$this->supportsType($type, 'w')) {
@@ -393,17 +399,23 @@ class Image_Transform_Driver_GD extends Image_Transform
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
-        $options = array();
-        if (!is_null($quality)) {
-            $options['quality'] = $quality;
+        if ($filename == '') {
+            header('Content-type: ' . $this->getMimeType($type));
         }
-        $quality = $this->_getOption('quality', $options, 75);
 
-        $functionName   = 'image' . $type;
-        if (!$functionName($this->imageHandle, $filename, $quality)) {
+        $functionName = 'image' . $type;
+        switch ($type) {
+            case 'jpeg':
+                $result = $functionName($this->imageHandle, $filename, $quality);
+                break;
+            default:
+                $result = $functionName($this->imageHandle, $filename);
+        }
+        if (!$result) {
             return PEAR::raiseError('Couldn\'t save image to file',
                 IMAGE_TRANSFORM_ERROR_IO);
         }
+        $this->imageHandle = $this->old_image;
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
@@ -425,33 +437,27 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function display($type = '', $quality = null)
     {
-        $type    = strtolower(($type == '') ? $this->type : $type);
-        switch ($type) {
-            case 'jpg':
-                $type = 'jpeg';
-                break;
-        }
-        $options = array();
-        if (!is_null($quality)) {
-            $options['quality'] = $quality;
-        }
-        $quality = $this->_getOption('quality', $options, 75);
-        if (!$this->supportsType($type, 'w')) {
-            return PEAR::raiseError('Image type not supported for output',
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
-        }
-        $functionName = 'Image' . $type;
-        header('Content-type: ' . $this->getMimeType($type));
-        if (!$functionName($this->imageHandle, '', $quality)) {
-            return PEAR::raiseError('Couldn\'t output image.',
-                IMAGE_TRANSFORM_ERROR_IO);
-        }
+        return $this->_generate('', $type, $quality);;
+    }
 
-        $this->imageHandle = $this->old_image;
-        if (!$this->keep_settings_on_save) {
-            $this->free();
+    /**
+     * Saves the image to a file
+     *
+     * @param string $filename the name of the file to write to
+     * @param string $type     the output format, default
+     *                          is the current used format
+     * @param int    $quality  default is 75
+     *
+     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @access public
+     */
+    function save($filename, $type = '', $quality = null)
+    {
+        if (!trim($filename)) {
+            return PEAR::raiseError('Filename missing',
+                IMAGE_TRANSFORM_ERROR_ARGUMENT);
         }
-        return true;
+        return $this->_generate($filename, $type, $quality);
     }
 
     /**
@@ -464,13 +470,12 @@ class Image_Transform_Driver_GD extends Image_Transform
         $this->resized = false;
         if (is_resource($this->imageHandle)) {
             ImageDestroy($this->imageHandle);
-            $this->imageHandle = null;
-
-            if ($this->old_image){
-                ImageDestroy($this->old_image);
-                $this->old_image = null;
-            }
         }
+        $this->imageHandle = null;
+        if (is_resource($this->old_image)){
+            ImageDestroy($this->old_image);
+        }
+        $this->old_image = null;
     }
 }
 
