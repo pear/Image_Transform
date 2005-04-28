@@ -213,6 +213,42 @@ class Image_TransformTest extends PHPUnit_TestCase
     }
 
     /**
+     * Tests the fit() method
+     *
+     */
+    function testFit150x200px()
+    {
+        if (!$this->valid) {
+            return $this->assertFalse(true, 'Class constructor failed.');
+        }
+        Image_TransformTestHelper::log('Fit into 150x200px box',
+            'fit150x200px.jpg', 'mixed.jpg');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mixed.jpg'))
+                  && (true === $this->imager->fit(150, 200))
+                  && (true === $this->imager->save(TEST_TMP_DIR
+                      . $this->prepend  . 'fit150x200px.jpg', 'jpeg'));
+        return $this->assertEquals(true, $result);
+    }
+
+    /**
+     * Tests the fit() method
+     *
+     */
+    function testFit200x100px()
+    {
+        if (!$this->valid) {
+            return $this->assertFalse(true, 'Class constructor failed.');
+        }
+        Image_TransformTestHelper::log('Fit into 200x100px box',
+            'fit200x100px.jpg', 'mixed.jpg');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mixed.jpg'))
+                  && (true === $this->imager->fit(200, 100))
+                  && (true === $this->imager->save(TEST_TMP_DIR
+                      . $this->prepend  . 'fit200x100px.jpg', 'jpeg'));
+        return $this->assertEquals(true, $result);
+    }
+
+    /**
      * Tests the rotate() method
      *
      * Simple test

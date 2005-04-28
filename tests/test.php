@@ -16,8 +16,8 @@ $drivers = array(
 //    'Imagick',
 //    'Imagick2',
 //    'Imlib',
-    'NetPBM',
-    'IM',
+//    'NetPBM',
+//    'IM',
     'GD'
     );
 
@@ -40,7 +40,7 @@ define('TEST_TMP_DIR', TEST_DIR . 'tmp' . DIRECTORY_SEPARATOR);
 
 
 /**
- * You shouldn't ave to modify anything below this point
+ * You shouldn't have to modify anything below this point
  */
 
 if (isset($_REQUEST['drivers'])) {
