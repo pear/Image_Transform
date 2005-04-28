@@ -130,7 +130,9 @@ class Image_Transform
     var $_options = array(
         'quality'     => 75,
         'scaleMethod' => 'smooth',
-        'canvasColor' => array(255, 255, 255)
+        'canvasColor' => array(255, 255, 255),
+        'pencilColor' => array(0, 0, 0),
+        'textColor'   => array(0, 0, 0)
         );
 
 	/**
@@ -142,16 +144,15 @@ class Image_Transform
 
     /**
      * Supported image types
-     * @access protected
-     * @access protected
      * @var array
+     * @access protected
      */
     var $_supported_image_types = array();
 
     /**
      * Initialization error tracking
-     * @access private
      * @var object
+     * @access private
      **/
     var $_error = null;
 
@@ -159,8 +160,8 @@ class Image_Transform
      * associative array that tracks existence of programs
      * (for drivers using shell interface and a tiny performance
      * improvement if the clearstatcache() is used)
-     * @access protected
      * @var array
+     * @access protected
      */
     var $_programs = array();
 
@@ -895,12 +896,10 @@ class Image_Transform
      * @see colorhex2colorarray
      */
     function colorarray2colorhex($color) {
-        $r = dechex($color[0]);
-        $g = dechex($color[1]);
-        $b = dechex($color[2]);
-        $color = '#' . ((!isset($r{1})) ? '0' : '') . $r
-                     . ((!isset($g{1})) ? '0' : '') . $g
-                     . ((!isset($b{1})) ? '0' : '') . $b;
+        if (!is_array($color)) {
+            return false;
+        }
+        $color = sprintf('#%02X%02X%02X', @$color[0], @$color[1], @$color[2]);
         return (strlen($color) != 7) ? false : $color;
     }
 
@@ -993,6 +992,14 @@ class Image_Transform
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
+    /**
+     * Rotates the image clockwise
+     *
+     * @param float $angle angle of rotation in degres
+     * @param mixed $options
+     * @return bool|PEAR_Error TRUE on success, PEAR_Error object on error
+     * @access public
+     */
     function rotate($angle, $options = null)
     {
         return PEAR::raiseError('rotate() method not supported by driver',
@@ -1043,6 +1050,48 @@ class Image_Transform
     function grayscale()
     {
         return $this->greyscale();
+    }
+
+    /**
+     * Returns a color option
+     *
+     * @param string $colorOf one of 'canvasColor', 'pencilColor', 'fontColor'
+     * @param array  $options
+     * @param array  $default default value to return if color not found
+     * @return array an RGB color array
+     * @access protected
+     */
+    function _getColor($colorOf, $options = array(), $default = array(0, 0, 0))
+    {
+        $opt = array_merge($this->_options, (array) $options);
+        if (isset($opt[$colorOf])) {
+            $color = $opt[$colorOf];
+            if (is_array($color)) {
+                return $color;
+            }
+            if ($color{0} == '#') {
+                return $this->colorhex2colorarray($color);
+            }
+            static $colornames = array();
+            include_once('Image/Transform/Driver/ColorsDefs.php');
+            return (isset($colornames[$color])) ? $colornames[$color] : $default;
+        }
+        return $default;
+    }
+
+    /**
+     * Returns an option
+     *
+     * @param string $name name of option
+     * @param array  $options local override option array
+     * @param mixed  $default default value to return if option is not found
+     * @return mixed the option
+     * @access protected
+     */
+    function _getOption($name, $options = array(), $default = null)
+    {
+        $opt = array_merge($this->_options, (array) $options);
+        return (isset($opt[$name])) ? $opt[$name] : $default;
     }
 }
 
