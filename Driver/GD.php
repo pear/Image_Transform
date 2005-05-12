@@ -272,20 +272,15 @@ class Image_Transform_Driver_GD extends Image_Transform
      **/
     function mirror()
     {
-        if (function_exists('ImageCreateTrueColor')) {
-            $new_img = @ImageCreateTrueColor($this->new_x, $this->new_y);
-        }
-        if (!$new_img) {
-            $new_img = ImageCreate($this->new_x, $this->new_y);
-        }
-        for ($x = 0; $x < $this->new_x; ++$x) {
+        for ($x1 = 0; $x1 < $this->new_x / 2; ++$x1) {
             for ($y = 0; $y < $this->new_y; ++$y) {
-                imagecopy($new_img, $this->imageHandle, $x, $y,
-                    $this->new_x - 1 - $x, $y, 1, 1);
+                $x2 = $this->new_x - 1 - $x1;
+                $color1 = imagecolorat($this->imageHandle, $x1, $y);
+                $color2 = imagecolorat($this->imageHandle, $x2, $y);
+                imagesetpixel($this->imageHandle, $x1, $y, $color2);
+                imagesetpixel($this->imageHandle, $x2, $y, $color1);
             }
         }
-        imagedestroy($this->imageHandle);
-        $this->imageHandle = $new_img;
         return true;
     }
 
@@ -298,20 +293,15 @@ class Image_Transform_Driver_GD extends Image_Transform
      **/
     function flip()
     {
-        if (function_exists('ImageCreateTrueColor')) {
-            $new_img = @ImageCreateTrueColor($this->new_x, $this->new_y);
-        }
-        if (!$new_img) {
-            $new_img = ImageCreate($this->new_x, $this->new_y);
-        }
         for ($x = 0; $x < $this->new_x; ++$x) {
-            for ($y = 0; $y < $this->new_y; ++$y) {
-                imagecopy($new_img, $this->imageHandle, $x, $y,
-                    $x, $this->new_y - 1 - $y, 1, 1);
+            for ($y1 = 0; $y1 < $this->new_y / 2; ++$y1) {
+                $y2 = $this->new_y - 1 - $y1;
+                $color1 = imagecolorat($this->imageHandle, $x, $y1);
+                $color2 = imagecolorat($this->imageHandle, $x, $y2);
+                imagesetpixel($this->imageHandle, $x, $y1, $color2);
+                imagesetpixel($this->imageHandle, $x, $y2, $color1);
             }
         }
-        imagedestroy($this->imageHandle);
-        $this->imageHandle = $new_img;
         return true;
     }
 
