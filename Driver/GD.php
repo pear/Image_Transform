@@ -263,6 +263,57 @@ class Image_Transform_Driver_GD extends Image_Transform
         return true;
     }
 
+    /**
+     * Horizontal mirroring
+     *
+     * @return mixed TRUE or PEAR_Error object on error
+     * @access public
+     * @see flip()
+     **/
+    function mirror()
+    {
+        if (function_exists('ImageCreateTrueColor')) {
+            $new_img = @ImageCreateTrueColor($this->new_x, $this->new_y);
+        }
+        if (!$new_img) {
+            $new_img = ImageCreate($this->new_x, $this->new_y);
+        }
+        for ($x = 0; $x < $this->new_x; ++$x) {
+            for ($y = 0; $y < $this->new_y; ++$y) {
+                imagecopy($new_img, $this->imageHandle, $x, $y,
+                    $this->new_x - 1 - $x, $y, 1, 1);
+            }
+        }
+        imagedestroy($this->imageHandle);
+        $this->imageHandle = $new_img;
+        return true;
+    }
+
+    /**
+     * Vertical mirroring
+     *
+     * @return TRUE or PEAR Error object on error
+     * @access public
+     * @see mirror()
+     **/
+    function flip()
+    {
+        if (function_exists('ImageCreateTrueColor')) {
+            $new_img = @ImageCreateTrueColor($this->new_x, $this->new_y);
+        }
+        if (!$new_img) {
+            $new_img = ImageCreate($this->new_x, $this->new_y);
+        }
+        for ($x = 0; $x < $this->new_x; ++$x) {
+            for ($y = 0; $y < $this->new_y; ++$y) {
+                imagecopy($new_img, $this->imageHandle, $x, $y,
+                    $x, $this->new_y - 1 - $y, 1, 1);
+            }
+        }
+        imagedestroy($this->imageHandle);
+        $this->imageHandle = $new_img;
+        return true;
+    }
 
     /**
      * Crops image by size and start coordinates
