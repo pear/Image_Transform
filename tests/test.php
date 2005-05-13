@@ -15,9 +15,9 @@
 $drivers = array(
 //    'Imagick'
 //    'Imagick2',
-//    'Imlib',
-//    'NetPBM',
-//    'IM',
+//    'Imlib'
+//    'NetPBM'
+//    'IM'
     'GD'
     );
 
@@ -108,15 +108,13 @@ function test_driver($driver) {
     echo $result->toHTML();
 }
 
-
-
 /*
 $driver = 'GD';
 $t =& Image_Transform::factory($driver);
-print_r($t);
-$t->load(TEST_IMAGE_DIR . 'mixed.jpg');
-print_r($t->scaleByX(200));
-$t->save(TEST_TMP_DIR . $driver . DIRECTORY_SEPARATOR  . 'test.jpg', 'jpeg');
+//print_r($t);
+$t->load(TEST_IMAGE_DIR . 'alpha.png');
+print_r($t->mirror());
+$t->save(TEST_TMP_DIR . $driver . DIRECTORY_SEPARATOR  . 'test.png');
 exit;
 */
 

@@ -170,8 +170,8 @@ class Image_TransformTest extends PHPUnit_TestCase
             return $this->assertTrue(false, 'Have valid "imager" object to work with? ');
         }
         Image_TransformTestHelper::log('Mirror Left Right', 'mirror.png',
-            'mirror-flip.png');
-        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mirror-flip.png'))
+            'alpha.png');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'alpha.png'))
                   && (true === $this->imager->mirror())
                   && (true === $this->imager->save(TEST_TMP_DIR
                       . $this->prepend  . 'mirror.png', 'png'));
@@ -187,8 +187,8 @@ class Image_TransformTest extends PHPUnit_TestCase
             return $this->assertFalse(true, 'Class constructor failed.');
         }
         Image_TransformTestHelper::log('Flip Top Bottom', 'flip.png',
-            'mirror-flip.png');
-        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mirror-flip.png'))
+            'alpha.png');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'alpha.png'))
                   && (true === $this->imager->flip())
                   && (true === $this->imager->save(TEST_TMP_DIR
                       . $this->prepend  . 'flip.png', 'png'));
