@@ -266,8 +266,6 @@ class Image_Transform_Driver_GD extends Image_Transform
      **/
     function mirror()
     {
-        // this method doesn't seem to preserve transparency
-        // Faster...
         $new_img = $this->_createImage();
         for ($x = 0; $x < $this->new_x; ++$x) {
             imagecopy($new_img, $this->imageHandle, $x, 0,
@@ -287,8 +285,16 @@ class Image_Transform_Driver_GD extends Image_Transform
      **/
     function flip()
     {
-        // this method preserves transparency
-        // Slower...
+        $new_img = $this->_createImage();
+        for ($y = 0; $y < $this->new_y; ++$y) {
+            imagecopy($new_img, $this->imageHandle, 0, $y,
+                0, $this->new_y - $y - 1, $this->new_x, 1);
+        }
+        imagedestroy($this->imageHandle);
+        $this->imageHandle = $new_img;
+
+        /* for very large images we may want to use the following
+           Needs to find out what is the threshhold
         for ($x = 0; $x < $this->new_x; ++$x) {
             for ($y1 = 0; $y1 < $this->new_y / 2; ++$y1) {
                 $y2 = $this->new_y - 1 - $y1;
@@ -297,7 +303,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 imagesetpixel($this->imageHandle, $x, $y1, $color2);
                 imagesetpixel($this->imageHandle, $x, $y2, $color1);
             }
-        }
+        } */
         return true;
     }
 
@@ -559,6 +565,11 @@ class Image_Transform_Driver_GD extends Image_Transform
         if (!$new_img) {
             $new_img = ImageCreate($width, $height);
             imagepalettecopy($new_img, $this->imageHandle);
+            $color = imagecolortransparent($this->imageHandle);
+            if ($color != -1) {
+                imagecolortransparent($new_img, $color);
+                imagefill($new_img, 0, 0, $color);
+            }
         }
         return $new_img;
     }
