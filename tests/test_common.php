@@ -196,6 +196,24 @@ class Image_TransformTest extends PHPUnit_TestCase
     }
 
     /**
+     * Tests the flip() method with alpha-channel
+     */
+    function testFlipTopBottomWithAlphaChannel()
+    {
+        if (!$this->valid) {
+            return $this->assertFalse(true, 'Class constructor failed.');
+        }
+        Image_TransformTestHelper::log('Flip Top Bottom With Alpha Channel',
+            'flip-alpha.png', 'alpha-gradient.png');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR
+                                    . 'alpha-gradient.png'))
+                  && (true === $this->imager->flip())
+                  && (true === $this->imager->save(TEST_TMP_DIR
+                      . $this->prepend  . 'flip-alpha.png', 'png'));
+        return $this->assertEquals(true, $result);
+    }
+
+    /**
      * Tests the greyscale() method
      */
     function testGreyscale()
