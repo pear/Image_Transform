@@ -169,13 +169,7 @@ class Image_Transform_Driver_GD extends Image_Transform
         $this->new_x = $this->img_x + 2 * $border_width;
         $this->new_y = $this->img_y + 2 * $border_width;
 
-        if (function_exists('ImageCreateTrueColor') && $this->true_color) {
-            $new_img = @ImageCreateTrueColor($new_x, $new_y);
-        }
-        if (!$new_img) {
-            $new_img = ImageCreate($new_x, $new_y);
-            imagepalettecopy($new_img, $this->imageHandle);
-        }
+        $new_img = $this->_createImage($new_x, $new_y, $this->true_color);
 
         $options = array('pencilColor', $color);
         $color = $this->_getColor('pencilColor', $options, array(0, 0, 0));
@@ -272,15 +266,15 @@ class Image_Transform_Driver_GD extends Image_Transform
      **/
     function mirror()
     {
-        for ($x1 = 0; $x1 < $this->new_x / 2; ++$x1) {
-            for ($y = 0; $y < $this->new_y; ++$y) {
-                $x2 = $this->new_x - 1 - $x1;
-                $color1 = imagecolorat($this->imageHandle, $x1, $y);
-                $color2 = imagecolorat($this->imageHandle, $x2, $y);
-                imagesetpixel($this->imageHandle, $x1, $y, $color2);
-                imagesetpixel($this->imageHandle, $x2, $y, $color1);
-            }
+        // this method doesn't seem to preserve transparency
+        // Faster...
+        $new_img = $this->_createImage();
+        for ($x = 0; $x < $this->new_x; ++$x) {
+            imagecopy($new_img, $this->imageHandle, $x, 0,
+                $this->new_x - $x - 1, 0, 1, $this->new_y);
         }
+        imagedestroy($this->imageHandle);
+        $this->imageHandle = $new_img;
         return true;
     }
 
@@ -293,6 +287,8 @@ class Image_Transform_Driver_GD extends Image_Transform
      **/
     function flip()
     {
+        // this method preserves transparency
+        // Slower...
         for ($x = 0; $x < $this->new_x; ++$x) {
             for ($y1 = 0; $y1 < $this->new_y / 2; ++$y1) {
                 $y2 = $this->new_y - 1 - $y1;
@@ -318,12 +314,10 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
-        if (function_exists('ImageCreateTrueColor')) {
-            $new_img = @ImageCreateTrueColor($width, $height);
-        }
-        if (!$new_img) {
-            $new_img = ImageCreate($width, $height);
-        }
+        $width   = min($width,  $this->new_x - $x - 1);
+        $height  = min($height, $this->new_y - $y - 1);
+        $new_img = $this->_createImage($width, $height);
+
         if (!imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height)) {
             imagedestroy($new_img);
             return PEAR::raiseError('Failed transformation: crop()',
@@ -359,6 +353,9 @@ class Image_Transform_Driver_GD extends Image_Transform
     * It uses a bicubic interpolation algorithm to get far
     * better result.
     *
+    * Options:
+    *  - scaleMethod: "pixel" or "smooth"
+    *
     * @param int   $new_x   New width
     * @param int   $new_y   New height
     * @param mixed $options Optional parameters
@@ -372,14 +369,17 @@ class Image_Transform_Driver_GD extends Image_Transform
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
 
-        if (function_exists('ImageCreateTrueColor')) {
-            $new_img = @ImageCreateTrueColor($new_x, $new_y);
-        }
-        if (!$new_img) {
-            $new_img = ImageCreate($new_x, $new_y);
+        if ($this->new_x == $new_x && $this->new_y == $new_y) {
+            return true;
         }
 
         $scaleMethod = $this->_getOption('scaleMethod', $options, 'smooth');
+
+        // Make sure to get a true color image if doing resampled resizing
+        // otherwise get the same type of image
+        $trueColor = ($scaleMethod == 'pixel') ? null : true;
+        $new_img = $this->_createImage($new_x, $new_y, $trueColor);
+
         $icr_res = null;
         if ($scaleMethod != 'pixel' && function_exists('ImageCopyResampled')) {
             $icr_res = ImageCopyResampled($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
@@ -522,6 +522,45 @@ class Image_Transform_Driver_GD extends Image_Transform
             ImageDestroy($this->old_image);
         }
         $this->old_image = null;
+    }
+
+    /**
+     * Returns a new image for temporary processing
+     *
+     * @param int $width width of the new image
+     * @param int $height height of the new image
+     * @param bool $trueColor force which type of image to create
+     * @return resource a GD image resource
+     * @access protected
+     */
+    function _createImage($width = -1, $height = -1, $trueColor = null)
+    {
+        if ($width == -1) {
+            $width = $this->new_x;
+        }
+        if ($height == -1) {
+            $height = $this->new_y;
+        }
+
+        $new_img = null;
+        if (is_null($trueColor)) {
+            if (function_exists('imageistruecolor')) {
+                $createtruecolor = imageistruecolor($this->imageHandle);
+            } else {
+                $createtruecolor = true;
+            }
+        } else {
+            $createtruecolor = $trueColor;
+        }
+        if ($createtruecolor
+            && function_exists('ImageCreateTrueColor')) {
+            $new_img = @ImageCreateTrueColor($width, $height);
+        }
+        if (!$new_img) {
+            $new_img = ImageCreate($width, $height);
+            imagepalettecopy($new_img, $this->imageHandle);
+        }
+        return $new_img;
     }
 }
 
