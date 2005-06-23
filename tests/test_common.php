@@ -122,6 +122,7 @@ class Image_TransformTest extends PHPUnit_TestCase
             $file = 'imageinfo_96x32.' . $format;
             if (true === ($r = $this->imager->load(TEST_IMAGE_DIR . $file))) {
                 $result[] = $format;
+                $this->assertEquals(true, true);
             }
         }
         return $this->assertEquals(array_keys($this->formats), $result);
@@ -323,22 +324,41 @@ class Image_TransformTest extends PHPUnit_TestCase
     }
 
     /**
-     * Tests the resize() method
+     * Tests the resize() method with true color images
      *
      * Tests the ability to resize an image without keeping width/height
      * proportions.
      */
-    function testResizeTo150x150px()
+    function testResizeTrueColorTo150x150px()
     {
         if (!$this->valid) {
             return $this->assertFalse(true, 'Class constructor failed.');
         }
-        Image_TransformTestHelper::log('Resize to 150x150 px',
+        Image_TransformTestHelper::log('Resize True Color Image to 150x150 px',
             'resizeTo150x150px.jpg', 'mixed.jpg');
         $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mixed.jpg'))
                   && (true === $this->imager->resize(150, 150))
                   && (true === $this->imager->save(TEST_TMP_DIR
                       . $this->prepend  . 'resizeTo150x150px.jpg', 'jpeg'));
+        return $this->assertEquals(true, $result);
+    }
+    /**
+     * Tests the resize() method with indexed images
+     *
+     * Tests the ability to resize an image without keeping width/height
+     * proportions.
+     */
+    function testResizeIndexedTo150x150px()
+    {
+        if (!$this->valid) {
+            return $this->assertFalse(true, 'Class constructor failed.');
+        }
+        Image_TransformTestHelper::log('Resize Indexed Image to 150x150 px',
+            'resizeTo150x150px.png', 'mixed.png');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mixed.png'))
+                  && (true === $this->imager->resize(150, 150))
+                  && (true === $this->imager->save(TEST_TMP_DIR
+                      . $this->prepend  . 'resizeTo150x150px.png', 'png'));
         return $this->assertEquals(true, $result);
     }
 
