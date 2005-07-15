@@ -1,6 +1,0 @@
-- Add borders method
-- Add AddDropShadow
-- Add ConvertToGrayScale
-- Add gamma to imagick driver (after adding it to imagick itself)
-- Returning true on success or PEAR::Error
-- Win32 tests
