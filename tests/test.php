@@ -14,10 +14,10 @@
 // Pick which driver(s) to test
 $drivers = array(
 //    'Imagick'
-//    'Imagick2',
+    'Imagick2',
 //    'Imlib'
-//    'NetPBM'
-//    'IM'
+    'NetPBM',
+    'IM',
     'GD'
     );
 
