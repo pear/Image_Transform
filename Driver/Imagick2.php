@@ -303,6 +303,10 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
+        // Sanity check
+        if (!$this->intersects($width, $height, $x, $y)) {
+            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
         if (!imagick_crop($this->imageHandle, $x, $y, $x + $width, $y + $height)) {
             return $this->raiseError('Couldn\'t crop image.',
                 IMAGE_TRANSFORM_ERROR_FAILED);

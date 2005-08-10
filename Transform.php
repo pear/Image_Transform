@@ -33,31 +33,28 @@ require_once 'PEAR.php';
 
 /**
  * Error code for unsupported library, image format or methods
- *
- * @name IMAGE_TRANSFORM_ERROR_UNSUPPORTED
  */
 define('IMAGE_TRANSFORM_ERROR_UNSUPPORTED', 1);
 
 /**
  * Error code for failed transformation operations
- *
- * @name IMAGE_TRANSFORM_ERROR_FAILED
  */
 define('IMAGE_TRANSFORM_ERROR_FAILED', 2);
 
 /**
  * Error code for failed i/o (Input/Output) operations
- *
- * @name IMAGE_TRANSFORM_ERROR_IO
  */
 define('IMAGE_TRANSFORM_ERROR_IO', 3);
 
 /**
  * Error code for invalid arguments
- *
- * @name IMAGE_TRANSFORM_ERROR_ARGUMENT
  */
 define('IMAGE_TRANSFORM_ERROR_ARGUMENT', 4);
+
+/**
+ * Error code for out-of-bound related errors
+ */
+define('IMAGE_TRANSFORM_ERROR_OUTOFBOUND', 5);
 
 
 
@@ -1101,6 +1098,36 @@ class Image_Transform
     {
         $opt = array_merge($this->_options, (array) $options);
         return (isset($opt[$name])) ? $opt[$name] : $default;
+    }
+
+    /**
+     * Checks if the rectangle passed intersects with the current image
+     *
+     * @param int $width
+     * @param int $height
+     * @param int $x X-coordinate
+     * @param int $y Y-coordinate
+     * @return bool|PEAR_Error TRUE if intersects, FALSE if not, and PEAR_Error on error
+     * @access public
+     */
+    function intersects($width, $height, $x, $y)
+    {
+        $left  = $x;
+        $right = $x + $width;
+        if ($right < $left) {
+            $left  = $right;
+            $right = $x;
+        }
+        $top    = $y;
+        $bottom = $y + $height;
+        if ($bottom < $top) {
+            $top    = $bottom;
+            $bottom = $y;
+        }
+        return (bool) ($left < $this->new_x
+                       && $right >= 0
+                       && $top < $this->new_y
+                       && $bottom >= 0);
     }
 }
 

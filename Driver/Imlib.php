@@ -30,13 +30,13 @@ require_once 'Image/Transform.php';
 //    $img->display();
 
 // }}}
-// {{{ class Image_Transform_Driver_Imlib 
+// {{{ class Image_Transform_Driver_Imlib
 
 /**
- * Performs image manipulation with the imlib library. 
+ * Performs image manipulation with the imlib library.
  *
  * @see http://mmcc.cx/php_imlib/index.php
- * @version Revision: 1.0 
+ * @version Revision: 1.0
  * @author  Jason Rust <jrust@rustyparts.com>
  * @package Image_Transform
  */
@@ -124,7 +124,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *                                  'angle' A imlib direction constant
      *                              )
      *
-     * @return TRUE or PEAR Error object on error 
+     * @return TRUE or PEAR Error object on error
      * @see PEAR::isError()
      */
 	function addText($params)
@@ -163,7 +163,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @param int       $angle      Rotation angle
      *
-     * @return TRUE or PEAR Error object on error 
+     * @return TRUE or PEAR Error object on error
      */
     function rotate($angle)
     {
@@ -191,7 +191,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
             $this->img_x = $new_x;
             $this->img_y = $new_y;
         }
-        
+
         return true;
     }
 
@@ -203,21 +203,25 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @param int $in_cropWidth The width of the new image
      * @param int $in_cropHeight The height of the new image
-     * @param int $in_cropX The X coordinate on the image to start the crop 
-     * @param int $in_cropY The Y coordinate on the image to start the crop 
+     * @param int $in_cropX The X coordinate on the image to start the crop
+     * @param int $in_cropY The Y coordinate on the image to start the crop
      *
      * @access public
-     * @return TRUE or PEAR Error object on error 
+     * @return TRUE or PEAR Error object on error
      */
     function crop($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)
     {
-        $this->oldHandle = $this->imageHandle; 
+        // Sanity check
+        if (!$this->_intersects($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)) {
+            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
+        $this->oldHandle = $this->imageHandle;
         $this->imageHandle = imlib_create_cropped_image($this->imageHandle, $in_cropX, $in_cropY, $in_cropWidth, $in_cropHeight);
-        $this->img_x = $in_cropWidth; 
+        $this->img_x = $in_cropWidth;
         $this->img_y = $in_cropHeight;
         return true;
     }
-    
+
     // }}}
     // {{{ save()
 
@@ -342,7 +346,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         $this->img_x = imlib_image_get_width($this->imageHandle);
         $this->img_y = imlib_image_get_height($this->imageHandle);
         $this->type = imlib_image_format($this->imageHandle);
-        $this->type = ($this->type == '') ? 'png' : $this->type; 
+        $this->type = ($this->type == '') ? 'png' : $this->type;
         return true;
     }
 
@@ -353,7 +357,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @return TRUE on success, PEAR Error object on error
      */
-    function mirror() 
+    function mirror()
     {
         imlib_image_flip_horizontal($this->imageHandle);
         return true;
@@ -364,7 +368,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @return TRUE on success, PEAR Error object on error
      */
-    function flip() 
+    function flip()
     {
         imlib_image_flip_vertical($this->imageHandle);
         return true;

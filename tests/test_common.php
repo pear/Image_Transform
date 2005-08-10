@@ -162,6 +162,24 @@ class Image_TransformTest extends PHPUnit_TestCase
         return $this->assertEquals(true, $result);
     }
 
+
+    /**
+     * Tests the crop() method
+     */
+    function testCropBiggerThanActualImage()
+    {
+        if (!$this->valid) {
+            return $this->assertFalse(true, 'Class constructor failed.');
+        }
+        Image_TransformTestHelper::log('Crop Bigger Than Actual Image',
+            'crop_40x41-at-0x0.png', 'mirror-flip.png');
+        $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mirror-flip.png'))
+                  && (true === $this->imager->crop(40, 41))
+                  && (true === $this->imager->save(TEST_TMP_DIR
+                      . $this->prepend  . 'crop_40x41-at-0x0.png', 'png'));
+        return $this->assertEquals(true, $result);
+    }
+
     /**
      * Tests the mirror() method
      */

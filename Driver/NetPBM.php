@@ -232,15 +232,20 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
     /**
      * Crop an image
      *
-     * @param int width Cropped image width
-     * @param int height Cropped image height
-     * @param int x X-coordinate to crop at
-     * @param int y Y-coordinate to crop at
+     * @param int $width Cropped image width
+     * @param int $height Cropped image height
+     * @param int $x positive X-coordinate to crop at
+     * @param int $y positive Y-coordinate to crop at
      *
      * @return mixed TRUE or a PEAR error object on error
+     * @todo keep track of the new cropped size
      **/
     function crop($width, $height, $x = 0, $y = 0)
     {
+        // Sanity check
+        if (!$this->intersects($width, $height, $x, $y)) {
+            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
         if ($x != 0 || $y != 0
             || $width != $this->img_x
             || $height != $this->img_y) {

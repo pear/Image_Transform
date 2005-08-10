@@ -314,14 +314,19 @@ class Image_Transform_Driver_GD extends Image_Transform
      * @param int height Cropped image height
      * @param int x X-coordinate to crop at
      * @param int y Y-coordinate to crop at
-     *
      * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
      * @access public
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
-        $width   = min($width,  $this->new_x - $x - 1);
-        $height  = min($height, $this->new_y - $y - 1);
+        // Sanity check
+        if (!$this->intersects($width, $height, $x, $y)) {
+            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
+        $x = min($this->new_x, max(0, $x));
+        $y = min($this->new_y, max(0, $y));
+        $width   = min($width,  $this->new_x - $x);
+        $height  = min($height, $this->new_y - $y);
         $new_img = $this->_createImage($width, $height);
 
         if (!imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height)) {
