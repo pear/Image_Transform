@@ -367,7 +367,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      */
     function display($type = '', $quality = null)
     {
-        $type    = strtoupper(($type == '') ? $type : $this->type);
+        $type    = strtoupper(($type == '') ? $this->type : $type);
         switch ($type) {
             case 'JPEG':
                 $type = 'JPG';
