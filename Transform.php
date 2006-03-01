@@ -193,21 +193,22 @@ class Image_Transform
      * @see PEAR::isError()
      * @see Image_Transform::setOption()
      */
-    function &factory($driver)
+    function &factory($driver = '')
     {
-		if ('' == $driver) {
-            $aExtensions = array(
+		if ($driver = '') {
+            $extensions = array(
                 'imagick' => 'Imagick2',
                 'gd'      => 'GD',
                 'imlib'   => 'Imlib');
-            foreach ($aExtensions as $sExt => $sDriver) {
-                if (PEAR::loadExtension($sExt)) {
-                    $driver = $sDriver;
+
+            foreach ($extensions as $ext => $ext_driver) {
+                if (PEAR::loadExtension($ext)) {
+                    $driver = $ext_driver;
                     break;
                 }
             }
             if (!$driver) {
-                return PEAR::raiseError('No image library specified... aborting.  You must call ::factory() with a proper library to load.',
+                return PEAR::raiseError('No image library specified and none can be found.  You must specify driver in factory() call.',
                     IMAGE_TRANSFORM_ERROR_ARGUMENT);
             }
 		}
