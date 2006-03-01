@@ -455,9 +455,9 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         if ($filename == '') {
             header('Content-type: ' . $this->getMimeType($type));
-            $action = 'save image to file';
-        } else {
             $action = 'output image';
+        } else {
+            $action = 'save image to file';
         }
 
         $functionName = 'image' . $type;
@@ -466,7 +466,11 @@ class Image_Transform_Driver_GD extends Image_Transform
                 $result = $functionName($this->imageHandle, $filename, $quality);
                 break;
             default:
-                $result = $functionName($this->imageHandle, $filename);
+                if ($filename == '') {
+                    $result = $functionName($this->imageHandle);
+                } else {
+                    $result = $functionName($this->imageHandle, $filename);
+                }
         }
         if (!$result) {
             return PEAR::raiseError('Couldn\'t ' . $action,
