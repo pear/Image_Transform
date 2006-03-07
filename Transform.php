@@ -280,8 +280,12 @@ class Image_Transform
      */
     function scaleByX($new_x)
     {
+        if ($new_x <= 0) {
+            return PEAR::raiseError('New size must be strictly positive',
+                                        IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
         $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
-        return $this->_resize($new_x, $new_y);
+        return $this->_resize(max(1, $new_x), max(1, $new_y));
     } // End scaleByX
 
     /**
@@ -305,8 +309,12 @@ class Image_Transform
      */
     function scaleByY($new_y)
     {
+        if ($new_y <= 0) {
+            return PEAR::raiseError('New size must be strictly positive',
+                                        IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
         $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
-        return $this->_resize($new_x, $new_y);
+        return $this->_resize(max(1, $new_x), max(1, $new_y));
     } // End scaleByY
 
     /**
@@ -355,9 +363,13 @@ class Image_Transform
      */
     function scaleByFactor($size)
     {
+        if ($size <= 0) {
+            return PEAR::raiseError('New size must be strictly positive',
+                                        IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
         $new_x = round($size * $this->img_x, 0);
         $new_y = round($size * $this->img_y, 0);
-        return $this->_resize($new_x, $new_y);
+        return $this->_resize(max(1, $new_x), max(1, $new_y));
     } // End scaleByFactor
 
     /**
@@ -371,14 +383,18 @@ class Image_Transform
      */
     function scaleMaxLength($size)
     {
-         if ($this->img_x >= $this->img_y) {
+        if ($size <= 0) {
+            return PEAR::raiseError('New size must be strictly positive',
+                                        IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
+        if ($this->img_x >= $this->img_y) {
             $new_x = $size;
             $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
         } else {
             $new_y = $size;
             $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
         }
-        return $this->_resize($new_x, $new_y);
+        return $this->_resize(max(1, $new_x), max(1, $new_y));
     } // End scaleMaxLength
 
     /**
