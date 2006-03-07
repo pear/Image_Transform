@@ -96,11 +96,12 @@ class Image_Transform_Driver_Imagick extends Image_Transform
      *
      * @param int   new_x   new width
      * @param int   new_y   new width
+     * @param mixed $options Optional parameters
      *
      * @return none
      * @see PEAR::isError()
      */
-    function _resize($new_x, $new_y)
+    function _resize($new_x, $new_y, $options = null)
     {
         if ($img2 = imagick_copy_resize($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_CUBIC, 1)){
             $this->oldImage = $this->imageHandle;

@@ -63,11 +63,12 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
     *
     * @param $new_x int  new width
     * @param $new_y int  new height
+    * @param mixed $options Optional parameters
     *
     * @return true on success or PEAR Error object on error
     * @see PEAR::isError()
     */
-    function _resize($new_x, $new_y) {
+    function _resize($new_x, $new_y, $options = null) {
         if ($this->resized === true) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }

@@ -265,7 +265,7 @@ class Image_Transform
                  : $this->_parse_size($new_y, $this->img_y);
 
         // Now do the library specific resizing.
-        return $this->_resize($new_x, $new_y);
+        return $this->_resize($new_x, $new_y, $options);
     } // End resize
 
 
