@@ -416,6 +416,8 @@ class Image_Transform
      * it will be scaled down to fit inside of it.
      * If the image is smaller, nothing is done.
      *
+     * @param  integer $width
+     * @param  integer $height
      * @return bool|PEAR_Error TRUE or PEAR_Error object on error
      * @access public
      */
@@ -434,6 +436,38 @@ class Image_Transform
         } else {
             return $this->scaleByY($height);
         }
+    }
+
+    /**
+     * Fits the image in the specified width
+     *
+     * If the image is wider than the width specified by $width,
+     * it will be scaled down to fit inside of it.
+     * If the image is smaller, nothing is done.
+     *
+     * @param integer $width
+     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @access public
+     */
+    function fitX($width)
+    {
+        return ($this->img_x <= $width) ? true : $this->scaleByX($width);
+    }
+
+    /**
+     * Fits the image in the specified height
+     *
+     * If the image is taller than the height specified by $height,
+     * it will be scaled down to fit inside of it.
+     * If the image is smaller, nothing is done.
+     *
+     * @param integer $height
+     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @access public
+     */
+    function fitY($height)
+    {
+        return ($this->img_y <= $height) ? true : $this->scaleByY($height);
     }
 
     /**
