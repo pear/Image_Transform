@@ -195,7 +195,7 @@ class Image_Transform
      */
     function &factory($driver = '')
     {
-		if ($driver = '') {
+		if ($driver == '') {
             $extensions = array(
                 'imagick' => 'Imagick2',
                 'gd'      => 'GD',
