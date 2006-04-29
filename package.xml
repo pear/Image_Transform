@@ -44,6 +44,7 @@ It provides :
     <state>alpha</state>
     <notes>- #6011, call to imagick_crop is using incorrect parameters (gauthierm)
 - #6452, add a resize example (msaraujo at php dot net)
+- #599, parameter $quality in method save() not recognized in some drivers
 </notes>
     <filelist>
       <dir name="/" baseinstalldir="Image">
