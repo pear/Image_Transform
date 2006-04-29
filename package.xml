@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <package version="1.0">
   <name>Image_Transform</name>
   <summary>Provides a standard interface to manipulate images using different libraries</summary>
@@ -24,50 +24,59 @@ It provides :
       <email>peter@mapledesign.co.uk</email>
       <role>lead</role>
     </maintainer>
-      <maintainer>
-        <user>pajoye</user>
-        <name>Pierre-Alain Joye</name>
-        <email>paj@pearfr.org</email>
-        <role>lead</role>
-      </maintainer>
-      <maintainer>
-        <user>jausions</user>
-        <name>Philippe Jausions</name>
-        <email>Philippe.Jausions@11abacus.com</email>
-        <role>lead</role>
-      </maintainer>
+    <maintainer>
+      <user>pajoye</user>
+      <name>Pierre-Alain Joye</name>
+      <email>paj@pearfr.org</email>
+      <role>lead</role>
+    </maintainer>
+    <maintainer>
+      <user>jausions</user>
+      <name>Philippe Jausions</name>
+      <email>Philippe.Jausions@11abacus.com</email>
+      <role>lead</role>
+    </maintainer>
   </maintainers>
   <release>
     <version>0.9.0</version>
     <date>2005-07-15</date>
     <license>PHP License</license>
     <state>alpha</state>
-    <notes>Fixes quite a lot of problems, but still far from stable. GD driver should be much better. ImageMagick is the best driver, especially to deal with transparent and alpha-channel images. Due to the size of the images, the tests are not packaged, use CVS instead.</notes>
+    <notes>- #6011, call to imagick_crop is using incorrect parameters (gauthierm)
+- #6452, add a resize example (msaraujo at php dot net)
+</notes>
     <filelist>
-     <dir name="/" baseinstalldir="Image">
-      <file role="php">Transform.php</file>
-      <dir name="Driver" role="php" baseinstalldir="Image/Transform">
-       <file>IMAGETYPE.php</file>
-       <file>image_type_to_mime_type.php</file>
-       <file>GD.php</file>
-       <file>GD1.php</file>
-       <file>IM.php</file>
-       <file>NetPBM.php</file>
-       <file>Imagick.php</file>
-       <file>Imagick2.php</file>
-       <file>Imlib.php</file>
-       <file>ColorsDefs.php</file>
-       <dir name="Imagick" role="php">
-        <file>ImageTypes.php</file>
-       </dir>
+      <dir name="/" baseinstalldir="Image">
+        <file role="php">Transform.php</file>
+        <dir name="Driver" role="php" baseinstalldir="Image/Transform">
+          <file>IMAGETYPE.php</file>
+          <file>image_type_to_mime_type.php</file>
+          <file>GD.php</file>
+          <file>GD1.php</file>
+          <file>IM.php</file>
+          <file>NetPBM.php</file>
+          <file>Imagick.php</file>
+          <file>Imagick2.php</file>
+          <file>Imlib.php</file>
+          <file>ColorsDefs.php</file>
+          <dir name="Imagick" role="php">
+            <file>ImageTypes.php</file>
+          </dir>
+        </dir>
       </dir>
-     </dir>
     </filelist>
   </release>
   <deps>
-  <!--  <dep type="pkg" rel="has">System_Command</dep>  needs version dependency on release fixed for Windows -->
- </deps>
+<!--  <dep type="pkg" rel="has">System_Command</dep>  needs version dependency on release fixed for Windows -->
+  </deps>
   <changelog>
+    <release>
+      <version>0.9.0</version>
+      <date>2005-07-15</date>
+      <license>PHP License</license>
+      <state>alpha</state>
+      <notes>Fixes quite a lot of problems, but still far from stable. GD driver should be much better. ImageMagick is the best driver, especially to deal with transparent and alpha-channel images. Due to the size of the images, the tests are not packaged, use CVS instead.</notes>
+    </release>
     <release>
       <version>0.8</version>
       <date>2003-12-29</date>
