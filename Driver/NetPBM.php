@@ -543,14 +543,14 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      * @param int $quality 75
      * @return TRUE or PEAR Error object on error
      */
-    function save($filename, $type = null, $quality = null)
+    function save($filename, $type = null, $quality = 75)
     {
         $type    = (is_null($type)) ? $this->type : $type;
         $options = array();
         if (!is_null($quality)) {
             $options['quality'] = $quality;
         }
-        $quality = $this->_getOption('quality', $options, 75);
+        $quality = $this->_getOption('quality', $options, $quality);
 
         $nullDevice = (OS_WINDOWS) ? 'nul' : '/dev/null';
 

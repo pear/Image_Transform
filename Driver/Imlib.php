@@ -235,7 +235,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @return TRUE on success or PEAR Error object on error
      */
-    function save($filename, $type = '', $quality = null)
+    function save($filename, $type = '', $quality = 75)
     {
         if (!is_resource($this->imageHandle)) {
             return PEAR::raiseError('Invalid image', true);
