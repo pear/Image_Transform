@@ -187,7 +187,10 @@ class Image_Transform_Driver_Imagick extends Image_Transform
      */
     function save($filename, $type='', $quality = 75)
     {
-        if ($type == '') {
+        if (function_exists('imagick_setcompressionquality')) {
+            imagick_setcompressionquality($this->imageHandle, $quality);
+        }
+        if ($type != '') {
             $type = strtoupper($type);
             imagick_write($this->imageHandle, $filename, $type);
         } else {
