@@ -139,12 +139,12 @@ class Image_Transform
         'textColor'   => array(0, 0, 0)
         );
 
-	/**
-	 * Flag for whether settings should be discarded on saving/display of image
-	 * @var bool
-	 * @see Image_Transform::keepSettingsOnSave
-	 */
-	var $keep_settings_on_save = false;
+    /**
+     * Flag for whether settings should be discarded on saving/display of image
+     * @var bool
+     * @see Image_Transform::keepSettingsOnSave
+     */
+    var $keep_settings_on_save = false;
 
     /**
      * Supported image types
