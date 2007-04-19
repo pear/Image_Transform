@@ -26,13 +26,13 @@ It provides :
   <name>Peter Bowyer</name>
   <user>reywob</user>
   <email>peter@mapledesign.co.uk</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
  <lead>
   <name>Pierre-Alain Joye</name>
   <user>pajoye</user>
   <email>pierre@php.net</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
  <lead>
   <name>Philippe Jausions</name>
@@ -92,7 +92,7 @@ It provides :
  <dependencies>
   <required>
    <php>
-    <min>4.0.0</min>
+    <min>4.3.0</min>
    </php>
    <pearinstaller>
     <min>1.4.0b1</min>
