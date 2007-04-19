@@ -177,8 +177,8 @@ class Image_Transform
                                       'y'     => 20,
                                       'color' => 'red',
                                       'font'  => 'Arial.ttf',
-        							  'size'  => '12',
-        							  'angle' => 0,
+                                      'size'  => '12',
+                                      'angle' => 0,
                                       'resize_first' => false);
 
     /**
@@ -195,7 +195,7 @@ class Image_Transform
      */
     function &factory($driver = '')
     {
-		if ($driver == '') {
+        if ($driver == '') {
             $extensions = array(
                 'imagick' => 'Imagick2',
                 'gd'      => 'GD',
@@ -211,7 +211,7 @@ class Image_Transform
                 return PEAR::raiseError('No image library specified and none can be found.  You must specify driver in factory() call.',
                     IMAGE_TRANSFORM_ERROR_ARGUMENT);
             }
-		}
+        }
         @include_once 'Image/Transform/Driver/' . basename($driver) . '.php';
 
         $classname = "Image_Transform_Driver_{$driver}";
@@ -406,7 +406,7 @@ class Image_Transform
      */
     function scaleByLength($size)
     {
-    	return $this->scaleMaxLength($size);
+        return $this->scaleMaxLength($size);
     }
 
     /**
@@ -761,17 +761,16 @@ class Image_Transform
     }
 
 
-	/**
-	 * Returns the image height
-	 *
-	 * @return int the width of the image
-     * @access public
-	 */
-	function getImageHeight()
-	{
-		return $this->img_y;
-	}
-
+    /**
+      * Returns the image height
+      *
+      * @return int the width of the image
+      * @access public
+      */
+    function getImageHeight()
+    {
+        return $this->img_y;
+    }
 
     /**
      * Returns the image size and extra format information
@@ -792,23 +791,23 @@ class Image_Transform
 
     /**
      * This looks at the current image type and attempts to determine which
-	 * web-safe format will be most suited.  It does not work brilliantly with
-	 * *.png images, because it is very difficult to know whether they are
-	 * 8-bit or greater.  Guess I need to have fatter code here :-)
-	 *
+     * web-safe format will be most suited.  It does not work brilliantly with
+     * *.png images, because it is very difficult to know whether they are
+     * 8-bit or greater.  Guess I need to have fatter code here :-)
+     *
      * @return string web-safe image type
      * @access public
      */
     function getWebSafeFormat()
     {
-    	switch($this->type){
-    		case 'gif':
+        switch($this->type){
+            case 'gif':
             case 'png':
-    			return 'png';
-    			break;
-    		default:
-    			return 'jpeg';
-    	} // switch
+                return 'png';
+                break;
+            default:
+                return 'jpeg';
+        } // switch
     }
 
     /**
@@ -985,13 +984,13 @@ class Image_Transform
      */
     function getTempFile($dirname = NULL)
     {
-		return tempnam((is_null($dirname)) ? System::tmpdir() : $dirname, 'temp.');
+        return tempnam((is_null($dirname)) ? System::tmpdir() : $dirname, 'temp.');
     }
 
-	function keepSettingsOnSave($bool)
-	{
-		$this->keep_settings_on_save = $bool;
-	}
+    function keepSettingsOnSave($bool)
+    {
+        $this->keep_settings_on_save = $bool;
+    }
 
 
     /* Methods to add to the driver classes in the future */
@@ -1181,5 +1180,3 @@ class Image_Transform
                        && $bottom >= 0);
     }
 }
-
-?>
