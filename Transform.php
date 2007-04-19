@@ -20,7 +20,7 @@
  * @author     Alan Knowles <alan@akbkhome.com>
  * @author     Peter Bowyer <peter@mapledesign.co.uk>
  * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
- * @copyright  2002-2005 The PHP Group
+ * @copyright  2002-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
  * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Image_Transform
@@ -70,7 +70,7 @@ define('IMAGE_TRANSFORM_ERROR_OUTOFBOUND', 5);
  * @author     Alan Knowles <alan@akbkhome.com>
  * @author     Peter Bowyer <peter@mapledesign.co.uk>
  * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
- * @copyright  2002-2005 The PHP Group
+ * @copyright  2002-2007 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
  * @version    Release: @package_version@
  * @link       http://pear.php.net/package/Image_Transform
