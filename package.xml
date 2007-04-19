@@ -38,13 +38,21 @@ It provides :
     </maintainer>
   </maintainers>
   <release>
-    <version>0.9.0</version>
+    <version>0.9.1</version>
     <date>2005-07-15</date>
     <license>PHP License</license>
     <state>alpha</state>
-    <notes>- #6011, call to imagick_crop is using incorrect parameters (gauthierm)
-- #6452, add a resize example (msaraujo at php dot net)
-- #599, parameter $quality in method save() not recognized in some drivers
+    <notes>
+- Fixed Bug #6011, call to imagick_crop is using incorrect parameters (gauthierm)
+- Fixed Bug #6452, add a resize example (msaraujo at php dot net)
+- Fixed Bug #599, parameter $quality in method save() not recognized in some drivers (pajoye)
+- Fixed Bug #6767: preventing resizing down to zero pixel width/height. (jausions)
+- Fixed Bug #6770 on empty file names and none-JPEG format output. (jausions)
+- Fixed Bug #6976 about defaulting image type in display() method (jausions)
+- Fixed Bug #7056 typo. (jausions)
+- Fixed Bug #7045 "resize options argument is not passed" (jausions)
+- Fixed Bug #5989 regarding attempted auto-detect of driver. (jausions)
+- Request #6004 Added 2 new methods fitX() and fitY() to fit an image within the given width or height (respectively). (jausions)
 </notes>
     <filelist>
       <dir name="/" baseinstalldir="Image">
