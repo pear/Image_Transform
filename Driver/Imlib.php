@@ -180,14 +180,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
                 $y_pos++;
                 $x_pos++;
                 $this->crop($this->img_y, $this->img_x, $x_pos, $y_pos);
-            }
-            else {
+            } else {
                 $x_pos = ($new_x - $this->img_x) / 2;
                 $y_pos = ($new_y - $this->img_y) / 2;
                 $this->crop($this->img_x, $this->img_y, $x_pos, $y_pos);
             }
-        }
-        else {
+        } else {
             $this->img_x = $new_x;
             $this->img_y = $new_y;
         }
