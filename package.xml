@@ -79,8 +79,6 @@ It provides :
     <file baseinstalldir="Image/Transform" name="GD.php" role="php" />
     <file baseinstalldir="Image/Transform" name="GD1.php" role="php" />
     <file baseinstalldir="Image/Transform" name="IM.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="IMAGETYPE.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="image_type_to_mime_type.php" role="php" />
     <file baseinstalldir="Image/Transform" name="Imagick.php" role="php" />
     <file baseinstalldir="Image/Transform" name="Imagick2.php" role="php" />
     <file baseinstalldir="Image/Transform" name="Imlib.php" role="php" />
