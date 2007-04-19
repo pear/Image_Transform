@@ -46,6 +46,12 @@ It provides :
   <email>dufuz@php.net</email>
   <active>yes</active>
  </lead>
+ <lead>
+  <name>David Coallier</name>
+  <user>davidc</user>
+  <email>davidc@php.net</email>
+  <active>yes</active>
+ </lead>
  <date>2007-04-19</date>
  <time>17:20:18</time>
  <version>
