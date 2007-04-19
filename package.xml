@@ -49,24 +49,15 @@ It provides :
  <date>2007-04-19</date>
  <time>17:20:18</time>
  <version>
-  <release>0.9.1</release>
-  <api>0.9.1</api>
+  <release>0.10.0</release>
+  <api>0.10.0</api>
  </version>
  <stability>
   <release>alpha</release>
   <api>alpha</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes>- Fixed Bug #6011, call to imagick_crop is using incorrect parameters (gauthierm)
-- Fixed Bug #6452, add a resize example (msaraujo at php dot net)
-- Fixed Bug #599, parameter $quality in method save() not recognized in some drivers (pajoye)
-- Fixed Bug #6767: preventing resizing down to zero pixel width/height. (jausions)
-- Fixed Bug #6770 on empty file names and none-JPEG format output. (jausions)
-- Fixed Bug #6976 about defaulting image type in display() method (jausions)
-- Fixed Bug #7056 typo. (jausions)
-- Fixed Bug #7045 &quot;resize options argument is not passed&quot; (jausions)
-- Fixed Bug #5989 regarding attempted auto-detect of driver. (jausions)
-- Request #6004 Added 2 new methods fitX() and fitY() to fit an image within the given width or height (respectively). (jausions)
+ <notes>
 
  </notes>
  <contents>
@@ -99,6 +90,30 @@ It provides :
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.9.1</release>
+    <api>0.9.1</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2007-04-19</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>- Fixed Bug #6011, call to imagick_crop is using incorrect parameters (gauthierm)
+- Fixed Bug #6452, add a resize example (msaraujo at php dot net)
+- Fixed Bug #599, parameter $quality in method save() not recognized in some drivers (pajoye)
+- Fixed Bug #6767: preventing resizing down to zero pixel width/height. (jausions)
+- Fixed Bug #6770 on empty file names and none-JPEG format output. (jausions)
+- Fixed Bug #6976 about defaulting image type in display() method (jausions)
+- Fixed Bug #7056 typo. (jausions)
+- Fixed Bug #7045 &quot;resize options argument is not passed&quot; (jausions)
+- Fixed Bug #5989 regarding attempted auto-detect of driver. (jausions)
+- Request #6004 Added 2 new methods fitX() and fitY() to fit an image within the given width or height (respectively). (jausions)
+
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.9.0</release>
