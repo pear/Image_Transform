@@ -25,7 +25,7 @@
  * @link       http://pear.php.net/package/Image_Transform
  */
 
-require_once "Image/Transform.php";
+require_once 'Image/Transform.php';
 
 /**
  * GD implementation for Image_Transform package
@@ -63,20 +63,20 @@ require_once "Image/Transform.php";
  */
 class Image_Transform_Driver_GD extends Image_Transform
 {
-	/**
-	 * Holds the image resource for manipulation
+    /**
+     * Holds the image resource for manipulation
      *
      * @var resource $imageHandle
      * @access protected
-	 */
+     */
     var $imageHandle = null;
 
-	/**
-	 * Holds the original image file
+    /**
+     * Holds the original image file
      *
      * @var resource $imageHandle
      * @access protected
-	 */
+     */
     var $old_image = null;
 
     /**
@@ -86,7 +86,6 @@ class Image_Transform_Driver_GD extends Image_Transform
     {
         $this->__construct();
     } // End function Image
-
 
     /**
      * Check settings
@@ -122,7 +121,6 @@ class Image_Transform_Driver_GD extends Image_Transform
 
     } // End function Image
 
-
     /**
      * Loads an image from file
      *
@@ -154,7 +152,6 @@ class Image_Transform_Driver_GD extends Image_Transform
         return true;
 
     } // End load
-
 
     /**
      * Adds a border of constant width around an image
@@ -188,7 +185,6 @@ class Image_Transform_Driver_GD extends Image_Transform
         return true;
     }
 
-
     /**
      * addText
      *
@@ -206,9 +202,9 @@ class Image_Transform_Driver_GD extends Image_Transform
      *
      * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
      */
-	function addText($params)
+    function addText($params)
     {
-		$params = array_merge($this->_get_default_text_params(), $params);
+        $params = array_merge($this->_get_default_text_params(), $params);
         extract($params);
 
         $options = array('fontColor' => $color);
@@ -217,13 +213,12 @@ class Image_Transform_Driver_GD extends Image_Transform
         $c = imagecolorresolve ($this->imageHandle, $color[0], $color[1], $color[2]);
 
         if ('ttf' == substr($font, -3)) {
-			ImageTTFText($this->imageHandle, $size, $angle, $x, $y, $c, $font, $text);
+            ImageTTFText($this->imageHandle, $size, $angle, $x, $y, $c, $font, $text);
         } else {
-        	ImagePSText($this->imageHandle, $size, $angle, $x, $y, $c, $font, $text);
+            ImagePSText($this->imageHandle, $size, $angle, $x, $y, $c, $font, $text);
         }
         return true;
-	} // End addText
-
+    } // End addText
 
     /**
      * Rotates image by the given angle
@@ -344,7 +339,6 @@ class Image_Transform_Driver_GD extends Image_Transform
         return true;
     }
 
-
     /**
      * Converts the image to greyscale
      *
@@ -355,7 +349,6 @@ class Image_Transform_Driver_GD extends Image_Transform
         imagecopymergegray($this->imageHandle, $this->imageHandle, 0, 0, 0, 0, $this->new_x, $this->new_y, 0);
         return true;
     }
-
 
    /**
     * Resize Action
@@ -484,7 +477,6 @@ class Image_Transform_Driver_GD extends Image_Transform
 
     } // End save
 
-
     /**
      * Displays image without saving and lose changes.
      *
@@ -583,5 +575,3 @@ class Image_Transform_Driver_GD extends Image_Transform
         return $new_img;
     }
 }
-
-?>

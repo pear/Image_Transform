@@ -64,7 +64,6 @@ class Image_Transform_Driver_IM extends Image_Transform
     function __construct()
     {
         $this->_init();
-        require_once 'System.php';
         if (!defined('IMAGE_TRANSFORM_IM_PATH')) {
             $path = dirname(System::which('convert'))
                     . DIRECTORY_SEPARATOR;
@@ -77,7 +76,6 @@ class Image_Transform_Driver_IM extends Image_Transform
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
         }
     } // End Image_IM
-
 
     /**
      * Initialize the state of the object
@@ -112,7 +110,6 @@ class Image_Transform_Driver_IM extends Image_Transform
         return true;
 
     } // End load
-
 
     /**
      * Image_Transform_Driver_IM::_get_image_details()
@@ -191,7 +188,6 @@ class Image_Transform_Driver_IM extends Image_Transform
         return true;
 
     } // End rotate
-
 
     /**
      * Crop image
@@ -388,9 +384,9 @@ class Image_Transform_Driver_IM extends Image_Transform
                    $this->image . ' ' . $type . ":-");
         passthru($cmd);
 
-		if (!$this->keep_settings_on_save) {
-		    $this->free();
-		}
+        if (!$this->keep_settings_on_save) {
+            $this->free();
+        }
         return true;
     }
 
@@ -401,11 +397,9 @@ class Image_Transform_Driver_IM extends Image_Transform
      */
     function free()
     {
-	    $this->command = array();
+        $this->command = array();
         $this->image = '';
         $this->type = '';
     }
 
 } // End class ImageIM
-
-?>

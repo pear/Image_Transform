@@ -45,14 +45,14 @@ require_once 'Image/Transform.php';
 class Image_Transform_Driver_Imlib extends Image_Transform {
     // {{{ properties
 
-	/**
-	 * Holds the image file for manipulation
-	 */
+    /**
+     * Holds the image file for manipulation
+     */
     var $imageHandle = '';
 
-	/**
-	 * Holds the original image file
-	 */
+    /**
+     * Holds the original image file
+     */
     var $oldHandle = '';
 
     // }}}
@@ -127,18 +127,18 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      * @return TRUE or PEAR Error object on error
      * @see PEAR::isError()
      */
-	function addText($params)
+    function addText($params)
     {
-		$default_params = array(
+        $default_params = array(
                                 'text' => 'This is Text',
                                 'x' => 10,
                                 'y' => 20,
                                 'color' => array(255,0,0),
                                 'font' => 'Arial.ttf',
-								'size' => '12',
-								'angle' => IMLIB_TEXT_TO_RIGHT,
+                                'size' => '12',
+                                'angle' => IMLIB_TEXT_TO_RIGHT,
                                 );
-		$params = array_merge($default_params, $params);
+        $params = array_merge($default_params, $params);
         extract($params);
 
         if (!is_array($color)){
@@ -153,7 +153,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         $fontResource = imlib_load_font($font . '/' . $size);
         imlib_text_draw($this->imageHandle, $fontResource, $x, $y, $text, $angle, $color[0], $color[1], $color[2], 255);
         return true;
-	}
+    }
 
     // }}}
     // {{{ rotate()
@@ -374,5 +374,3 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         return true;
     }
 }
-
-?>

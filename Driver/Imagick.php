@@ -26,7 +26,7 @@
 /**
  * Include of base class
  */
-require_once "Image/Transform.php";
+require_once 'Image/Transform.php';
 
 
 /**
@@ -45,7 +45,6 @@ class Image_Transform_Driver_Imagick extends Image_Transform
      */
     var $imageHandle;
 
-
     /**
      * Handler of the image ressource before
      * the last transformation
@@ -62,7 +61,7 @@ class Image_Transform_Driver_Imagick extends Image_Transform
         if (!PEAR::loadExtension('imagick')) {
             return PEAR::raiseError('The imagick extension can not be found.', true);
         }
-        include('Image/Transform/Driver/Imagick/ImageTypes.php');
+        include 'Image/Transform/Driver/Imagick/ImageTypes.php';
         return true;
     } // End Image_IM
 
@@ -227,14 +226,13 @@ class Image_Transform_Driver_Imagick extends Image_Transform
      */
     function free()
     {
-        if(is_resource($this->imageHandle)){
+        if (is_resource($this->imageHandle)){
             imagick_free($this->imageHandle);
         }
-        if(is_resource($this->oldImage)){
+        if (is_resource($this->oldImage)){
             imagick_free($this->oldImage);
         }
         return true;
     }
 
 } // End class ImageIM
-?>

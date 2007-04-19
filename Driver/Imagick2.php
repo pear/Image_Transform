@@ -25,7 +25,7 @@
  * @link       http://pear.php.net/package/Image_Transform
  */
 
-require_once "Image/Transform.php";
+require_once 'Image/Transform.php';
 
 /**
  * imagick PECL extension implementation for Image_Transform package
@@ -67,7 +67,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
     function __construct()
     {
         if (PEAR::loadExtension('imagick')) {
-            include('Image/Transform/Driver/Imagick/ImageTypes.php');
+            include 'Image/Transform/Driver/Imagick/ImageTypes.php';
         } else {
             $this->isError(PEAR::raiseError('Couldn\'t find the imagick extension.',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
@@ -289,7 +289,6 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
         return true;
     }
 
-
     /**
      * Crops the image
      *
@@ -383,5 +382,3 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
     }
 
 } // End class Image_Transform_Driver_Imagick2
-
-?>
