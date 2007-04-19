@@ -4,3 +4,6 @@
 - Add gamma to imagick driver (after adding it to imagick itself)
 - Returning true on success or PEAR::Error
 - Win32 tests
+- Add proper deps
+- Convert to package.xml v2
+- Proper unit tests that can be run via CLI
