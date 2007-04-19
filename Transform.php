@@ -685,7 +685,7 @@ class Image_Transform
      */
     function _set_img_x($size)
     {
-    	$this->img_x = $size;
+        $this->img_x = $size;
     }
 
     /**
@@ -697,7 +697,7 @@ class Image_Transform
      */
     function _set_img_y($size)
     {
-    	$this->img_y = $size;
+        $this->img_y = $size;
     }
 
     /**
@@ -709,7 +709,7 @@ class Image_Transform
      */
     function _set_new_x($size)
     {
-    	$this->new_x = $size;
+        $this->new_x = $size;
     }
 
     /**
@@ -721,7 +721,7 @@ class Image_Transform
      */
     function _set_new_y($size)
     {
-    	$this->new_y = $size;
+        $this->new_y = $size;
     }
 
     /**
@@ -759,7 +759,6 @@ class Image_Transform
     {
         return $this->img_x;
     }
-
 
     /**
       * Returns the image height
@@ -800,7 +799,7 @@ class Image_Transform
      */
     function getWebSafeFormat()
     {
-        switch($this->type){
+        switch ($this->type){
             case 'gif':
             case 'png':
                 return 'png';
@@ -959,7 +958,6 @@ class Image_Transform
         return (strlen($color) != 7) ? false : $color;
     }
 
-
     /*** These snitched from the File package.  Saves including another class! ***/
     /**
      * Returns the temp directory according to either the TMP, TMPDIR, or TEMP env
@@ -991,7 +989,6 @@ class Image_Transform
     {
         $this->keep_settings_on_save = $bool;
     }
-
 
     /* Methods to add to the driver classes in the future */
     function addText()
@@ -1129,7 +1126,7 @@ class Image_Transform
                 return $this->colorhex2colorarray($color);
             }
             static $colornames = array();
-            include_once('Image/Transform/Driver/ColorsDefs.php');
+            include_once 'Image/Transform/Driver/ColorsDefs.php';
             return (isset($colornames[$color])) ? $colornames[$color] : $default;
         }
         return $default;
