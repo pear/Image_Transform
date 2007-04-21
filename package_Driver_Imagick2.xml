@@ -45,7 +45,8 @@ It provides :
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-* This driver was split off Image_Transform
+- This driver was split off Image_Transform
+- Fixed Bug #9904 Typo in IM2::addText, should be $params not $parms
  </notes>
  <contents>
   <dir name="/">
