@@ -46,7 +46,8 @@ It provides :
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
 - This driver was split off Image_Transform
-- Fixed Bug #5067   GD:addText() should also store a copy of $this->imageHandle in $this->old_image
+- Fixed Bug #5067 GD:addText() should also store a copy of $this->imageHandle in $this->old_image
+- Fixed Bug #4967   Call to undefined function: imagecreatefrom
  </notes>
  <contents>
   <dir name="/">

@@ -64,7 +64,9 @@ It provides :
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-* Now the drivers have been split off into their own sub packages
+- Now the drivers have been split off into their own sub packages
+- Fixed Bug #8573 This way we can retrieve the new_y and new_x with getNewImageWidth and getNewImageHeight (davidc)
+- Fixed Bug Bug #8607   Fatal error: Call to undefined function: load() (davidc)
  </notes>
  <contents>
   <dir name="/">
