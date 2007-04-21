@@ -247,7 +247,7 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         $mask = imagecolorresolve($this->imageHandle, $color_mask[0], $color_mask[1], $color_mask[2]);
 
-        $this->oldImage= $this->imageHandle;
+        $this->oldImage = $this->imageHandle;
 
         // Multiply by -1 to change the sign, so the image is rotated clockwise
         $this->imageHandle = ImageRotate($this->imageHandle, $angle * -1, $mask);
@@ -332,7 +332,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 IMAGE_TRANSFORM_ERROR_FAILED);
         }
 
-        $this->oldImage= $this->imageHandle;
+        $this->oldImage = $this->imageHandle;
         $this->imageHandle = $new_img;
         $this->resized = true;
 
@@ -393,7 +393,7 @@ class Image_Transform_Driver_GD extends Image_Transform
         if (!$icr_res) {
             ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         }
-        $this->oldImage= $this->imageHandle;
+        $this->oldImage = $this->imageHandle;
         $this->imageHandle = $new_img;
         $this->resized = true;
 
@@ -471,7 +471,7 @@ class Image_Transform_Driver_GD extends Image_Transform
             return PEAR::raiseError('Couldn\'t ' . $action,
                 IMAGE_TRANSFORM_ERROR_IO);
         }
-        $this->imageHandle = $this->old_image;
+        $this->imageHandle = $this->oldImage;
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
@@ -527,10 +527,10 @@ class Image_Transform_Driver_GD extends Image_Transform
             ImageDestroy($this->imageHandle);
         }
         $this->imageHandle = null;
-        if (is_resource($this->old_image)){
-            ImageDestroy($this->old_image);
+        if (is_resource($this->oldImage)){
+            ImageDestroy($this->oldImage);
         }
-        $this->oldImage= null;
+        $this->oldImage = null;
     }
 
     /**
