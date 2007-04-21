@@ -56,8 +56,6 @@ define('IMAGE_TRANSFORM_ERROR_ARGUMENT', 4);
  */
 define('IMAGE_TRANSFORM_ERROR_OUTOFBOUND', 5);
 
-
-
 /**
  * Base class with factory method for backend driver
  *
@@ -199,7 +197,8 @@ class Image_Transform
             $extensions = array(
                 'imagick' => 'Imagick2',
                 'gd'      => 'GD',
-                'imlib'   => 'Imlib');
+                'imlib'   => 'Imlib'
+            );
 
             foreach ($extensions as $ext => $ext_driver) {
                 if (PEAR::loadExtension($ext)) {
@@ -214,9 +213,9 @@ class Image_Transform
         }
         @include_once 'Image/Transform/Driver/' . basename($driver) . '.php';
 
-        $classname = "Image_Transform_Driver_{$driver}";
+        $classname = 'Image_Transform_Driver_' . $driver;
         if (!class_exists($classname)) {
-            return PEAR::raiseError('Image library not supported... aborting.',
+            return PEAR::raiseError('Image library ' . $driver . ' not supported... aborting.',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $obj =& new $classname;
@@ -267,7 +266,6 @@ class Image_Transform
         // Now do the library specific resizing.
         return $this->_resize($new_x, $new_y, $options);
     } // End resize
-
 
     /**
      * Scales the image to the specified width
@@ -575,7 +573,6 @@ class Image_Transform
         return true;
     }
 
-
     /**
      * Returns the matching IMAGETYPE_* constant for a given image type
      *
@@ -625,7 +622,6 @@ class Image_Transform
 
         return (isset($types[$t = strtolower($type)])) ? $types[$t] : $type;
     }
-
 
     /**
      * Parses input for number format and convert
@@ -958,7 +954,6 @@ class Image_Transform
         return (strlen($color) != 7) ? false : $color;
     }
 
-    /*** These snitched from the File package.  Saves including another class! ***/
     /**
      * Returns the temp directory according to either the TMP, TMPDIR, or TEMP env
      * variables. If these are not set it will also check for the existence of
