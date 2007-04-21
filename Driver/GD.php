@@ -204,6 +204,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function addText($params)
     {
+        $this->old_image = $this->imageHandle;
         $params = array_merge($this->_get_default_text_params(), $params);
         extract($params);
 
@@ -217,6 +218,7 @@ class Image_Transform_Driver_GD extends Image_Transform
         } else {
             ImagePSText($this->imageHandle, $size, $angle, $x, $y, $c, $font, $text);
         }
+
         return true;
     } // End addText
 
@@ -243,9 +245,9 @@ class Image_Transform_Driver_GD extends Image_Transform
         $color_mask = $this->_getColor('canvasColor', $options,
                                         array(255, 255, 255));
 
-        $mask   = imagecolorresolve($this->imageHandle, $color_mask[0], $color_mask[1], $color_mask[2]);
+        $mask = imagecolorresolve($this->imageHandle, $color_mask[0], $color_mask[1], $color_mask[2]);
 
-        $this->old_image   = $this->imageHandle;
+        $this->old_image = $this->imageHandle;
 
         // Multiply by -1 to change the sign, so the image is rotated clockwise
         $this->imageHandle = ImageRotate($this->imageHandle, $angle * -1, $mask);
@@ -490,7 +492,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function display($type = '', $quality = null)
     {
-        return $this->_generate('', $type, $quality);;
+        return $this->_generate('', $type, $quality);
     }
 
     /**
