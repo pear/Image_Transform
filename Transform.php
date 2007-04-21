@@ -57,6 +57,11 @@ define('IMAGE_TRANSFORM_ERROR_ARGUMENT', 4);
 define('IMAGE_TRANSFORM_ERROR_OUTOFBOUND', 5);
 
 /**
+ * Error code for inexsitant driver errors
+ */
+define('IMAGE_TRANSFORM_DRIVER_FILE_MISSING', 6);
+
+/**
  * Base class with factory method for backend driver
  *
  * The main "Image_Transform" class is a container and base class which
@@ -210,9 +215,27 @@ class Image_Transform
                 return PEAR::raiseError('No image library specified and none can be found.  You must specify driver in factory() call.',
                     IMAGE_TRANSFORM_ERROR_ARGUMENT);
             }
+        } else {
+            switch strtolower($driver) {
+                case 'gd':
+                    $driver = 'GD';
+                    break;
+                case 'imagick':
+                    $driver = 'Imagick2';
+                    break;
+                case 'imlib':
+                    $driver = 'Imlib';
+                    break;
+            }
         }
-        @include_once 'Image/Transform/Driver/' . basename($driver) . '.php';
+        
+        if (!is_readable('Image/Transform/Driver' . $driver . '.php')) { 
+            return PEAR::raiseError('Driver failed to load file Image/Transform/Driver/' . $driver, 
+                                    IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
+        }
 
+        include_once 'Image/Transform/Driver/' . $driver . '.php';
+        
         $classname = 'Image_Transform_Driver_' . $driver;
         if (!class_exists($classname)) {
             return PEAR::raiseError('Image library ' . $driver . ' not supported... aborting.',
