@@ -6,3 +6,4 @@
 - Win32 tests
 - Add proper deps
 - Proper unit tests that can be run via CLI
+- _generate, imagepng can take in the quality param, but from 0 - 9 not 0 - 100, conversion is needed
