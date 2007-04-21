@@ -194,8 +194,8 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
         imagick_begindraw($this->imageHandle ) ;
 
         foreach ($cmds as $cmd => $v) {
-            if (!call_user_func('imagick_' . $cmd, $this->imageHandle, $parms[$v])) {
-                return $this->raiseError("Problem with adding Text::{$v} = {$parms[$v]}",
+            if (!call_user_func('imagick_' . $cmd, $this->imageHandle, $params[$v])) {
+                return $this->raiseError("Problem with adding Text::{$v} = {$params[$v]}",
                     IMAGE_TRANSFORM_ERROR_FAILED);
             }
         }
