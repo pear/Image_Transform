@@ -77,7 +77,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      * @var resource $imageHandle
      * @access protected
      */
-    var $old_image = null;
+    var $oldImage = null;
 
     /**
      * Check settings
@@ -204,7 +204,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      */
     function addText($params)
     {
-        $this->old_image = $this->imageHandle;
+        $this->oldImage = $this->imageHandle;
         $params = array_merge($this->_get_default_text_params(), $params);
         extract($params);
 
@@ -247,7 +247,7 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         $mask = imagecolorresolve($this->imageHandle, $color_mask[0], $color_mask[1], $color_mask[2]);
 
-        $this->old_image = $this->imageHandle;
+        $this->oldImage= $this->imageHandle;
 
         // Multiply by -1 to change the sign, so the image is rotated clockwise
         $this->imageHandle = ImageRotate($this->imageHandle, $angle * -1, $mask);
@@ -332,7 +332,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 IMAGE_TRANSFORM_ERROR_FAILED);
         }
 
-        $this->old_image = $this->imageHandle;
+        $this->oldImage= $this->imageHandle;
         $this->imageHandle = $new_img;
         $this->resized = true;
 
@@ -393,7 +393,7 @@ class Image_Transform_Driver_GD extends Image_Transform
         if (!$icr_res) {
             ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
         }
-        $this->old_image = $this->imageHandle;
+        $this->oldImage= $this->imageHandle;
         $this->imageHandle = $new_img;
         $this->resized = true;
 
@@ -530,7 +530,7 @@ class Image_Transform_Driver_GD extends Image_Transform
         if (is_resource($this->old_image)){
             ImageDestroy($this->old_image);
         }
-        $this->old_image = null;
+        $this->oldImage= null;
     }
 
     /**
