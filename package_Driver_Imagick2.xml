@@ -47,6 +47,7 @@ It provides :
  <notes>
 - This driver was split off Image_Transform
 - Fixed Bug #9904 Typo in IM2::addText, should be $params not $parms
+- Fixed Bug #9541 Imagick2 resize() incorrectly maintains aspect ratio, i.e. not how the old Imagick driver did it
  </notes>
  <contents>
   <dir name="/">
