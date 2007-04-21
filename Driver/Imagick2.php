@@ -54,6 +54,13 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
     var $imageHandle = null;
 
     /**
+     * Handler of the image ressource before
+     * the last transformation
+     * @var array
+     */
+    var $oldImage;
+
+    /**
      * @see __construct()
      */
     function Image_Transform_Driver_Imagick2()
@@ -114,7 +121,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      */
     function _resize($new_x, $new_y, $options = null)
     {
-        if (!imagick_resize($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_UNKNOWN , 1)) {
+        if (!imagick_resize($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_UNKNOWN , 1, , '!')) {
             return $this->raiseError('Couldn\'t resize image.',
                 IMAGE_TRANSFORM_ERROR_FAILED);
         }
@@ -171,27 +178,21 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      */
     function addText($params)
     {
-        static $default_params = array(
-                                'text'          => 'This is a Text',
-                                'x'             => 10,
-                                'y'             => 20,
-                                'size'          => 12,
-                                'color'         => 'red',
-                                'font'          => 'Helvetica',
-                                'resize_first'  => false // Carry out the scaling of the image before annotation?
-                                );
-        $params = array_merge($default_params, $params);
+        $this->oldImage= $this->imageHandle;
+        $params = array_merge($this->_get_default_text_params(), $params);
 
-
-        $params['color']= is_array($params['color'])?$this->colorarray2colorhex($params['color']):strtolower($params['color']);
-
+        if (is_array($params['color'])) {
+            $params['color'] = $this->colorarray2colorhex($params['color']);
+        } else {
+            $params['color'] = strtolower($params['color']);
+        }
 
         static $cmds = array(
             'setfillcolor' => 'color',
             'setfontsize'  => 'size',
             'setfontface'  => 'font'
         );
-        imagick_begindraw($this->imageHandle ) ;
+        imagick_begindraw($this->imageHandle);
 
         foreach ($cmds as $cmd => $v) {
             if (!call_user_func('imagick_' . $cmd, $this->imageHandle, $params[$v])) {
@@ -235,7 +236,11 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
             return $this->raiseError('Couldn\'t save image to file.',
                 IMAGE_TRANSFORM_ERROR_IO);
         }
-        $this->free();
+
+        if (!$this->keep_settings_on_save) {
+            $this->free();
+        }
+
         return true;
 
     } // End save
