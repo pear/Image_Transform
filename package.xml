@@ -41,7 +41,7 @@ It provides :
   <active>yes</active>
  </lead>
  <lead>
-  <name>Helgi Thormar</name>
+  <name>Helgi Þormar</name>
   <user>dufuz</user>
   <email>dufuz@php.net</email>
   <active>yes</active>
@@ -64,22 +64,12 @@ It provides :
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-
+* Now the drivers have been split off into their own sub packages
  </notes>
  <contents>
   <dir name="/">
    <dir name="Driver">
-    <dir name="Imagick">
-     <file baseinstalldir="Image/Transform" name="ImageTypes.php" role="php" />
-    </dir> <!-- //Driver/Imagick -->
     <file baseinstalldir="Image/Transform" name="ColorsDefs.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="GD.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="GD1.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="IM.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="Imagick.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="Imagick2.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="Imlib.php" role="php" />
-    <file baseinstalldir="Image/Transform" name="NetPBM.php" role="php" />
    </dir> <!-- //Driver -->
    <file baseinstalldir="Image" name="Transform.php" role="php" />
   </dir> <!-- / -->
