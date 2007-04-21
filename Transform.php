@@ -746,6 +746,43 @@ class Image_Transform
     }
 
     /**
+     * Returns the new image width
+     *
+     * This function returns the width
+     * of the new image.
+     *
+     * @access public
+     * @return int  The width of the new image.
+     */
+    function getNewImageWidth()
+    {
+        if (isset($this->new_x)) {
+            return (int)$this->new_x;
+        }
+
+        return false;
+    }
+
+    /**
+     * Return new image Y
+     *
+     * This function will retrieve the
+     * new image 'Y' and return it's value
+     * if it's set.
+     *
+     * @access public
+     * @return int  The new height of the image.
+     */
+    function getNewImageHeight()
+    {
+        if (isset($this->new_y)) {
+            return (int)$this->new_y;
+        }
+
+        return false;
+    }
+    
+    /**
      * Returns the image width
      *
      * @return int the width of the image
