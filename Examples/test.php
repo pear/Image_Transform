@@ -8,7 +8,7 @@ require_once 'Image/Transform.php';
 define('IMAGE_TRANSFORM_LIB_PATH', '/usr/local/ImageMagick/bin/');
 // Change 'IM' to 'GD' to test using the GD library.
 $im = Image_Transform::factory('IM');
-$im->load('/www/php_lib/Image_Resize/Examples/test.jpg');
+$im->load('Image_Transform/Examples/test.jpg');
 
 // next will resize so that the largest length is 300px - height or width
 $im->resize(300, 50);

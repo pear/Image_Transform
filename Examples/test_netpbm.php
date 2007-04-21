@@ -8,7 +8,7 @@ define('IMAGE_TRANSFORM_LIB_PATH', '/netpbm/');
 require_once 'Image/Transform.php';
 // Change 'IM' to 'GD' to test using the GD library.
 $im = Image_Transform::factory('NetPBM');
-$im->load('/usr/local/lib/php/Image/Transform/Examples/test.jpg');
+$im->load('Image/Transform/Examples/test.jpg');
 
 // next will resize so that the largest length is 300px - height or width
 $im->resize(300, 50);
