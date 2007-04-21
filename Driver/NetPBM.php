@@ -597,6 +597,4 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
     {
         $this->command = array();
     }
-
-
 } // End class ImageIM

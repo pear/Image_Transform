@@ -57,7 +57,6 @@ class Image_Transform_Driver_IM extends Image_Transform
         $this->__construct();
     } // End Image_IM
 
-
     /**
      * Class constructor
      */
@@ -131,15 +130,15 @@ class Image_Transform_Driver_IM extends Image_Transform
                 '-format %w:%h:%m ' . escapeshellarg($image));
             exec($cmd, $res, $exit);
 
-            if ($exit == 0) {
-                $data  = explode(':', $res[0]);
-                $this->img_x = $data[0];
-                $this->img_y = $data[1];
-                $this->type  = strtolower($data[2]);
-                $retval = true;
-            } else {
+            if ($exit != 0) {
                 return PEAR::raiseError("Cannot fetch image or images details.", true);
             }
+
+            $data  = explode(':', $res[0]);
+            $this->img_x = $data[0];
+            $this->img_y = $data[1];
+            $this->type  = strtolower($data[2]);
+            $retval = true;
 
         }
 
