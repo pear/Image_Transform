@@ -25,15 +25,9 @@ It provides :
 
  </description>
  <lead>
-  <name>Helgi Þormar</name>
-  <user>dufuz</user>
-  <email>dufuz@php.net</email>
-  <active>yes</active>
- </lead>
- <lead>
-  <name>David Coallier</name>
-  <user>davidc</user>
-  <email>davidc@php.net</email>
+  <name>Jason Rust</name>
+  <user>jrust</user>
+  <email>jrust@php.net</email>
   <active>yes</active>
  </lead>
  <date>2007-04-19</date>
