@@ -458,6 +458,21 @@ class Image_Transform
             return $this->scaleByY($height);
         }
     }
+    
+    /**
+     * This works as per fit, but creates the canvas of size $width x $height
+     * and positions the resized image on it, by default in the centre.
+     *
+     * @param unknown_type $width
+     * @param unknown_type $height
+     * @param unknown_type $posn
+     * @return unknown
+     */
+    function fitOnCanvas($width, $height, $posn='center')
+    {
+    	return PEAR::raiseError('fitOnCanvas() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
+    }
 
     /**
      * Fits the image in the specified width
@@ -992,7 +1007,7 @@ class Image_Transform
         $filename = explode('.', basename($this->image));
         $filename = $filename[0];
         header('Content-type: ' . $this->getMimeType($type));
-        header ('Content-Disposition: inline; filename=' . $filename . '.' . $type );
+        header('Content-Disposition: inline; filename=' . $filename . '.' . $type );
     }
 
     /**
