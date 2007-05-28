@@ -46,6 +46,7 @@ It provides :
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
 * This driver was split off Image_Transform
+* Bug #11165 NetPBM save() command appends a '2' (helgi) [patch by markvds@elegia.nl]
  </notes>
  <contents>
   <dir name="/">

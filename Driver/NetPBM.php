@@ -553,7 +553,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
         $nullDevice = (OS_WINDOWS) ? 'nul' : '/dev/null';
 
         $cmd = $this->_postProcess($type, $quality) . '> "' . $filename . '"';
-        exec($cmd . '2> ' . $nullDevice, $res, $exit);
+        exec($cmd . ' 2>  ' . $nullDevice, $res, $exit);
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
