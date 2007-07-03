@@ -206,7 +206,7 @@ class Image_Transform_Driver_IM extends Image_Transform
         // raise a warning? [and obviously same for $height+$y]
         $this->command['crop'] = '-crop '
             . ((int) $width)  . 'x' . ((int) $height)
-            . '+' . ((int) $x) . '+' . ((int) $y);
+            . '+' . ((int) $x) . '+' . ((int) $y) . '!';
 
         // I think that setting img_x/y is wrong, but scaleByLength() & friends
         // mess up the aspect after a crop otherwise.
