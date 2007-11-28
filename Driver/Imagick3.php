@@ -115,6 +115,9 @@ class Image_Transform_Driver_Imagick3 extends Image_Transform
      * @param integer $new_x   New width
      * @param integer $new_y   New height
      * @param mixed $options Optional parameters
+     * <ul>
+     *  <li>'scaleMethod': "pixel" or "smooth"</li>
+     * </ul>
      *
      * @return bool|PEAR_Error TRUE or PEAR_Error object on error
      * @access protected
@@ -122,8 +125,10 @@ class Image_Transform_Driver_Imagick3 extends Image_Transform
     function _resize($new_x, $new_y, $options = null)
     {
         try {
+            $scaleMethod = $this->_getOption('scaleMethod', $options, 'smooth');
+            $blur = ($scaleMethod == 'pixel') ? 0 : 1;
             $this->imagick->resizeImage($new_x, $new_y,
-                                        imagick::FILTER_UNDEFINED, 1);
+                                        imagick::FILTER_UNDEFINED, $blur);
 
         } catch (ImagickException $e) {
             return $this->raiseError('Could not resize image.',
@@ -351,6 +356,21 @@ class Image_Transform_Driver_Imagick3 extends Image_Transform
         $this->new_x = $width;
         $this->new_y = $height;
 
+        return true;
+    }
+
+    /**
+     * Converts the image to greyscale
+     *
+     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @access public
+     */
+    function greyscale() {
+        $this->imagick->setImageType(Imagick::IMGTYPE_GRAYSCALE);
+        /*$this->imagick->setImageColorSpace(Imagick::COLORSPACE_GRAY);
+        $this->imagick->setImageDepth(8);
+        $this->imagick->separateImageChannel(Imagick::CHANNEL_GRAY);
+        $this->imagick->setImageChannelDepth(Imagick::CHANNEL_GRAY, 8);*/
         return true;
     }
 

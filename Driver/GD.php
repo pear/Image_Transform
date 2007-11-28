@@ -352,23 +352,23 @@ class Image_Transform_Driver_GD extends Image_Transform
         return true;
     }
 
-   /**
-    * Resize Action
-    *
-    * For GD 2.01+ the new copyresampled function is used
-    * It uses a bicubic interpolation algorithm to get far
-    * better result.
-    *
-    * Options:
-    *  - scaleMethod: "pixel" or "smooth"
-    *
-    * @param int   $new_x   New width
-    * @param int   $new_y   New height
-    * @param mixed $options Optional parameters
-    *
-    * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
-    * @access protected
-    */
+    /**
+     * Resize Action
+     *
+     * For GD 2.01+ the new copyresampled function is used
+     * It uses a bicubic interpolation algorithm to get far
+     * better result.
+     *
+     * @param int   $new_x   New width
+     * @param int   $new_y   New height
+     * @param array $options Optional parameters
+     * <ul>
+     *  <li>'scaleMethod': "pixel" or "smooth"</li>
+     * </ul>
+     *
+     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @access protected
+     */
     function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
