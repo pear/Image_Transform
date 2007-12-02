@@ -228,14 +228,14 @@ class Image_Transform
                     break;
             }
         }
-        
-        if (!is_readable('Image/Transform/Driver' . $driver . '.php')) { 
-            return PEAR::raiseError('Driver failed to load file Image/Transform/Driver/' . $driver, 
+
+        if (!is_readable('Image/Transform/Driver' . $driver . '.php')) {
+            return PEAR::raiseError('Driver failed to load file Image/Transform/Driver/' . $driver,
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
         }
 
         include_once 'Image/Transform/Driver/' . $driver . '.php';
-        
+
         $classname = 'Image_Transform_Driver_' . $driver;
         if (!class_exists($classname)) {
             return PEAR::raiseError('Image library ' . $driver . ' not supported... aborting.',
@@ -458,7 +458,7 @@ class Image_Transform
             return $this->scaleByY($height);
         }
     }
-    
+
     /**
      * This works as per fit, but creates the canvas of size $width x $height
      * and positions the resized image on it, by default in the centre.
@@ -819,7 +819,7 @@ class Image_Transform
 
         return false;
     }
-    
+
     /**
      * Returns the image width
      *
@@ -1050,9 +1050,14 @@ class Image_Transform
      * @param  string $dirname Optional directory name for the tmp file
      * @return string          Filename and path of the tmp file
      */
-    function getTempFile($dirname = NULL)
+    function getTempFile($dirname = null)
     {
-        return tempnam((is_null($dirname)) ? System::tmpdir() : $dirname, 'temp.');
+        if  (is_null($dirname)) {
+            include_once 'System.php';
+            $dirname = System::tmpdir();
+        }
+
+        return tempnam($dirname, 'temp.');
     }
 
     function keepSettingsOnSave($bool)
