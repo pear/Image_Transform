@@ -64,9 +64,10 @@ It provides :
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-- Now the drivers have been split off into their own sub packages
-- Fixed Bug #8573 This way we can retrieve the new_y and new_x with getNewImageWidth and getNewImageHeight (davidc)
-- Fixed Bug Bug #8607   Fatal error: Call to undefined function: load() (davidc)
+- Now the drivers have been split off into their own sub packages [dufuz]
+- Fixed Bug #8573  This way we can retrieve the new_y and new_x with getNewImageWidth and getNewImageHeight [davidc]
+- Fixed Bug #8607  Fatal error: Call to undefined function: load() [davidc]
+- Fixed Bug #12559 Missing include in Image/Transform.php for System.php in getTempFile() [dufuz]
  </notes>
  <contents>
   <dir name="/">
