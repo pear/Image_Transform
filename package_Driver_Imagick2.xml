@@ -74,6 +74,7 @@ It provides :
    </package>
    <extension>
     <name>imagick</name>
+    <max>0.9.13</max>
    </extension>
   </required>
  </dependencies>
