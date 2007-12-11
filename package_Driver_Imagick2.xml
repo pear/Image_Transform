@@ -75,6 +75,7 @@ It provides :
    <extension>
     <name>imagick</name>
     <max>0.9.13</max>
+    <min>0.9</min>
    </extension>
   </required>
  </dependencies>
