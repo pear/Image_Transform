@@ -216,7 +216,7 @@ class Image_Transform
                     IMAGE_TRANSFORM_ERROR_ARGUMENT);
             }
         } else {
-            switch strtolower($driver) {
+            switch (strtolower($driver)) {
                 case 'gd':
                     $driver = 'GD';
                     break;
@@ -230,7 +230,7 @@ class Image_Transform
         }
 
         if (!is_readable('Image/Transform/Driver' . $driver . '.php')) {
-            return PEAR::raiseError('Driver failed to load file Image/Transform/Driver/' . $driver,
+            return PEAR::raiseError('Driver failed to load file Image/Transform/Driver/' . $driver . '.php',
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
         }
 
