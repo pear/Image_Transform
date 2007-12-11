@@ -229,12 +229,13 @@ class Image_Transform
             }
         }
 
-        if (!is_readable('Image/Transform/Driver' . $driver . '.php')) {
-            return PEAR::raiseError('Driver failed to load file Image/Transform/Driver/' . $driver . '.php',
+        $file = 'Image/Transform/Driver' . $driver . '.php';
+        if (!is_readable($file)) {
+            return PEAR::raiseError('Driver failed to load file ' . $fil ,
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
         }
 
-        include_once 'Image/Transform/Driver/' . $driver . '.php';
+        include_once $file;
 
         $classname = 'Image_Transform_Driver_' . $driver;
         if (!class_exists($classname)) {
