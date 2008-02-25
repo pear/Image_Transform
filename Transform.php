@@ -229,7 +229,7 @@ class Image_Transform
             }
         }
 
-        $file = 'Image/Transform/Driver' . $driver . '.php';
+        $file = 'Image/Transform/Driver/' . $driver . '.php';
         if (!is_readable($file)) {
             return PEAR::raiseError('Driver failed to load file ' . $file ,
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
@@ -471,7 +471,7 @@ class Image_Transform
      */
     function fitOnCanvas($width, $height, $posn='center')
     {
-    	return PEAR::raiseError('fitOnCanvas() method not supported by driver',
+        return PEAR::raiseError('fitOnCanvas() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -909,6 +909,19 @@ class Image_Transform
     function _resize()
     {
         return PEAR::raiseError('Resize method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
+    }
+
+    /**
+     * Normalizes the colors, gamma and other properties of an image
+     * (this should give a result equivalent to a Photoshop autolevels)
+     *
+     * @return PEAR_error
+     * @access public
+     */
+    function normalize()
+    {
+        return PEAR::raiseError('Normalize method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
