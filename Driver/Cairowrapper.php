@@ -171,6 +171,20 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
 
 
     /**
+     * Returns the surface of the image so it can be modified further
+     *
+     * @return resource
+     *
+     * @access public
+     */
+    function getHandle()
+    {
+        return $this->surface;
+    }//function getHandle()
+
+
+
+    /**
      * Frees cairo handles
      *
      * @return void
