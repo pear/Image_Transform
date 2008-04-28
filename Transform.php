@@ -760,6 +760,20 @@ class Image_Transform
     }
 
     /**
+     * Returns the image handle so that one can further try
+     * to manipulate the image
+     *
+     * @return resource
+     *
+     * @access public
+     */
+    function getHandle()
+    {
+        return PEAR::raiseError('getHandle() method not supported by driver',
+            IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
+    }//function getHandle()
+
+    /**
      * Returns the type of the image being manipulated
      *
      * @return string the image type
