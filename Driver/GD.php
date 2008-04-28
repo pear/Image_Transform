@@ -154,6 +154,18 @@ class Image_Transform_Driver_GD extends Image_Transform
     } // End load
 
     /**
+     * Returns the GD image handle
+     *
+     * @return resource
+     *
+     * @access public
+     */
+    function getHandle()
+    {
+        return $this->imageHandle;
+    }//function getHandle()
+
+    /**
      * Adds a border of constant width around an image
      *
      * @param int $border_width Width of border to add
