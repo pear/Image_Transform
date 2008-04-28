@@ -230,7 +230,7 @@ class Image_Transform
         }
 
         $file = 'Image/Transform/Driver/' . $driver . '.php';
-        if (!is_readable($file)) {
+        if (!@fclose(@fopen($file, 'r', true))) {
             return PEAR::raiseError('Driver failed to load file ' . $file ,
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
         }
