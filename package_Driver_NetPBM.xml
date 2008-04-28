@@ -3,7 +3,7 @@
 http://pear.php.net/dtd/tasks-1.0.xsd
 http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd">
- <name>Image_Transform_Driver_IM</name>
+ <name>Image_Transform_Driver_NetPBM</name>
  <channel>pear.php.net</channel>
  <summary>Provides a standard interface to manipulate images using different libraries</summary>
  <description>This package was written to provide a simpler and cross-library interface to doing image transformations and manipulations.
