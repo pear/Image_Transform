@@ -576,6 +576,8 @@ class Image_Transform_Driver_GD extends Image_Transform
         if ($createtruecolor
             && function_exists('ImageCreateTrueColor')) {
             $new_img = @ImageCreateTrueColor($width, $height);
+            imagealphablending($new_img, false);
+            imagesavealpha($new_img, true);
         }
         if (!$new_img) {
             $new_img = ImageCreate($width, $height);
