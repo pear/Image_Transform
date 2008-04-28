@@ -162,6 +162,17 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
 
 
 
+    /**
+     * Saves the scaled image into a file.
+     *
+     * @param string $filename The filename to save to
+     * @param mixed  $type     ignored
+     * @param mixed  $quality  ignored
+     *
+     * @return void
+     *
+     * @access public
+     */
     function save($filename, $type = null, $quality = null)
     {
         cairo_surface_write_to_png($this->surface, $filename);
