@@ -144,12 +144,10 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
 
         cairo_scale($outputContext, $xFactor, $yFactor);
 
-        $inputContext = cairo_create($this->surface);
         cairo_set_source_surface($outputContext, $this->surface, 0, 0);
         cairo_paint($outputContext);
 
         cairo_destroy($outputContext);
-        cairo_destroy($inputContext);
 
         cairo_surface_destroy($this->surface);
 
@@ -210,6 +208,62 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
         }
         $this->surface = null;
     }//function free()
+
+
+
+    /**
+     * Mirrors the image horizontally
+     * Uses an affine transformation matrix to flip the image.
+     *
+     * @return void
+     */
+    function flip()
+    {
+        $outputSurface = cairo_image_surface_create(
+            CAIRO_FORMAT_ARGB32, $this->img_x, $this->img_y
+        );
+        $outputContext = cairo_create($outputSurface);
+        //                            xx, yx, xy, yy, x0, y0
+        $matrix = cairo_matrix_create(1,  0,  0,  -1,  0, $this->img_y);
+
+        cairo_set_matrix($outputContext, $matrix);
+        cairo_set_source_surface($outputContext, $this->surface, 0, 0);
+        cairo_paint($outputContext);
+
+        cairo_destroy($outputContext);
+        cairo_surface_destroy($this->surface);
+
+        $this->surface = $outputSurface;
+    }//function flip()
+
+
+
+    /**
+     * Mirrors the image vertically.
+     * Uses an affine transformation matrix to mirror the image.
+     *
+     * 123 -> 321
+     *
+     * @return void
+     */
+    function mirror()
+    {
+        $outputSurface = cairo_image_surface_create(
+            CAIRO_FORMAT_ARGB32, $this->img_x, $this->img_y
+        );
+        $outputContext = cairo_create($outputSurface);
+        //                            xx, yx, xy, yy, x0, y0
+        $matrix = cairo_matrix_create(-1, 0,  0,  1, $this->img_x, 0);
+
+        cairo_set_matrix($outputContext, $matrix);
+        cairo_set_source_surface($outputContext, $this->surface, 0, 0);
+        cairo_paint($outputContext);
+
+        cairo_destroy($outputContext);
+        cairo_surface_destroy($this->surface);
+
+        $this->surface = $outputSurface;
+    }//function mirror()
 
 }//class Image_Transform_Driver_Cairowrapper extends Image_Transform
 ?>
