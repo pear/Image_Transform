@@ -220,15 +220,15 @@ class Image_Transform
             }
         } else {
             switch (strtolower($driver)) {
-            case 'gd':
-                $driver = 'GD';
-                break;
-            case 'imagick':
-                $driver = 'Imagick2';
-                break;
-            case 'imlib':
-                $driver = 'Imlib';
-                break;
+                case 'gd':
+                    $driver = 'GD';
+                    break;
+                case 'imagick':
+                    $driver = 'Imagick2';
+                    break;
+                case 'imlib':
+                    $driver = 'Imlib';
+                    break;
             }
         }
 
@@ -580,55 +580,55 @@ class Image_Transform
         }
 
         switch ($data[2]) {
-        case IMAGETYPE_GIF:
-            $type = 'gif';
-            break;
-        case IMAGETYPE_JPEG:
-            $type = 'jpeg';
-            break;
-        case IMAGETYPE_PNG:
-            $type = 'png';
-            break;
-        case IMAGETYPE_SWF:
-            $type = 'swf';
-            break;
-        case IMAGETYPE_PSD:
-            $type = 'psd';
-            break;
-        case IMAGETYPE_BMP:
-            $type = 'bmp';
-            break;
-        case IMAGETYPE_TIFF_II:
-        case IMAGETYPE_TIFF_MM:
-            $type = 'tiff';
-            break;
-        case IMAGETYPE_JPC:
-            $type = 'jpc';
-            break;
-        case IMAGETYPE_JP2:
-            $type = 'jp2';
-            break;
-        case IMAGETYPE_JPX:
-            $type = 'jpx';
-            break;
-        case IMAGETYPE_JB2:
-            $type = 'jb2';
-            break;
-        case IMAGETYPE_SWC:
-            $type = 'swc';
-            break;
-        case IMAGETYPE_IFF:
-            $type = 'iff';
-            break;
-        case IMAGETYPE_WBMP:
-            $type = 'wbmp';
-            break;
-        case IMAGETYPE_XBM:
-            $type = 'xbm';
-            break;
-        default:
-            return PEAR::raiseError("Cannot recognize image format",
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
+            case IMAGETYPE_GIF:
+                $type = 'gif';
+                break;
+            case IMAGETYPE_JPEG:
+                $type = 'jpeg';
+                break;
+            case IMAGETYPE_PNG:
+                $type = 'png';
+                break;
+            case IMAGETYPE_SWF:
+                $type = 'swf';
+                break;
+            case IMAGETYPE_PSD:
+                $type = 'psd';
+                break;
+            case IMAGETYPE_BMP:
+                $type = 'bmp';
+                break;
+            case IMAGETYPE_TIFF_II:
+            case IMAGETYPE_TIFF_MM:
+                $type = 'tiff';
+                break;
+            case IMAGETYPE_JPC:
+                $type = 'jpc';
+                break;
+            case IMAGETYPE_JP2:
+                $type = 'jp2';
+                break;
+            case IMAGETYPE_JPX:
+                $type = 'jpx';
+                break;
+            case IMAGETYPE_JB2:
+                $type = 'jb2';
+                break;
+            case IMAGETYPE_SWC:
+                $type = 'swc';
+                break;
+            case IMAGETYPE_IFF:
+                $type = 'iff';
+                break;
+            case IMAGETYPE_WBMP:
+                $type = 'wbmp';
+                break;
+            case IMAGETYPE_XBM:
+                $type = 'xbm';
+                break;
+            default:
+                return PEAR::raiseError("Cannot recognize image format",
+                    IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->img_x = $this->new_x = $data[0];
         $this->img_y = $this->new_y = $data[1];
@@ -649,40 +649,40 @@ class Image_Transform
     function _convert_image_type($type)
     {
         switch (strtolower($type)) {
-        case 'gif':
-            return IMAGETYPE_GIF;
-        case 'jpeg':
-        case 'jpg':
-            return IMAGETYPE_JPEG;
-        case 'png':
-            return IMAGETYPE_PNG;
-        case 'swf':
-            return IMAGETYPE_SWF;
-        case 'psd':
-            return IMAGETYPE_PSD;
-        case 'bmp':
-            return IMAGETYPE_BMP;
-        case 'tiff':
-            return IMAGETYPE_TIFF_II;
-            //IMAGETYPE_TIFF_MM;
-        case 'jpc':
-            return IMAGETYPE_JPC;
-        case 'jp2':
-            return IMAGETYPE_JP2;
-        case 'jpx':
-            return IMAGETYPE_JPX;
-        case 'jb2':
-            return IMAGETYPE_JB2;
-        case 'swc':
-            return IMAGETYPE_SWC;
-        case 'iff':
-            return IMAGETYPE_IFF;
-        case 'wbmp':
-            return IMAGETYPE_WBMP;
-        case 'xbm':
-            return IMAGETYPE_XBM;
-        default:
-            return $type;
+            case 'gif':
+                return IMAGETYPE_GIF;
+            case 'jpeg':
+            case 'jpg':
+                return IMAGETYPE_JPEG;
+            case 'png':
+                return IMAGETYPE_PNG;
+            case 'swf':
+                return IMAGETYPE_SWF;
+            case 'psd':
+                return IMAGETYPE_PSD;
+            case 'bmp':
+                return IMAGETYPE_BMP;
+            case 'tiff':
+                return IMAGETYPE_TIFF_II;
+                //IMAGETYPE_TIFF_MM;
+            case 'jpc':
+                return IMAGETYPE_JPC;
+            case 'jp2':
+                return IMAGETYPE_JP2;
+            case 'jpx':
+                return IMAGETYPE_JPX;
+            case 'jb2':
+                return IMAGETYPE_JB2;
+            case 'swc':
+                return IMAGETYPE_SWC;
+            case 'iff':
+                return IMAGETYPE_IFF;
+            case 'wbmp':
+                return IMAGETYPE_WBMP;
+            case 'xbm':
+                return IMAGETYPE_XBM;
+            default:
+                return $type;
         }
 
         return (isset($types[$t = strtolower($type)])) ? $types[$t] : $type;
@@ -923,12 +923,12 @@ class Image_Transform
     function getWebSafeFormat()
     {
         switch ($this->type){
-        case 'gif':
-        case 'png':
-            return 'png';
-            break;
-        default:
-            return 'jpeg';
+            case 'gif':
+            case 'png':
+                return 'png';
+                break;
+            default:
+                return 'jpeg';
         } // switch
     }
 
