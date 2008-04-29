@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package version="2.0" xmlns="http://pear.php.net/dtd/package-2.0"
+ xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd"
+>
+ <name>Image_Transform_Driver_Cairowrapper</name>
+ <channel>pear.php.net</channel>
+ <summary>Image_Transform driver for cairo_wrapper extension</summary>
+ <description>
+  This package provides an Image_Transform driver for the pecl
+  cairo_wrapper extension.
+  Operations using cairo are fast and of high quality.
+ </description>
+
+ <lead>
+  <name>Christian Weiske</name>
+  <user>cweiske</user>
+  <email>cweiske@php.net</email>
+  <active>yes</active>
+ </lead>
+
+ <date>2008-04-29</date>
+
+ <version>
+  <release>0.0.1</release>
+  <api>0.0.1</api>
+ </version>
+
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license uri="http://www.gnu.org/licenses/lgpl.html">LGPL</license>
+ <notes>
+- First version
+ </notes>
+
+ <contents>
+  <dir name="/">
+   <dir name="Driver">
+    <file baseinstalldir="Image/Transform" name="Cairowrapper.php" role="php" />
+   </dir> <!-- //Driver -->
+  </dir> <!-- / -->
+ </contents>
+
+ <dependencies>
+  <required>
+   <php>
+    <min>4.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.5.2</min>
+   </pearinstaller>
+
+   <package>
+    <name>Image_Transform</name>
+    <channel>pear.php.net</channel>
+    <min>0.10.0</min>
+   </package>
+   <extension>
+    <name>cairo_wrapper</name>
+   </extension>
+  </required>
+ </dependencies>
+
+ <phprelease />
+
+ <changelog>
+ </changelog>
+</package>
