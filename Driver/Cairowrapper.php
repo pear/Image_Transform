@@ -67,8 +67,12 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
     function __construct()
     {
         if (!PEAR::loadExtension('cairo_wrapper')) {
-            $this->isError(PEAR::raiseError("cairo_wrapper extension is not available.",
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
+            $this->isError(
+                PEAR::raiseError(
+                    "cairo_wrapper extension is not available.",
+                    IMAGE_TRANSFORM_ERROR_UNSUPPORTED
+                )
+            );
         }
     }
 
@@ -167,7 +171,7 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
      * @param mixed  $type     ignored
      * @param mixed  $quality  ignored
      *
-     * @return void
+     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
      *
      * @access public
      */
@@ -175,6 +179,7 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
     {
         cairo_surface_write_to_png($this->surface, $filename);
         $this->free();
+        return true;
     }//function save(..)
 
 
@@ -212,7 +217,7 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
 
 
     /**
-     * Mirrors the image horizontally
+     * Mirrors the image vertically
      * Uses an affine transformation matrix to flip the image.
      *
      * @return void
@@ -239,7 +244,7 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
 
 
     /**
-     * Mirrors the image vertically.
+     * Mirrors the image horizontally.
      * Uses an affine transformation matrix to mirror the image.
      *
      * 123 -> 321
