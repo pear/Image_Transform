@@ -78,7 +78,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     function __construct()
     {
         if (!PEAR::loadExtension('imlib')) {
-            $this->isError(PEAR::raiseError('Couldn\'t find the imlib extension.', true));
+            $this->isError(
+                PEAR::raiseError(
+                    'Couldn\'t find the imlib extension.',
+                    IMAGE_TRANSFORM_ERROR_UNSUPPORTED
+                )
+            );
         }
     }
 
