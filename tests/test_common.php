@@ -40,7 +40,7 @@ class Image_TransformTestHelper {
     }
 }
 
-class Image_TransformTest extends PHPUnit_TestCase
+class Image_TransformTest extends PHPUnit_Framework_TestCase
 {
     /**
      * To hold the image transformer
@@ -95,7 +95,7 @@ class Image_TransformTest extends PHPUnit_TestCase
      **/
     function __construct($name)
     {
-        $this->PHPUnit_TestCase($name);
+        parent::__construct($name);
     }
 
     function setUp()
@@ -295,7 +295,7 @@ class Image_TransformTest extends PHPUnit_TestCase
         if (!$this->valid) {
             return $this->assertFalse(true, 'Class constructor failed.');
         }
-        Image_TransformTestHelper::log('Rotation 90°', 'rotate90.png',
+        Image_TransformTestHelper::log('Rotation 90ï¿½', 'rotate90.png',
             'mirror-flip.png');
         $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mirror-flip.png'))
                   && (true === $this->imager->rotate(90))
@@ -315,7 +315,7 @@ class Image_TransformTest extends PHPUnit_TestCase
         if (!$this->valid) {
             return $this->assertFalse(true, 'Class constructor failed.');
         }
-        Image_TransformTestHelper::log('Rotation 120° With Blue Background',
+        Image_TransformTestHelper::log('Rotation 120ï¿½ With Blue Background',
             'rotate120.png', 'mirror-flip.png');
         $result = (true === $this->imager->load(TEST_IMAGE_DIR . 'mirror-flip.png'))
                   && (true === $this->imager->rotate(120, array('canvasColor' => '#0000FF')))
