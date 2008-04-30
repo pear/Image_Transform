@@ -238,16 +238,19 @@ class Image_Transform
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
         }
 
-        include_once $file;
-
         $classname = 'Image_Transform_Driver_' . $driver;
+
         if (!class_exists($classname)) {
-            return PEAR::raiseError(
-                'Image library ' . $driver . ' not supported... aborting.',
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED
-            );
+            include_once $file;
+
+            if (!class_exists($classname)) {
+                return PEAR::raiseError(
+                    'Image library ' . $driver . ' not supported... aborting.',
+                    IMAGE_TRANSFORM_ERROR_UNSUPPORTED
+                );
+            }
         }
-        $obj =& new $classname;
+        $obj =& new $classname();
 
         // Check startup error
         if ($error =& $obj->isError()) {
