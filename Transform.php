@@ -175,14 +175,16 @@ class Image_Transform
      /**
       * Default parameters used in the addText methods.
       */
-     var $default_text_params = array('text' => 'Default text',
-                                      'x'     => 10,
-                                      'y'     => 20,
-                                      'color' => 'red',
-                                      'font'  => 'Arial.ttf',
-                                      'size'  => '12',
-                                      'angle' => 0,
-                                      'resize_first' => false);
+    var $default_text_params = array(
+        'text' => 'Default text',
+        'x'     => 10,
+        'y'     => 20,
+        'color' => 'red',
+        'font'  => 'Arial.ttf',
+        'size'  => 12,
+        'angle' => 0,
+        'resize_first' => false
+    );
 
     /**
      * Creates a new Image_Transform object
