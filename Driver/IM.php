@@ -236,8 +236,10 @@ class Image_Transform_Driver_IM extends Image_Transform
      */
     function addText($params)
     {
+        $this->old_image = $this->imageHandle;
          $params = array_merge($this->_get_default_text_params(), $params);
          extract($params);
+
          if (true === $resize_first) {
              // Set the key so that this will be the last item in the array
             $key = 'ztext';
@@ -343,6 +345,10 @@ class Image_Transform_Driver_IM extends Image_Transform
                . escapeshellarg($this->image) . ' ' . $type . ':'
                . escapeshellarg($filename) . ' 2>&1');
         exec($cmd, $res, $exit);
+
+        if (!$this->keep_settings_on_save) {
+            $this->free();
+        }
 
         return ($exit == 0) ? true : PEAR::raiseError(implode('. ', $res),
             IMAGE_TRANSFORM_ERROR_IO);
