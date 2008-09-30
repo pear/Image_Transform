@@ -46,8 +46,9 @@ It provides :
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
 - This driver was split off Image_Transform
-- Fixed Bug #9904 Typo in IM2::addText, should be $params not $parms
-- Fixed Bug #9541 Imagick2 resize() incorrectly maintains aspect ratio, i.e. not how the old Imagick driver did it
+- Fixed Bug #9904: Typo in IM2::addText, should be $params not $parms
+- Fixed Bug #9541: Imagick2 resize() incorrectly maintains aspect ratio, i.e. not how the old Imagick driver did it
+- Fixed Bug #14711: typo on file Imagick2.php - strcasecomp instead of strcasecmp
  </notes>
  <contents>
   <dir name="/">
@@ -65,7 +66,7 @@ It provides :
     <min>4.3.0</min>
    </php>
    <pearinstaller>
-    <min>1.4.0b1</min>
+    <min>1.7.0</min>
    </pearinstaller>
    <package>
     <name>Image_Transform</name>
