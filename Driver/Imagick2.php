@@ -265,7 +265,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
         $quality = $this->_getOption('quality', $options, 75);
         imagick_setcompressionquality($this->imageHandle, $quality);
 
-        if ($type && strcasecomp($type, $this->type)
+        if ($type && strcasecmp($type, $this->type)
             && !imagick_convert($this->imageHandle, $type)) {
             return $this->raiseError('Couldn\'t save image to file (conversion failed).',
                 IMAGE_TRANSFORM_ERROR_FAILED);
