@@ -5,8 +5,9 @@ http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Image_Transform_Driver_Imagick2</name>
  <channel>pear.php.net</channel>
- <summary>Provides a standard interface to manipulate images using different libraries</summary>
+ <summary>Provides a standard interface to manipulate images, this is the Imagick 0.9 driver</summary>
  <description>This package was written to provide a simpler and cross-library interface to doing image transformations and manipulations.
+This is the Imagick 0.9 driver, it will not work with the new Imagick extension, use the Imagick3 driver for that
 It provides :
 
 * files related functions
@@ -15,11 +16,8 @@ It provides :
 * Resize
 * Rotate (custom angle)
 * Crop
-* Mirror (Most drivers)
-* Flip (Most drivers)
-* Add border (soon)
-* Add shadow (soon)
-
+* Mirror
+* Flip
  </description>
  <lead>
   <name>Helgi Þormar</name>

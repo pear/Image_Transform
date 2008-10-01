@@ -5,21 +5,22 @@ http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Image_Transform_Driver_IM</name>
  <channel>pear.php.net</channel>
- <summary>Provides a standard interface to manipulate images using different libraries</summary>
+ <summary>Provides a standard interface to manipulate images, this is the IM driver</summary>
  <description>This package was written to provide a simpler and cross-library interface to doing image transformations and manipulations.
+This is the imagemagick driver, doesn't utilize the imagick PHP exts but instead interacts straight with the CLI of Imagemagick which
+is not recommended.
+
 It provides :
 
+* grayscale
 * files related functions
 * addText
 * Scale (by length, percentage, maximum X/Y)
 * Resize
 * Rotate (custom angle)
 * Crop
-* Mirror (Most drivers)
-* Flip (Most drivers)
-* Add border (soon)
-* Add shadow (soon)
-
+* Mirror
+* Flip
  </description>
  <lead>
   <name>Helgi Þormar</name>
@@ -63,7 +64,7 @@ It provides :
     <min>4.3.0</min>
    </php>
    <pearinstaller>
-    <min>1.5.2</min>
+    <min>1.7.0</min>
    </pearinstaller>
    <package>
     <name>Image_Transform</name>

@@ -3,35 +3,29 @@
 http://pear.php.net/dtd/tasks-1.0.xsd
 http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd">
- <name>Image_Transform_Driver_NetPBM</name>
+ <name>Image_Transform_Driver_Imagick3</name>
  <channel>pear.php.net</channel>
- <summary>Provides a standard interface to manipulate images, NetPBM driver</summary>
+ <summary>Provides a standard interface to manipulate images using different libraries</summary>
  <description>This package was written to provide a simpler and cross-library interface to doing image transformations and manipulations.
-This is the NetPBM driver.
 It provides :
 
+* grayscale
 * files related functions
 * addText
-* Scale (by length, percentage, maximum X/Y)
-* Resize
 * Rotate (custom angle)
 * Crop
 * Mirror (Most drivers)
 * Flip (Most drivers)
+* Resize (soon)
+* Scale (by length, percentage, maximum X/Y) (soon)
 * Add border (soon)
 * Add shadow (soon)
 
  </description>
  <lead>
-  <name>Helgi Þormar</name>
-  <user>dufuz</user>
-  <email>dufuz@php.net</email>
-  <active>yes</active>
- </lead>
- <lead>
-  <name>David Coallier</name>
-  <user>davidc</user>
-  <email>davidc@php.net</email>
+  <name>Philippe Jausions</name>
+  <user>jausions</user>
+  <email>Philippe.Jausions@11abacus.com</email>
   <active>yes</active>
  </lead>
  <date>2007-04-19</date>
@@ -46,20 +40,22 @@ It provides :
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-* This driver was split off Image_Transform
-* Bug #11165 NetPBM save() command appends a '2' (helgi) [patch by markvds@elegia.nl]
+- Initial release of driver, aimed at Imagick 2+
  </notes>
  <contents>
   <dir name="/">
    <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="NetPBM.php" role="php" />
+    <dir name="Imagick">
+     <file baseinstalldir="Image/Transform" name="ImageTypes.php" role="php" />
+    </dir> <!-- //Driver/Imagick -->
+    <file baseinstalldir="Image/Transform" name="Imagick3.php" role="php" />
    </dir> <!-- //Driver -->
   </dir> <!-- / -->
  </contents>
  <dependencies>
   <required>
    <php>
-    <min>4.3.0</min>
+    <min>5.1.3</min>
    </php>
    <pearinstaller>
     <min>1.7.0</min>
@@ -69,6 +65,10 @@ It provides :
     <channel>pear.php.net</channel>
     <min>0.10.0</min>
    </package>
+   <extension>
+    <name>imagick</name>
+    <min>2.2.0</min>
+   </extension>
   </required>
  </dependencies>
  <phprelease />

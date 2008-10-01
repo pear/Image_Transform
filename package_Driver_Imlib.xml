@@ -5,10 +5,9 @@ http://pear.php.net/dtd/package-2.0
 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Image_Transform_Driver_Imlib</name>
  <channel>pear.php.net</channel>
- <summary>Provides a standard interface to manipulate images using different libraries</summary>
+ <summary>Provides a standard interface to manipulate images, this is the Imlib driver</summary>
  <description>This package was written to provide a simpler and cross-library interface to doing image transformations and manipulations.
-
-http://mmcc.cx/php_imlib/index.php
+This is the Imlib driver - http://mmcc.cx/php_imlib/index.php
 
 It provides :
 
@@ -18,10 +17,8 @@ It provides :
 * Resize
 * Rotate (custom angle)
 * Crop
-* Mirror (Most drivers)
-* Flip (Most drivers)
-* Add border (soon)
-* Add shadow (soon)
+* Mirror
+* Flip
 
  </description>
  <lead>
@@ -57,7 +54,7 @@ It provides :
     <min>4.3.0</min>
    </php>
    <pearinstaller>
-    <min>1.4.0b1</min>
+    <min>1.7.0</min>
    </pearinstaller>
    <package>
     <name>Image_Transform</name>
