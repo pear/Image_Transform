@@ -121,7 +121,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      */
     function _resize($new_x, $new_y, $options = null)
     {
-        if (!imagick_resize($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_UNKNOWN , 1, , '!')) {
+        if (!imagick_resize($this->imageHandle, $new_x, $new_y, IMAGICK_FILTER_UNKNOWN , 1, '!')) {
             return $this->raiseError('Couldn\'t resize image.',
                 IMAGE_TRANSFORM_ERROR_FAILED);
         }
