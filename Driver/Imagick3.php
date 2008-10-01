@@ -384,7 +384,6 @@ class Image_Transform_Driver_Imagick3 extends Image_Transform
     {
         try {
             $this->imagick->flopImage();
-
         } catch (ImagickException $e) {
             return $this->raiseError('Could not mirror the image.',
                 IMAGE_TRANSFORM_ERROR_FAILED);
