@@ -50,8 +50,8 @@ It provides :
  <date>2009-08-16</date>
  <time>13:06:21</time>
  <version>
-  <release>0.10.0</release>
-  <api>0.10.0</api>
+  <release>0.9.3</release>
+  <api>0.9.3</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -221,8 +221,8 @@ Fixes quite a lot of problems, but still far from stable. GD driver should be mu
   </release>
   <release>
    <version>
-    <release>0.10.0</release>
-    <api>0.10.0</api>
+    <release>0.9.3</release>
+    <api>0.9.3</api>
    </version>
    <stability>
     <release>alpha</release>
@@ -231,10 +231,15 @@ Fixes quite a lot of problems, but still far from stable. GD driver should be mu
    <date>2009-08-16</date>
    <license uri="http://www.php.net/license">PHP License</license>
    <notes>
-- Now the drivers have been split off into their own sub packages [dufuz]
+QA Release
 - Fixed Bug #8573  This way we can retrieve the new_y and new_x with getNewImageWidth and getNewImageHeight [davidc]
 - Fixed Bug #8607  Fatal error: Call to undefined function: load() [davidc]
 - Fixed Bug #12559 Missing include in Image/Transform.php for System.php in getTempFile() [dufuz]
+- Bug #11166 NetPBM save() command uses wrong filename 	dufuz
+- Request #12926 Add function to return GD image handle 	cweiske
+- Bug #12930 function crop() should not set resized=true 	 
+- Bug #13784 driver load check does not work 	cweiske
+- Bug #14711 typo on file Imagick2.php - strcasecomp instead of strcasecmp 	dufuz
    </notes>
   </release>
  </changelog>
