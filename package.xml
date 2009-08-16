@@ -70,11 +70,9 @@ It provides :
 - Fixed Bug #12559 Missing include in Image/Transform.php for System.php in getTempFile() [dufuz]
  </notes>
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="ColorsDefs.php" role="php" />
-   </dir> <!-- //Driver -->
-   <file baseinstalldir="Image" name="Transform.php" role="php" />
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" name="Image/Transform/Driver/ColorsDefs.php" role="php" />
+   <file baseinstalldir="/" name="Image/Transform.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
