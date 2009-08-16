@@ -42,10 +42,8 @@ It provides :
 * This driver was split off Image_Transform
  </notes>
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="Imlib.php" role="php" />
-   </dir> <!-- //Driver -->
+  <dir baseinstalldir="/" name="/">
+    <file baseinstalldir="/" name="Image/Transform/Driver/Imlib.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>

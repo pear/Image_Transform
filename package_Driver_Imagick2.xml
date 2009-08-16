@@ -49,13 +49,9 @@ It provides :
 - Fixed Bug #14711: typo on file Imagick2.php - strcasecomp instead of strcasecmp
  </notes>
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <dir name="Imagick">
-     <file baseinstalldir="Image/Transform" name="ImageTypes.php" role="php" />
-    </dir> <!-- //Driver/Imagick -->
-    <file baseinstalldir="Image/Transform" name="Imagick2.php" role="php" />
-   </dir> <!-- //Driver -->
+  <dir baseinstalldir="/" name="/">
+    <file baseinstalldir="/" name="Image/Transform/Driver/Imagick/ImageTypes.php" role="php" />
+    <file baseinstalldir="/" name="Image/Transform/Driver/Imagick2.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>

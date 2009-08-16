@@ -48,10 +48,8 @@ It provides :
 * This driver was split off Image_Transform
  </notes>
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="GD1.php" role="php" />
-   </dir> <!-- //Driver -->
+  <dir baseinstalldir="/" name="/">
+    <file baseinstalldir="" name="Image/Transform/Driver/GD1.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>

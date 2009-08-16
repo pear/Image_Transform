@@ -49,13 +49,9 @@ It provides :
 * This driver was split off Image_Transform
  </notes>
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <dir name="Imagick">
-     <file baseinstalldir="Image/Transform" name="ImageTypes.php" role="php" />
-    </dir> <!-- //Driver/Imagick -->
-    <file baseinstalldir="Image/Transform" name="IM.php" role="php" />
-   </dir> <!-- //Driver -->
+  <dir  basinstalldir="/" name="/">
+    <file baseinstalldir="/" name="Image/Transform/Driver/Imagick/ImageTypes.php" role="php" />
+    <file baseinstalldir="/" name="Image/Transform/Driver/IM.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>

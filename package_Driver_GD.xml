@@ -51,10 +51,8 @@ It provides :
 - Fixed Bug #4967   Call to undefined function: imagecreatefrom
  </notes>
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="GD.php" role="php" />
-   </dir> <!-- //Driver -->
+  <dir baseinstalldir="/" name="/">
+    <file baseinstalldir="/" name="Image/Transform/Driver/GD.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>

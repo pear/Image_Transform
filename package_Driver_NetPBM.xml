@@ -51,9 +51,7 @@ It provides :
  </notes>
  <contents>
   <dir name="/">
-   <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="NetPBM.php" role="php" />
-   </dir> <!-- //Driver -->
+    <file baseinstalldir="/" name="Image/Transform/Driver/NetPBM.php" role="php" />
   </dir> <!-- / -->
  </contents>
  <dependencies>

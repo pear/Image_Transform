@@ -40,10 +40,8 @@ http://pear.php.net/dtd/package-2.0.xsd"
  </notes>
 
  <contents>
-  <dir name="/">
-   <dir name="Driver">
-    <file baseinstalldir="Image/Transform" name="Cairowrapper.php" role="php" />
-   </dir> <!-- //Driver -->
+  <dir baseinstalldir="/" name="/">
+    <file baseinstalldir="/" name="Image/Transform/Driver/Cairowrapper.php" role="php" />
   </dir> <!-- / -->
  </contents>
 
