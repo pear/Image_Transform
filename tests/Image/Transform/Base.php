@@ -4,7 +4,7 @@
  *
  * @author Christian Weiske <cweiske@php.net>
  */
-abstract class Image_TransformTest_Base extends PHPUnit_Framework_TestCase
+abstract class Image_Transform_Base extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Image_Transform
@@ -45,13 +45,9 @@ abstract class Image_TransformTest_Base extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         $strClass            = get_class($this);
-        $this->strDriverPart = substr($strClass, strrpos($strClass, '_') + 1);
+        $this->strDriverPart = substr($strClass, strrpos($strClass, '_') + 1, -4);
 
-        chdir(dirname(__FILE__) . '/../../');
-        require_once 'Image/TransformTest/Helper.php';
-
-        chdir(dirname(__FILE__) . '/../../../');
-        //var_dump(getcwd());die();
+        require_once 'Image/Transform/Helper.php';
         require_once 'Image/Transform.php';
 
         $this->strImageDir = dirname(__FILE__) . '/../../images/';
@@ -463,14 +459,14 @@ abstract class Image_TransformTest_Base extends PHPUnit_Framework_TestCase
     {
         if ($this->nMaxAverageDiff === null) {
             $this->assertTrue(
-                Image_TransformTest_Helper::exactlySameFile(
+                Image_Transform_Helper::exactlySameFile(
                     $filename1, $filename2
                 ),
                 'Images are not the same (' . $filename1 . ' and ' . $filename2 . ')'
             );
         } else {
             $this->assertTrue(
-                Image_TransformTest_Helper::nearlySameFile(
+                Image_Transform_Helper::nearlySameFile(
                     $filename1, $filename2, $this->nMaxAverageDiff
                 ),
                 'Images are not the same (' . $filename1 . ' and ' . $filename2 . ')'

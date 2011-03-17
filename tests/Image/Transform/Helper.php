@@ -4,7 +4,7 @@
 *
 * @author Christian Weiske <cweiske@php.net>
 */
-class Image_TransformTest_Helper
+class Image_Transform_Helper
 {
     public static function exactlySameFile($filename1, $filename2)
     {
