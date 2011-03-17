@@ -47,10 +47,12 @@ It provides :
   <email>davidc@php.net</email>
   <active>yes</active>
  </lead>
- <date>2009-08-16</date>
- <time>13:06:21</time>
+
+ <date>2011-03-17</date>
+ <time>10:36:00</time>
+
  <version>
-  <release>0.9.3</release>
+  <release>0.9.4</release>
   <api>0.9.3</api>
  </version>
  <stability>
@@ -58,101 +60,100 @@ It provides :
   <api>alpha</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
+
  <notes>
 QA Release
-- Fixed Bug #8573  This way we can retrieve the new_y and new_x with getNewImageWidth and getNewImageHeight [davidc]
-- Fixed Bug #8607  Fatal error: Call to undefined function: load() [davidc]
-- Fixed Bug #12559 Missing include in Image/Transform.php for System.php in getTempFile() [dufuz]
-- Bug #11166 NetPBM save() command uses wrong filename 	dufuz
-- Request #12926 Add function to return GD image handle 	cweiske
-- Bug #12930 function crop() should not set resized=true 	 
-- Bug #13784 driver load check does not work 	cweiske
-- Bug #14711 typo on file Imagick2.php - strcasecomp instead of strcasecmp 	dufuz
+- Fix bug #16070: Use Imagick3 on PHP5, not Imagick2 [fkrauthan, cweiske]
  </notes>
+
  <contents>
   <dir baseinstalldir="/" name="/">
-   <file baseinstalldir="/" name="Docs/README" role="data" />
-   <file baseinstalldir="/" name="Examples/resize.php" role="php" />
-   <file baseinstalldir="/" name="Examples/test.gif" role="data" />
-   <file baseinstalldir="/" name="Examples/test.jpg" role="data" />
-   <file baseinstalldir="/" name="Examples/test.php" role="php" />
-   <file baseinstalldir="/" name="Examples/test.png" role="data" />
-   <file baseinstalldir="/" name="Examples/test.tif" role="data" />
-   <file baseinstalldir="/" name="Examples/test_netpbm.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/Cairowrapper.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/ColorsDefs.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/GD.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/GD1.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/IM.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/Imagick2.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/Imagick3.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/Imlib.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/NetPBM.php" role="php" />
-   <file baseinstalldir="/" name="Image/Transform/Driver/Imagick/ImageTypes.php" role="php" />
-   <file baseinstalldir="/" name="imgtests/index.php" role="php" />
-   <file baseinstalldir="/" name="imgtests/norfolk_broads.jpg-GD" role="data" />
-   <file baseinstalldir="/" name="imgtests/test.php" role="php" />
-   <file baseinstalldir="/" name="imgtests/text.php" role="php" />
-   <file baseinstalldir="/" name="imgtests/images/image1.jpg" role="data" />
-   <file baseinstalldir="/" name="imgtests/images/norfolk_broads.jpg" role="data" />
-   <file baseinstalldir="/" name="imgtests/images/norfolk_broads.png" role="data" />
-   <file baseinstalldir="/" name="tests/AllTests.php" role="test" />
-   <file baseinstalldir="/" name="tests/test_common.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Base.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Helper.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Driver/Cairowrapper.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Driver/GD.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Driver/IM.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Driver/Imagick3.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Driver/Imlib.php" role="test" />
-   <file baseinstalldir="/" name="tests/Image/TransformTest/Driver/NetPBM.php" role="test" />
-   <file baseinstalldir="/" name="tests/images/alpha-gradient.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/alpha.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/base_4x4-flip.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/base_4x4-mirror.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/base_4x4-resized-2x2.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/base_4x4.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/bggrid.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/circle.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/crop.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/grid.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/icon_15x16.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/imageinfo_96x32.bmp" role="test" />
-   <file baseinstalldir="/" name="tests/images/imageinfo_96x32.gif" role="test" />
-   <file baseinstalldir="/" name="tests/images/imageinfo_96x32.jpeg" role="test" />
-   <file baseinstalldir="/" name="tests/images/imageinfo_96x32.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/imageinfo_96x32.wbmp" role="test" />
-   <file baseinstalldir="/" name="tests/images/imageinfo_96x32.xbm" role="test" />
-   <file baseinstalldir="/" name="tests/images/mirror-flip.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/mixed.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/mixed.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/plasma.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/resizePixel.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/crop_32x32-at-0x0.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/crop_40x41-at-0x0.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/crop_111x111-at-30x30.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/fit150x200px.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/fit200x100px.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/flip-alpha.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/flip.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/greyscale.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/mirror.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/mixed.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/resizePixel.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/resizePixel.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/resizeTo150x150px.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/resizeTo150x150px.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/rotate90.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/rotate120.png" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/scaleByFactor0_33.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/scaleByPct31_5.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/scaleByXTo200px.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/scaleByYTo112px.jpg" role="test" />
-   <file baseinstalldir="/" name="tests/images/expected/scalePct31_5s.jpg" role="test" />
+   <file name="Docs/README" role="data" />
+   <file name="Examples/resize.php" role="php" />
+   <file name="Examples/test.gif" role="data" />
+   <file name="Examples/test.jpg" role="data" />
+   <file name="Examples/test.php" role="php" />
+   <file name="Examples/test.png" role="data" />
+   <file name="Examples/test.tif" role="data" />
+   <file name="Examples/test_netpbm.php" role="php" />
+   <file name="Image/Transform.php" role="php" />
+   <file name="Image/Transform/Driver/Cairowrapper.php" role="php" />
+   <file name="Image/Transform/Driver/ColorsDefs.php" role="php" />
+   <file name="Image/Transform/Driver/GD.php" role="php" />
+   <file name="Image/Transform/Driver/GD1.php" role="php" />
+   <file name="Image/Transform/Driver/IM.php" role="php" />
+   <file name="Image/Transform/Driver/Imagick2.php" role="php" />
+   <file name="Image/Transform/Driver/Imagick3.php" role="php" />
+   <file name="Image/Transform/Driver/Imlib.php" role="php" />
+   <file name="Image/Transform/Driver/NetPBM.php" role="php" />
+   <file name="Image/Transform/Driver/Imagick/ImageTypes.php" role="php" />
+
+   <file name="imgtests/index.php" role="php" />
+   <file name="imgtests/norfolk_broads.jpg-GD" role="data" />
+   <file name="imgtests/test.php" role="php" />
+   <file name="imgtests/text.php" role="php" />
+   <file name="imgtests/images/image1.jpg" role="data" />
+   <file name="imgtests/images/norfolk_broads.jpg" role="data" />
+   <file name="imgtests/images/norfolk_broads.png" role="data" />
+
+   <file name="tests/bootstrap.php" role="test" />
+   <file name="tests/phpunit.xml" role="test" />
+   <file name="tests/test_common.php" role="test" />
+   <file name="tests/Image/TransformTest.php" role="test" />
+   <file name="tests/Image/Transform/Base.php" role="test" />
+   <file name="tests/Image/Transform/Helper.php" role="test" />
+   <file name="tests/Image/Transform/Driver/CairowrapperTest.php" role="test" />
+   <file name="tests/Image/Transform/Driver/GDTest.php" role="test" />
+   <file name="tests/Image/Transform/Driver/IMTest.php" role="test" />
+   <file name="tests/Image/Transform/Driver/Imagick3Test.php" role="test" />
+   <file name="tests/Image/Transform/Driver/ImlibTest.php" role="test" />
+   <file name="tests/Image/Transform/Driver/NetPBMTest.php" role="test" />
+   <file name="tests/images/alpha-gradient.png" role="test" />
+   <file name="tests/images/alpha.png" role="test" />
+   <file name="tests/images/base_4x4-flip.png" role="test" />
+   <file name="tests/images/base_4x4-mirror.png" role="test" />
+   <file name="tests/images/base_4x4-resized-2x2.png" role="test" />
+   <file name="tests/images/base_4x4.png" role="test" />
+   <file name="tests/images/bggrid.png" role="test" />
+   <file name="tests/images/circle.png" role="test" />
+   <file name="tests/images/crop.png" role="test" />
+   <file name="tests/images/grid.png" role="test" />
+   <file name="tests/images/icon_15x16.png" role="test" />
+   <file name="tests/images/imageinfo_96x32.bmp" role="test" />
+   <file name="tests/images/imageinfo_96x32.gif" role="test" />
+   <file name="tests/images/imageinfo_96x32.jpeg" role="test" />
+   <file name="tests/images/imageinfo_96x32.png" role="test" />
+   <file name="tests/images/imageinfo_96x32.wbmp" role="test" />
+   <file name="tests/images/imageinfo_96x32.xbm" role="test" />
+   <file name="tests/images/mirror-flip.png" role="test" />
+   <file name="tests/images/mixed.jpg" role="test" />
+   <file name="tests/images/mixed.png" role="test" />
+   <file name="tests/images/plasma.png" role="test" />
+   <file name="tests/images/resizePixel.png" role="test" />
+   <file name="tests/images/expected/crop_32x32-at-0x0.png" role="test" />
+   <file name="tests/images/expected/crop_40x41-at-0x0.png" role="test" />
+   <file name="tests/images/expected/crop_111x111-at-30x30.png" role="test" />
+   <file name="tests/images/expected/fit150x200px.jpg" role="test" />
+   <file name="tests/images/expected/fit200x100px.jpg" role="test" />
+   <file name="tests/images/expected/flip-alpha.png" role="test" />
+   <file name="tests/images/expected/flip.png" role="test" />
+   <file name="tests/images/expected/greyscale.png" role="test" />
+   <file name="tests/images/expected/mirror.png" role="test" />
+   <file name="tests/images/expected/mixed.jpg" role="test" />
+   <file name="tests/images/expected/resizePixel.jpg" role="test" />
+   <file name="tests/images/expected/resizePixel.png" role="test" />
+   <file name="tests/images/expected/resizeTo150x150px.jpg" role="test" />
+   <file name="tests/images/expected/resizeTo150x150px.png" role="test" />
+   <file name="tests/images/expected/rotate90.png" role="test" />
+   <file name="tests/images/expected/rotate120.png" role="test" />
+   <file name="tests/images/expected/scaleByFactor0_33.jpg" role="test" />
+   <file name="tests/images/expected/scaleByPct31_5.jpg" role="test" />
+   <file name="tests/images/expected/scaleByXTo200px.jpg" role="test" />
+   <file name="tests/images/expected/scaleByYTo112px.jpg" role="test" />
+   <file name="tests/images/expected/scalePct31_5s.jpg" role="test" />
   </dir>
  </contents>
+
  <dependencies>
   <required>
    <php>
@@ -163,8 +164,11 @@ QA Release
    </pearinstaller>
   </required>
  </dependencies>
+
  <phprelease />
+
  <changelog>
+
   <release>
    <version>
     <release>0.8</release>
@@ -180,6 +184,7 @@ QA Release
 Second public release, hopefully much more stable.  API nearly fixed.  NOT NECESSARILY COMPATIBLE WITH 0.1 - be warned!
    </notes>
   </release>
+
   <release>
    <version>
     <release>0.9.0</release>
@@ -195,6 +200,7 @@ Second public release, hopefully much more stable.  API nearly fixed.  NOT NECES
 Fixes quite a lot of problems, but still far from stable. GD driver should be much better. ImageMagick is the best driver, especially to deal with transparent and alpha-channel images. Due to the size of the images, the tests are not packaged, use CVS instead.
    </notes>
   </release>
+
   <release>
    <version>
     <release>0.9.1</release>
@@ -219,6 +225,7 @@ Fixes quite a lot of problems, but still far from stable. GD driver should be mu
 - Request #6004 Added 2 new methods fitX() and fitY() to fit an image within the given width or height (respectively). (jausions)
    </notes>
   </release>
+
   <release>
    <version>
     <release>0.9.3</release>
@@ -242,5 +249,23 @@ QA Release
 - Bug #14711 typo on file Imagick2.php - strcasecomp instead of strcasecmp 	dufuz
    </notes>
   </release>
+
+  <release>
+   <version>
+    <release>0.9.4</release>
+    <api>0.9.3</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-03-17</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+QA Release
+- Fix bug #16070: Use Imagick3 on PHP5, not Imagick2 [fkrauthan, cweiske]
+   </notes>
+  </release>
+
  </changelog>
 </package>
