@@ -1,0 +1,7 @@
+<phpunit backupGlobals="false" colors="true" bootstrap="bootstrap.php">
+<!-- <testsuites>
+  <testsuite name="Image_Transform">
+   <directory>*/*/*.php</directory>
+  </testsuite>
+ </testsuites>-->
+</phpunit>
