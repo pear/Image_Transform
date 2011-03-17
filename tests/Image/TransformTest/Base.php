@@ -1,6 +1,4 @@
 <?php
-require_once 'PHPUnit/Framework.php';
-
 /**
  * Base class for image transform driver tests
  *

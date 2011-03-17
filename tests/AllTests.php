@@ -19,6 +19,7 @@ class Image_Transform_AllTests
 
     public static function suite()
     {
+        error_reporting(E_ALL & ~E_DEPRECATED);
         $suite = new PHPUnit_Framework_TestSuite('Image_Transform Tests');
         /** Add testsuites, if there is. */
         $suite->addTestSuite('Image_TransformTest');
