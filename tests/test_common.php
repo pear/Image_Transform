@@ -100,7 +100,6 @@ class Image_TransformTest extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        error_reporting(E_ALL);
         // Save result images in the driver's temp folder
         $this->prepend = $this->driver . DIRECTORY_SEPARATOR;
         $this->imager =& Image_Transform::factory($this->driver);
