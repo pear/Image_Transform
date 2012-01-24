@@ -157,7 +157,7 @@ QA Release
  <dependencies>
   <required>
    <php>
-    <min>4.3.2</min>
+    <min>5.0.0</min>
    </php>
    <pearinstaller>
     <min>1.7.0</min>
