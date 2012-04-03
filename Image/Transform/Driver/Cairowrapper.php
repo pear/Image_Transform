@@ -67,8 +67,8 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
      *
      * @param string $image filename
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
-     *
+     * @return bool
+     * @throws Image_Transform_Exception
      * @access public
      */
     function load($image)
@@ -102,8 +102,8 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
      * @param int   $new_y   New height
      * @param array $options Optional parameters
      *
-     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
-     *
+     * @return bool
+     * @throws Image_Transform_Exception
      * @access protected
      */
     function _resize($new_x, $new_y, $options = null)
@@ -152,7 +152,7 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
      * @param mixed  $type     ignored
      * @param mixed  $quality  ignored
      *
-     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @return bool
      *
      * @access public
      */

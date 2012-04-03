@@ -146,8 +146,7 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
         $img2   = @imagecreateTrueColor($width2,$height2);
 
         if (!is_resource($img2)) {
-            throw new Image_Transform_Exception('Cannot create buffer for the rotataion.',
-                                null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
+            throw new Image_Transform_Exception('Cannot create buffer for the rotation.');
         }
 
         $this->img_x = $width2;

@@ -30,6 +30,7 @@
  * Include for error handling
  */
 require_once 'PEAR.php';
+require_once 'Image/Transform/Exception.php';
 
 /**
  * Error code for unsupported library, image format or methods
@@ -193,10 +194,11 @@ class Image_Transform
      *               is specified the factory will attempt to use 'Imagick' first
      *               then 'GD' second, then 'Imlib' last
      *
-     * @return object an Image_Transform object, or PEAR_Error on error
+     * @return object an Image_Transform object
      *
-     * @see PEAR::isError()
      * @see Image_Transform::setOption()
+     * @throws Image_Transform_Exception
+     * @throws InvalidArgumentException
      */
     function &factory($driver = '')
     {
@@ -218,7 +220,7 @@ class Image_Transform
                 }
             }
             if (!$driver) {
-                return PEAR::raiseError(
+                throw new InvalidArgumentException(
                     'No image library specified and none can be found.'
                     . ' You must specify driver in factory() call.',
                     IMAGE_TRANSFORM_ERROR_ARGUMENT
@@ -243,7 +245,7 @@ class Image_Transform
 
         $file = 'Image/Transform/Driver/' . $driver . '.php';
         if (!@fclose(@fopen($file, 'r', true))) {
-            return PEAR::raiseError('Driver failed to load file ' . $file,
+            throw new Image_Transform_Exception('Driver failed to load file ' . $file,
                                     IMAGE_TRANSFORM_DRIVER_FILE_MISSING);
         }
 
@@ -253,7 +255,7 @@ class Image_Transform
             include_once $file;
 
             if (!class_exists($classname)) {
-                return PEAR::raiseError(
+                throw new InvalidArgumentException(
                     'Image library ' . $driver . ' not supported... aborting.',
                     IMAGE_TRANSFORM_ERROR_UNSUPPORTED
                 );
@@ -273,8 +275,9 @@ class Image_Transform
      *
      * @param object $error PEAR_Error object when setting an error
      *
-     * @return mixed FALSE or PEAR_Error object
+     * @return mixed FALSE
      * @access protected
+     * @deprecated
      */
     function &isError($error = null)
     {
@@ -293,10 +296,9 @@ class Image_Transform
      * @param mixed $new_y   (0, number, percentage 10% or 0.1)
      * @param array $options Options
      *
-     * @return mixed TRUE or PEAR_Error object on error
-     * @access public
+     * @return bool
      */
-    function resize($new_x = 0, $new_y = 0, $options = null)
+    public function resize($new_x = 0, $new_y = 0, $options = null)
     {
         // 0 means keep original size
         $new_x = (0 == $new_x)
@@ -317,13 +319,13 @@ class Image_Transform
      *
      * @param int $new_x Size to scale X-dimension to
      *
-     * @return mixed TRUE or PEAR_Error object on error
-     * @access public
+     * @return bool
+     * @throws InvalidArgumentException
      */
-    function scaleByX($new_x)
+    public function scaleByX($new_x)
     {
         if ($new_x <= 0) {
-            return PEAR::raiseError('New size must be strictly positive',
+            throw new InvalidArgumentException('New size must be strictly positive',
                                         IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         $new_y = round(($new_x / $this->img_x) * $this->img_y, 0);
@@ -347,13 +349,13 @@ class Image_Transform
      *
      * @param int $new_y Size to scale Y-dimension to
      *
-     * @return mixed TRUE or PEAR_Error object on error
-     * @access public
+     * @return mixed TRUE
+     * @throws InvalidArgumentException
      */
-    function scaleByY($new_y)
+    public function scaleByY($new_y)
     {
         if ($new_y <= 0) {
-            return PEAR::raiseError('New size must be strictly positive',
+            throw new InvalidArgumentException('New size must be strictly positive',
                                         IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         $new_x = round(($new_y / $this->img_y) * $this->img_x, 0);
@@ -367,7 +369,7 @@ class Image_Transform
      *
      * @param mixed $size (number, percentage 10% or 0.1)
      *
-     * @return mixed TRUE or PEAR_Error object on error
+     * @return bool TRUE
      * @access public
      * @see scaleByPercentage, scaleByFactor, scaleByLength
      */
@@ -389,10 +391,9 @@ class Image_Transform
      *
      * @param int $size Percentage of original size to scale to
      *
-     * @return mixed TRUE or PEAR_Error object on error
-     * @access public
+     * @return bool
      */
-    function scaleByPercentage($size)
+    public function scaleByPercentage($size)
     {
         return $this->scaleByFactor($size / 100);
     } // End scaleByPercentage
@@ -404,13 +405,13 @@ class Image_Transform
      *
      * @param float $size Factor of original size to scale to
      *
-     * @return mixed TRUE or PEAR_Error object on error
-     * @access public
+     * @return mixed TRUE
+     * @throws InvalidArgumentException
      */
-    function scaleByFactor($size)
+    public function scaleByFactor($size)
     {
         if ($size <= 0) {
-            return PEAR::raiseError('New size must be strictly positive',
+            throw new InvalidArgumentException('New size must be strictly positive',
                                         IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         $new_x = round($size * $this->img_x, 0);
@@ -425,13 +426,13 @@ class Image_Transform
      *
      * @param int $size Max dimension in pixels
      *
-     * @return mixed TRUE or PEAR_Error object on error
-     * @access public
+     * @return mixed TRUE
+     * @throws InvalidArgumentException
      */
-    function scaleMaxLength($size)
+    public function scaleMaxLength($size)
     {
         if ($size <= 0) {
-            return PEAR::raiseError('New size must be strictly positive',
+            throw new InvalidArgumentException('New size must be strictly positive',
                                         IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         if ($this->img_x >= $this->img_y) {
@@ -449,7 +450,7 @@ class Image_Transform
      *
      * @param int $size Max dimension in pixels
      *
-     * @return mixed TRUE or PEAR_Error object on error
+     * @return mixed TRUE
      * @access public
      * @see scaleMaxLength()
      */
@@ -468,13 +469,13 @@ class Image_Transform
      * @param integer $width  Width of the box in pixels
      * @param integer $height Height of the box in pixels
      *
-     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
-     * @access public
+     * @return bool
+     * @throws InvalidArgumentException
      */
-    function fit($width, $height)
+    public function fit($width, $height)
     {
         if ($width <= 0 || $height <= 0) {
-            return PEAR::raiseError("Invalid arguments.",
+            throw new InvalidArgumentException("Invalid arguments.",
                 IMAGE_TRANSFORM_ERROR_ARGUMENT);
         }
         $x = $this->img_x / $width;
@@ -500,7 +501,7 @@ class Image_Transform
      */
     function fitOnCanvas($width, $height, $posn='center')
     {
-        return PEAR::raiseError('fitOnCanvas() method not supported by driver',
+        throw new Image_Transform_Exception('fitOnCanvas() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -513,7 +514,7 @@ class Image_Transform
      *
      * @param integer $width Maximum width in pixels
      *
-     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function fitX($width)
@@ -530,7 +531,7 @@ class Image_Transform
      *
      * @param integer $height Maximum height in pixels
      *
-     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function fitY($height)
@@ -575,7 +576,7 @@ class Image_Transform
      *
      * @param string $image Image filename
      *
-     * @return mixed TRUE or PEAR_error
+     * @return bool
      * @access protected
      * @see PHP_Compat::image_type_to_mime_type()
      * @link http://php.net/getimagesize
@@ -588,7 +589,7 @@ class Image_Transform
         //  9 = JPC,  10 = JP2, 11 = JPX, 12 = JB2, 13 = SWC, 14 = IFF,
         // 15 = WBMP, 16 = XBM
         if (!is_array($data)) {
-            return PEAR::raiseError("Cannot fetch image or images details.", true);
+            throw new Image_Transform_Exception("Cannot fetch image or images details.", true);
         }
 
         switch ($data[2]) {
@@ -639,7 +640,7 @@ class Image_Transform
                 $type = 'xbm';
                 break;
             default:
-                return PEAR::raiseError("Cannot recognize image format",
+                throw new Image_Transform_Exception("Cannot recognize image format",
                     IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->img_x = $this->new_x = $data[0];
@@ -708,7 +709,7 @@ class Image_Transform
      * @param mixed $new_size (0, number, percentage 10% or 0.1)
      * @param int   $old_size
      *
-     * @return mixed Integer or PEAR_error
+     * @return mixed Integer
      * @access protected
      */
     function _parse_size($new_size, $old_size)
@@ -817,7 +818,7 @@ class Image_Transform
      */
     function getHandle()
     {
-        return PEAR::raiseError('getHandle() method not supported by driver',
+        throw new Image_Transform_Exception('getHandle() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }//function getHandle()
 
@@ -967,12 +968,11 @@ class Image_Transform
      * Place holder for the real resize method
      * used by extended methods to do the resizing
      *
-     * @return PEAR_error
      * @access protected
      */
     function _resize()
     {
-        return PEAR::raiseError('Resize method not supported by driver',
+        throw new Image_Transform_Exception('Resize method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -980,12 +980,11 @@ class Image_Transform
      * Normalizes the colors, gamma and other properties of an image
      * (this should give a result equivalent to a Photoshop autolevels)
      *
-     * @return PEAR_error
      * @access public
      */
     function normalize()
     {
-        return PEAR::raiseError('Normalize method not supported by driver',
+        throw new Image_Transform_Exception('Normalize method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -997,12 +996,11 @@ class Image_Transform
      *
      * @param string $filename Full name of file
      *
-     * @return PEAR_error
      * @access public
      */
     function load($filename)
     {
-        return PEAR::raiseError('load() method not supported by driver',
+        throw new Image_Transform_Exception('load() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1015,12 +1013,11 @@ class Image_Transform
      * @param string $type    Format of image to save as
      * @param mixed  $quality Format-dependent
      *
-     * @return PEAR_error
      * @access public
      */
     function display($type, $quality = null)
     {
-        return PEAR::raiseError('display() method not supported by driver',
+        throw new Image_Transform_Exception('display() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1048,12 +1045,11 @@ class Image_Transform
      * @param string $type     Format of image to save as
      * @param mixed  $quality  Format-dependent
      *
-     * @return PEAR_error
      * @access public
      */
     function save($filename, $type, $quality = null)
     {
-        return PEAR::raiseError('save() method not supported by driver',
+        throw new Image_Transform_Exception('save() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1063,12 +1059,11 @@ class Image_Transform
      * Place holder for the real free method
      * used by extended methods to do the resizing
      *
-     * @return PEAR_error
      * @access public
      */
     function free()
     {
-        return PEAR::raiseError('free() method not supported by driver',
+        throw new Image_Transform_Exception('free() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1165,19 +1160,19 @@ class Image_Transform
      */
     function addText()
     {
-        return PEAR::raiseError('addText() method not supported by driver',
+        throw new Image_Transform_Exception('addText() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function addDropShadow()
     {
-        return PEAR::raiseError('addDropShadow() method not supported by driver',
+        throw new Image_Transform_Exception('addDropShadow() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function addBorder()
     {
-        return PEAR::raiseError('addBorder() method not supported by driver',
+        throw new Image_Transform_Exception('addBorder() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1189,18 +1184,18 @@ class Image_Transform
      * @param int $x      X-coordinate to crop at
      * @param int $y      Y-coordinate to crop at
      *
-     * @return mixed TRUE or a PEAR_Error object on error
+     * @return mixed TRUE
      * @access public
      **/
     function crop($width, $height, $x = 0, $y = 0)
     {
-        return PEAR::raiseError('crop() method not supported by driver',
+        throw new Image_Transform_Exception('crop() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     function canvasResize()
     {
-        return PEAR::raiseError('canvasResize() method not supported by driver',
+        throw new Image_Transform_Exception('canvasResize() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1209,12 +1204,12 @@ class Image_Transform
      *
      * @param float $outputgamma Gamma correction factor
      *
-     * @return mixed TRUE or a PEAR_error object on error
+     * @return mixed TRUE
      * @access public
      **/
     function gamma($outputgamma = 1.0)
     {
-        return PEAR::raiseError('gamma() method not supported by driver',
+        throw new Image_Transform_Exception('gamma() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
@@ -1224,59 +1219,59 @@ class Image_Transform
      * @param float $angle   Angle of rotation in degres
      * @param mixed $options Rotation options
      *
-     * @return bool|PEAR_Error TRUE on success, PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function rotate($angle, $options = null)
     {
-        return PEAR::raiseError('rotate() method not supported by driver',
+        throw new Image_Transform_Exception('rotate() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
      * Horizontal mirroring
      *
-     * @return mixed TRUE or PEAR_Error object on error
+     * @return mixed TRUE
      * @access public
      * @see flip()
      **/
     function mirror()
     {
-        return PEAR::raiseError('mirror() method not supported by driver',
+        throw new Image_Transform_Exception('mirror() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
      * Vertical mirroring
      *
-     * @return TRUE or PEAR Error object on error
-     * @access public
+     * @return TRUE
      * @see mirror()
-     **/
+     * @throws Image_Transform_Exception
+     */
     function flip()
     {
-        return PEAR::raiseError('flip() method not supported by driver',
+        throw new Image_Transform_Exception('flip() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
      * Converts an image into greyscale colors
      *
-     * @return mixed TRUE or a PEAR error object on error
-     * @access public
-     **/
-    function greyscale()
+     * @return mixed TRUE
+     * @throws Image_Transform_Exception
+     */
+    public function greyscale()
     {
-        return PEAR::raiseError('greyscale() method not supported by driver',
+        throw new Image_Transform_Exception('greyscale() method not supported by driver',
             IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
     }
 
     /**
      * Converts an image into greyscale colors
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      * @see greyscale()
-     **/
+     */
     function grayscale()
     {
         return $this->greyscale();
@@ -1334,8 +1329,7 @@ class Image_Transform
      * @param int $x      X-coordinate
      * @param int $y      Y-coordinate
      *
-     * @return bool|PEAR_Error TRUE if intersects, FALSE if not,
-     *                         and PEAR_Error on error
+     * @return bool
      * @access public
      */
     function intersects($width, $height, $x, $y)

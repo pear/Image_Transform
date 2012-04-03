@@ -238,7 +238,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      *                             'canvasColor' => array(r ,g, b), named color or #rrggbb
      *                            )
      * @author Pierre-Alain Joye
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function rotate($angle, $options = null)
@@ -350,7 +350,7 @@ class Image_Transform_Driver_GD extends Image_Transform
     /**
      * Converts the image to greyscale
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function greyscale() {
@@ -379,7 +379,7 @@ class Image_Transform_Driver_GD extends Image_Transform
     function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
-            throw new Image_Transform_Exception('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
+            throw new Image_Transform_Exception('You have already resized the image without saving it.  Your previous resizing will be overwritten');
         }
 
         if ($this->new_x == $new_x && $this->new_y == $new_y) {
