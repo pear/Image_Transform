@@ -16,6 +16,7 @@
  * @link       http://pear.php.net/package/Image_Transform
  */
 require_once 'Image/Transform.php';
+require_once 'Image/Transform/Exception.php';
 
 /**
  * Cairo implementation for Image_Transform package using pecl's cairo_wrapper
@@ -52,11 +53,9 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
     function __construct()
     {
         if (!PEAR::loadExtension('cairo_wrapper')) {
-            $this->isError(
-                PEAR::raiseError(
-                    'cairo_wrapper extension is not available.',
-                    IMAGE_TRANSFORM_ERROR_UNSUPPORTED
-                )
+            throw new Image_Transform_Exception(
+                'cairo_wrapper extension is not available.',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED
             );
         }
     }
@@ -78,18 +77,16 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
 
         $this->image = $image;
         $result = $this->_get_image_details($image);
-        if (PEAR::isError($result)) {
-            return $result;
-        }
+
         if (!$this->supportsType($this->type, 'r')) {
-            return PEAR::raiseError('Image type not supported for input',
+            throw new Image_Transform_Exception('Image type not supported for input',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
         $this->surface = cairo_image_surface_create_from_png($this->image);
         if (cairo_surface_status($this->surface) != CAIRO_STATUS_SUCCESS) {
             $this->surface = null;
-            return PEAR::raiseError('Error while loading image file.',
+            throw new Image_Transform_Exception('Error while loading image file.',
                 IMAGE_TRANSFORM_ERROR_IO);
         }
 
@@ -112,10 +109,9 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
     function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
-            return PEAR::raiseError(
+            throw new Image_Transform_Exception(
                 'You have already resized the image without saving it.'
-                . ' Your previous resizing will be overwritten',
-                null, PEAR_ERROR_TRIGGER, E_USER_NOTICE
+                . ' Your previous resizing will be overwritten'
             );
         }
 
