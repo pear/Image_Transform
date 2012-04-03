@@ -62,14 +62,15 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
 
     /**
      * @see http://www.imagemagick.org/www/formats.html
+     * @throws Image_Transform_Exception
      */
     function __construct()
     {
         if (PEAR::loadExtension('imagick')) {
             include 'Image/Transform/Driver/Imagick/ImageTypes.php';
         } else {
-            $this->isError(PEAR::raiseError('Couldn\'t find the imagick extension.',
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
+            throw new Image_Transform_Exception('Couldn\'t find the imagick extension.',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
     }
 
@@ -77,7 +78,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * Loads an image
      *
      * @param string $image filename
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function load($image)
@@ -94,9 +95,6 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
 
         $this->image = $image;
         $result = $this->_get_image_details($image);
-        if (PEAR::isError($result)) {
-            return $result;
-        }
 
         return true;
     } // End load
@@ -108,7 +106,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * @param int   $new_y   New height
      * @param mixed $options Optional parameters
      *
-     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @return bool
      * @access protected
      */
     function _resize($new_x, $new_y, $options = null)
@@ -131,7 +129,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * @param   int     Rotation angle in degree
      * @param   array   No options are currently supported
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function rotate($angle, $options = null)
@@ -165,7 +163,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      *                                                  before drawing the text
      *                              )
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function addText($params)
@@ -206,7 +204,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * Saves the image to a file
      *
      * @param $filename string the name of the file to write to
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function save($filename, $type = '', $quality = null)
@@ -245,7 +243,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * @param string type (JPG,PNG...);
      * @param int quality 75
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function display($type = '', $quality = null)
@@ -276,7 +274,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * Adjusts the image gamma
      *
      * @param float $outputgamma
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function gamma($outputgamma = 1.0) {
@@ -294,17 +292,17 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      * @param int x X-coordinate to crop at
      * @param int y Y-coordinate to crop at
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
         // Sanity check
         if (!$this->intersects($width, $height, $x, $y)) {
-            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+            throw new Image_Transform_Exception('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         if (!imagick_crop($this->imageHandle, $x, $y, $width, $height)) {
-            return $this->raiseError('Couldn\'t crop image.',
+            throw new Image_Transform_Exception('Couldn\'t crop image.',
                 IMAGE_TRANSFORM_ERROR_FAILED);
         }
 
@@ -319,7 +317,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
     /**
      * Horizontal mirroring
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function mirror()
@@ -334,7 +332,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
     /**
      * Vertical mirroring
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function flip()
@@ -364,7 +362,6 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
      *
      * @param string $message message = prefixed message..
      * @param int    $code error code
-     * @return PEAR error object
      * @access protected
      */
     function raiseError($message, $code = 0)
@@ -375,7 +372,7 @@ class Image_Transform_Driver_Imagick2 extends Image_Transform
                         . "\nDescription: "
                         . imagick_faileddescription($this->imageHandle);
         }
-        return PEAR::raiseError($message, $code);
+        throw new Image_Transform_Exception($message, $code);
     }
 
 } // End class Image_Transform_Driver_Imagick2
