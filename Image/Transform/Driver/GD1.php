@@ -29,29 +29,6 @@ require_once 'Image/Transform/Driver/GD.php';
  **/
 Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
 {
-    /**
-     * Check settings
-     *
-     * @return mixed true or  or a PEAR error object on error
-     *
-     * @see PEAR::isError()
-     */
-    function Image_Transform_Driver_GD1()
-    {
-        $this->__construct();
-    } // End function Image
-
-    /**
-     * Check settings
-     *
-     * @return mixed true or  or a PEAR error object on error
-     *
-     * @see PEAR::isError()
-     */
-    function __construct()
-    {
-        parent::__construct();
-    } // End function Image
 
    /**
     * Resize Action
@@ -64,13 +41,13 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
     * @param $new_y int  new height
     * @param mixed $options Optional parameters
     *
-    * @return true on success or PEAR Error object on error
-    * @see PEAR::isError()
+    * @return bool
+     * @throws Image_Transform_Exception
     */
     function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
-            return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
+            throw new Image_Transform_Exception('You have already resized the image without saving it.  Your previous resizing will be overwritten');
         }
         $new_img =ImageCreate($new_x,$new_y);
         ImageCopyResized($new_img, $this->imageHandle, 0, 0, 0, 0, $new_x, $new_y, $this->img_x, $this->img_y);
@@ -83,7 +60,9 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
         return true;
     }
 
-
+    /**
+     * @throws Image_Transform_Exception
+     */
     function rotate($angle, $options = null)
     {
         if ($options == null){
@@ -167,7 +146,7 @@ Class Image_Transform_Driver_GD1 extends Image_Transform_Driver_GD
         $img2   = @imagecreateTrueColor($width2,$height2);
 
         if (!is_resource($img2)) {
-            return PEAR::raiseError('Cannot create buffer for the rotataion.',
+            throw new Image_Transform_Exception('Cannot create buffer for the rotataion.',
                                 null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
 
