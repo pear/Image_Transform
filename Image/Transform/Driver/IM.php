@@ -335,7 +335,11 @@ class Image_Transform_Driver_IM extends Image_Transform
             $this->free();
         }
 
-        return ($exit == 0) ? true : throw new Image_Transform_Exception(implode('. ', $res),
+        if ($exit == 0) {
+            return true;
+        }
+
+        throw new Image_Transform_Exception(implode('. ', $res),
             IMAGE_TRANSFORM_ERROR_IO);
     } // End save
 
