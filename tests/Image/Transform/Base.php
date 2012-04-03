@@ -80,15 +80,14 @@ abstract class Image_Transform_Base extends PHPUnit_Framework_TestCase
     {
         $this->nMaxAverageDiff = null;
 
-        $this->it = Image_Transform::factory($this->strDriverPart);
-
-        $bError = PEAR::isError($this->it);
-        if ($bError) {
-            if ($this->it->getCode() == IMAGE_TRANSFORM_ERROR_UNSUPPORTED) {
-                $this->markTestSkipped($this->it->getMessage());
-            } else {
-                $this->fail($this->it->getMessage(), $this->it->getCode());
+        try {
+            $this->it = Image_Transform::factory($this->strDriverPart);
+        } catch (Image_Transform_Exception $ite) {
+            if ($ite->getCode() == IMAGE_TRANSFORM_ERROR_UNSUPPORTED) {
+                $this->markTestSkipped($ite->getMessage());
             }
+
+            throw $ite;
         }
     }//protected function setUp()
 
