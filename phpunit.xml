@@ -13,7 +13,9 @@
 	</filter>
 	<testsuites>
 		<testsuite>
-			<directory>tests</directory>
+			<directory>tests/Image/Transform/Driver</directory>
+			<directory>tests/Image/Transform</directory>
+			<directory>tests/Image</directory>
 			<file>*Test.php</file>
 		</testsuite>
 	</testsuites>
