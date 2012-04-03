@@ -69,7 +69,6 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
             throw new Image_Transform_Exception(
                     'Couldn\'t find the imlib extension.',
                     IMAGE_TRANSFORM_ERROR_UNSUPPORTED
-                )
             );
         }
     }
