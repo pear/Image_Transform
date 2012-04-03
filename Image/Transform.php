@@ -261,30 +261,7 @@ class Image_Transform
                 );
             }
         }
-        $obj = new $classname();
-
-        // Check startup error
-        if ($error =& $obj->isError()) {
-            $obj =& $error;
-        }
-        return $obj;
-    }
-
-    /**
-     * Returns/sets an error when the instance couldn't initialize properly
-     *
-     * @param object $error PEAR_Error object when setting an error
-     *
-     * @return mixed FALSE
-     * @access protected
-     * @deprecated
-     */
-    function &isError($error = null)
-    {
-        if (!is_null($error)) {
-            $this->_error =& $error;
-        }
-        return $this->_error;
+        return new $classname();
     }
 
     /**
