@@ -61,7 +61,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
         }
         if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmscale'
                              . ((OS_WINDOWS) ? '.exe' : ''))) {
-            throw new Image_Tranform_Exception('Couldn\'t find "pnmscale" binary',
+            throw new Image_Transform_Exception('Couldn\'t find "pnmscale" binary',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
     } // End function Image_NetPBM
