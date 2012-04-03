@@ -82,6 +82,8 @@ abstract class Image_Transform_Base extends PHPUnit_Framework_TestCase
 
         try {
             $this->it = Image_Transform::factory($this->strDriverPart);
+
+            $this->assertTrue($this->it instanceof Image_Transform, "Expected an Image_Transform, got " . print_r($this->it, true));
         } catch (Image_Transform_Exception $ite) {
             if ($ite->getCode() == IMAGE_TRANSFORM_ERROR_UNSUPPORTED) {
                 $this->markTestSkipped($ite->getMessage());
