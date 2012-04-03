@@ -63,8 +63,8 @@ class Image_Transform_Driver_IM extends Image_Transform
         if (System::which(IMAGE_TRANSFORM_IM_PATH . 'convert' . ((OS_WINDOWS) ? '.exe' : ''))) {
             include 'Image/Transform/Driver/Imagick/ImageTypes.php';
         } else {
-            $this->isError(PEAR::raiseError('Couldn\'t find "convert" binary',
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
+            throw new Image_Transform_Exception('Couldn\'t find "convert" binary',
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
     } // End Image_IM
 
@@ -83,21 +83,18 @@ class Image_Transform_Driver_IM extends Image_Transform
      *
      * @param string filename
      *
-     * @return mixed TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return mixed TRUE
      */
     function load($image)
     {
         $this->_init();
         if (!file_exists($image)) {
-            return PEAR::raiseError('The image file ' . $image
+            throw new Image_Transform_Exception('The image file ' . $image
                 . ' doesn\'t exist', IMAGE_TRANSFORM_ERROR_IO);
         }
         $this->image = $image;
         $result = $this->_get_image_details($image);
-        if (PEAR::isError($result)) {
-            return $result;
-        }
+
         return true;
 
     } // End load
@@ -110,12 +107,11 @@ class Image_Transform_Driver_IM extends Image_Transform
      */
     function _get_image_details($image)
     {
-        $retval = Image_Transform::_get_image_details($image);
-        if (PEAR::isError($retval)) {
-            unset($retval);
-
+        try {
+            return Image_Transform::_get_image_details($image);
+        } catch (Image_Transform_Exception $ite) {
             if (!System::which(IMAGE_TRANSFORM_IM_PATH . 'identify' . ((OS_WINDOWS) ? '.exe' : ''))) {
-                $this->isError(PEAR::raiseError('Couldn\'t find "identify" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
+                throw new Image_Transform_Exception('Couldn\'t find "identify" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
             }
             $cmd = $this->_prepare_cmd(IMAGE_TRANSFORM_IM_PATH,
                 'identify',
@@ -123,18 +119,16 @@ class Image_Transform_Driver_IM extends Image_Transform
             exec($cmd, $res, $exit);
 
             if ($exit != 0) {
-                return PEAR::raiseError("Cannot fetch image or images details.", true);
+                throw new Image_Transform_Exception("Cannot fetch image or images details.", true);
             }
 
             $data  = explode(':', $res[0]);
             $this->img_x = $data[0];
             $this->img_y = $data[1];
             $this->type  = strtolower($data[2]);
-            $retval = true;
 
+            return true;
         }
-
-        return $retval;
     }
 
     /**
@@ -146,13 +140,13 @@ class Image_Transform_Driver_IM extends Image_Transform
      * @param int   $new_y   New height
      * @param mixed $options Optional parameters
      *
-     * @return true on success or PEAR Error object on error
-     * @see PEAR::isError()
+     * @return true on success
+     * @throws Image_Transform_Exception
      */
     function _resize($new_x, $new_y, $options = null)
     {
         if (isset($this->command['resize'])) {
-            return PEAR::raiseError('You cannot scale or resize an image more than once without calling save() or display()', true);
+            throw new Image_Transform_Exception('You cannot scale or resize an image more than once without calling save() or display()', true);
         }
         $this->command['resize'] = '-geometry '
             . ((int) $new_x) . 'x' . ((int) $new_y) . '!';
@@ -168,7 +162,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      *
      * @param   int     angle   rotation angle
      * @param   array   options no option allowed
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      */
     function rotate($angle, $options = null)
     {
@@ -191,7 +185,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      * @param int x X-coordinate to crop at
      * @param int y Y-coordinate to crop at
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      */
     function crop($width, $height, $x = 0, $y = 0) {
         // Do we want a safety check - i.e. if $width+$x > $this->img_x then we
@@ -223,8 +217,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      *                                                  before drawing the text
      *                              )
      *
-     * @return mixed TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return mixed TRUE
      */
     function addText($params)
     {
@@ -252,7 +245,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      *
      * @access public
      * @param float $outputgamma
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      */
     function gamma($outputgamma = 1.0) {
         if ($outputgamme != 1.0) {
@@ -265,7 +258,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      * Convert the image to greyscale
      *
      * @access public
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      */
     function greyscale() {
         $this->command['type'] = '-type Grayscale';
@@ -276,7 +269,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      * Horizontal mirroring
      *
      * @access public
-     * @return TRUE or PEAR Error object on error
+     * @return TRUE
      */
     function mirror() {
         // We can only apply "flop" once
@@ -292,7 +285,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      * Vertical mirroring
      *
      * @access public
-     * @return TRUE or PEAR Error object on error
+     * @return TRUE
      */
     function flip() {
         // We can only apply "flip" once
@@ -313,7 +306,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      * @param $quality  quality image dpi, default=75
      * @param $type     string  (JPEG, PNG...)
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      */
     function save($filename, $type = '', $quality = null)
     {
@@ -342,7 +335,7 @@ class Image_Transform_Driver_IM extends Image_Transform
             $this->free();
         }
 
-        return ($exit == 0) ? true : PEAR::raiseError(implode('. ', $res),
+        return ($exit == 0) ? true : throw new Image_Transform_Exception(implode('. ', $res),
             IMAGE_TRANSFORM_ERROR_IO);
     } // End save
 
@@ -356,7 +349,7 @@ class Image_Transform_Driver_IM extends Image_Transform
      * @param string type (JPEG,PNG...);
      * @param int quality 75
      *
-     * @return mixed TRUE or a PEAR error object on error
+     * @return mixed TRUE
      */
     function display($type = '', $quality = null)
     {
