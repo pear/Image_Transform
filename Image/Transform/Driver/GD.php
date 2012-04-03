@@ -5,7 +5,7 @@
 /**
  * GD implementation for Image_Transform package
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -78,14 +78,6 @@ class Image_Transform_Driver_GD extends Image_Transform
      * @access protected
      */
     var $oldImage = null;
-
-    /**
-     * Check settings
-     */
-    function Image_Transform_Driver_GD()
-    {
-        $this->__construct();
-    } // End function Image
 
     /**
      * Check settings
@@ -592,23 +584,23 @@ class Image_Transform_Driver_GD extends Image_Transform
                 imagefill($new_img, 0, 0, $color);
             }
         }
-        
+
         //GIF Transparent Patch
         if ($this->type=='gif') {
             $transparencyIndex = imagecolortransparent($this->imageHandle);
             $transparencyColor = array('red' => 255, 'green' => 255, 'blue' => 255);
-            
+
             if ($transparencyIndex >= 0) {
-                $transparencyColor = imagecolorsforindex($this->imageHandle, $transparencyIndex);   
+                $transparencyColor = imagecolorsforindex($this->imageHandle, $transparencyIndex);
             }
-           
+
             $transparencyIndex = imagecolorallocate($new_img, $transparencyColor['red'], $transparencyColor['green'], $transparencyColor['blue']);
             imagefill($new_img, 0, 0, $transparencyIndex);
             imagecolortransparent($new_img, $transparencyIndex);
         }
         //End GIF Transparent Patch
-        
-        
+
+
         return $new_img;
     }
 }

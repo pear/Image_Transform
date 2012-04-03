@@ -4,7 +4,7 @@
 /**
  * Cairo implementation for Image_Transform package
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * @category   Image
  * @package    Image_Transform
@@ -45,16 +45,6 @@ class Image_Transform_Driver_Cairowrapper extends Image_Transform
     var $_supported_image_types = array(
         'png' => 'rw'
     );
-
-    /**
-     * Check settings
-     */
-    function Image_Transform_Driver_Cairowrapper()
-    {
-        $this->__construct();
-    }
-
-
 
     /**
      * Create object and check if cairo_wrapper is loaded
