@@ -59,14 +59,6 @@ class Image_Transform_Driver_Imagick3 extends Image_Transform
     var $oldImage;
 
     /**
-     * @see __construct()
-     */
-    function Image_Transform_Driver_Imagick3()
-    {
-        $this->__construct();
-    }
-
-    /**
      * @see http://www.imagemagick.org/www/formats.html
      */
     function __construct()
