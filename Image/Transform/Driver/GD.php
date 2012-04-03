@@ -26,6 +26,7 @@
  */
 
 require_once 'Image/Transform.php';
+require_once 'Image/Transform/Exception.php';
 
 /**
  * GD implementation for Image_Transform package
@@ -83,12 +84,13 @@ class Image_Transform_Driver_GD extends Image_Transform
      * Check settings
      *
      * @since PHP 5
+     * @throws Image_Transform_Exception
      */
     function __construct()
     {
         if (!PEAR::loadExtension('gd')) {
-            $this->isError(PEAR::raiseError("GD library is not available.",
-                IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
+            throw new Image_Transform_Exception("GD library is not available.",
+                IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         } else {
             $types = ImageTypes();
             if ($types & IMG_PNG) {
@@ -107,7 +109,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 $this->_supported_image_types['wbmp'] = 'rw';
             }
             if (!$this->_supported_image_types) {
-                $this->isError(PEAR::raiseError("No supported image types available", IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
+                throw new Image_Transform_Exception("No supported image types available", IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
             }
         }
 
@@ -117,7 +119,8 @@ class Image_Transform_Driver_GD extends Image_Transform
      * Loads an image from file
      *
      * @param string $image filename
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
+     * @throws Image_Transform_Exception
      * @access public
      */
     function load($image)
@@ -126,11 +129,9 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         $this->image = $image;
         $result = $this->_get_image_details($image);
-        if (PEAR::isError($result)) {
-            return $result;
-        }
+
         if (!$this->supportsType($this->type, 'r')) {
-            return PEAR::raiseError('Image type not supported for input',
+            throw new Image_Transform_Exception('Image type not supported for input',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
@@ -138,7 +139,7 @@ class Image_Transform_Driver_GD extends Image_Transform
         $this->imageHandle = $functionName($this->image);
         if (!$this->imageHandle) {
             $this->imageHandle = null;
-            return PEAR::raiseError('Error while loading image file.',
+            throw new Image_Transform_Exception('Error while loading image file.',
                 IMAGE_TRANSFORM_ERROR_IO);
         }
         return true;
@@ -204,7 +205,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      *                                                  before drawing the text
      *                              )
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      */
     function addText($params)
     {
@@ -261,7 +262,7 @@ class Image_Transform_Driver_GD extends Image_Transform
     /**
      * Horizontal mirroring
      *
-     * @return mixed TRUE or PEAR_Error object on error
+     * @return bool
      * @access public
      * @see flip()
      **/
@@ -280,7 +281,7 @@ class Image_Transform_Driver_GD extends Image_Transform
     /**
      * Vertical mirroring
      *
-     * @return TRUE or PEAR Error object on error
+     * @return TRUE
      * @access public
      * @see mirror()
      **/
@@ -315,14 +316,15 @@ class Image_Transform_Driver_GD extends Image_Transform
      * @param int height Cropped image height
      * @param int x X-coordinate to crop at
      * @param int y Y-coordinate to crop at
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
+     * @throws Image_Transform_Exception
      * @access public
      */
     function crop($width, $height, $x = 0, $y = 0)
     {
         // Sanity check
         if (!$this->intersects($width, $height, $x, $y)) {
-            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+            throw new Image_Transform_Exception('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         $x = min($this->new_x, max(0, $x));
         $y = min($this->new_y, max(0, $y));
@@ -332,7 +334,7 @@ class Image_Transform_Driver_GD extends Image_Transform
 
         if (!imagecopy($new_img, $this->imageHandle, 0, 0, $x, $y, $width, $height)) {
             imagedestroy($new_img);
-            return PEAR::raiseError('Failed transformation: crop()',
+            throw new Image_Transform_Exception('Failed transformation: crop()',
                 IMAGE_TRANSFORM_ERROR_FAILED);
         }
 
@@ -370,13 +372,14 @@ class Image_Transform_Driver_GD extends Image_Transform
      *  <li>'scaleMethod': "pixel" or "smooth"</li>
      * </ul>
      *
-     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @return bool
+     * @throws Image_Transform_Exception
      * @access protected
      */
     function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
-            return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
+            throw new Image_Transform_Exception('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
 
         if ($this->new_x == $new_x && $this->new_y == $new_y) {
@@ -411,7 +414,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      *
      * @param float $outputgamma
      *
-     * @return bool|PEAR_Error TRUE or a PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function gamma($outputgamma = 1.0)
@@ -430,8 +433,9 @@ class Image_Transform_Driver_GD extends Image_Transform
      *                          is the current used format
      * @param int    $quality  output DPI, default is 75
      *
-     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @return bool
      * @access protected
+     * @throws Image_Transform_Exception
      */
     function _generate($filename, $type = '', $quality = null)
     {
@@ -448,7 +452,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 break;
         }
         if (!$this->supportsType($type, 'w')) {
-            return PEAR::raiseError('Image type not supported for output',
+            throw new Image_Transform_Exception('Image type not supported for output',
                 IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
@@ -472,7 +476,7 @@ class Image_Transform_Driver_GD extends Image_Transform
                 }
         }
         if (!$result) {
-            return PEAR::raiseError('Couldn\'t ' . $action,
+            throw new Image_Transform_Exception('Couldn\'t ' . $action,
                 IMAGE_TRANSFORM_ERROR_IO);
         }
         $this->imageHandle = $this->oldImage;
@@ -491,7 +495,7 @@ class Image_Transform_Driver_GD extends Image_Transform
      * @param string $type (JPEG, PNG...);
      * @param int    $quality 75
      *
-     * @return bool|PEAR_Error TRUE or PEAR_Error object on error
+     * @return bool
      * @access public
      */
     function display($type = '', $quality = null)
@@ -507,13 +511,14 @@ class Image_Transform_Driver_GD extends Image_Transform
      *                          is the current used format
      * @param int    $quality  default is 75
      *
-     * @return bool|PEAR_Error TRUE on success or PEAR_Error object on error
+     * @return bool
+     * @throws Image_Transform_Exception
      * @access public
      */
     function save($filename, $type = '', $quality = null)
     {
         if (!trim($filename)) {
-            return PEAR::raiseError('Filename missing',
+            throw new Image_Transform_Exception('Filename missing',
                 IMAGE_TRANSFORM_ERROR_ARGUMENT);
         }
         return $this->_generate($filename, $type, $quality);
