@@ -18,7 +18,7 @@
 // {{{ requires
 
 require_once 'Image/Transform.php';
-
+require_once 'Image/Transform/Exception.php';
 // }}}
 // {{{ example usage
 
@@ -61,25 +61,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Check settings
      *
-     * @see __construct()
-     */
-    function Image_Transform_Imlib()
-    {
-        $this->__construct();
-    }
-
-    /**
-     * Check settings
-     *
-     * @return mixed true or  or a PEAR error object on error
-     *
-     * @see PEAR::isError()
+     * @return mixed true
      */
     function __construct()
     {
         if (!PEAR::loadExtension('imlib')) {
-            $this->isError(
-                PEAR::raiseError(
+            throw new Image_Transform_Exception(
                     'Couldn\'t find the imlib extension.',
                     IMAGE_TRANSFORM_ERROR_UNSUPPORTED
                 )
@@ -95,17 +82,13 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @param string filename
      *
-     * @return mixed TRUE or a PEAR error object on error
-     * @see PEAR::isError()
+     * @return mixed TRUE
      */
     function load($image)
     {
         $this->image = $image;
         $this->imageHandle = imlib_load_image($this->image);
         $result =& $this->_get_image_details($image);
-        if (PEAR::isError($result)) {
-            return $result;
-        }
 
         return true;
     }
@@ -129,8 +112,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *                                  'angle' A imlib direction constant
      *                              )
      *
-     * @return TRUE or PEAR Error object on error
-     * @see PEAR::isError()
+     * @return TRUE
      */
     function addText($params)
     {
@@ -168,7 +150,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *
      * @param int       $angle      Rotation angle
      *
-     * @return TRUE or PEAR Error object on error
+     * @return TRUE
      */
     function rotate($angle)
     {
@@ -210,13 +192,13 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      * @param int $in_cropY The Y coordinate on the image to start the crop
      *
      * @access public
-     * @return TRUE or PEAR Error object on error
+     * @return TRUE
      */
     function crop($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)
     {
         // Sanity check
         if (!$this->_intersects($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)) {
-            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+            throw new Image_Transform_Exception('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
         }
         $this->oldHandle = $this->imageHandle;
         $this->imageHandle = imlib_create_cropped_image($this->imageHandle, $in_cropX, $in_cropY, $in_cropWidth, $in_cropHeight);
@@ -236,12 +218,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      *                          is the current used format
      * @param $quality  int     (optional) output DPI, default is 75
      *
-     * @return TRUE on success or PEAR Error object on error
+     * @return bool
      */
     function save($filename, $type = '', $quality = 75)
     {
         if (!is_resource($this->imageHandle)) {
-            return PEAR::raiseError('Invalid image', true);
+            throw new InvalidArgumentException('Invalid image', true);
         }
 
         $err = 0;
@@ -252,7 +234,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         $this->imageHandle = $this->oldHandle;
         $this->resized = false;
         if (!$return) {
-            return PEAR::raiseError('Couldn\'t save image. Reason: ' . $err, true);
+            throw new Image_Tranform_Exception('Couldn\'t save image. Reason: ' . $err, true);
         }
         return true;
     }
@@ -268,12 +250,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      * @param string $type (optional) (JPG,PNG...);
      * @param int $quality (optional) 75
      *
-     * @return TRUE on success or PEAR Error object on error
+     * @return TRUE on success
      */
     function display($type = '', $quality = null)
     {
         if (!is_resource($this->imageHandle)) {
-            return PEAR::raiseError('Invalid image', true);
+            throw new Image_Transform_Exception('Invalid image', true);
         }
 
         $type    = ($type == '') ? $this->type : $type;
@@ -286,7 +268,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
         $this->resized = false;
         imlib_free_image($this->oldHandle);
         if (!$return) {
-            return PEAR::raiseError('Couldn\'t output image. Reason: ' . $err, true);
+            throw new Image_Transform_Exception('Couldn\'t output image. Reason: ' . $err, true);
         }
         return true;
     }
@@ -318,13 +300,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      * @param int   $new_y   New height
      * @param mixed $options Optional parameters
      *
-     * @return TRUE on success or PEAR Error object on error
-     * @see PEAR::isError()
+     * @return TRUE on success
      */
     function _resize($new_x, $new_y, $options = null)
     {
         if ($this->resized === true) {
-            return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
+            throw new Image_Transform_Exception('You have already resized the image without saving it.  Your previous resizing will be overwritten');
         }
 
         $this->oldHandle = $this->imageHandle;
@@ -342,7 +323,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
      * Gets the image details
      *
      * @access private
-     * @return TRUE on success or PEAR Error object on error
+     * @return TRUE on success
      */
     function _get_image_details()
     {
@@ -358,7 +339,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Horizontal mirroring
      *
-     * @return TRUE on success, PEAR Error object on error
+     * @return TRUE on success
      */
     function mirror()
     {
@@ -369,7 +350,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform {
     /**
      * Vertical mirroring
      *
-     * @return TRUE on success, PEAR Error object on error
+     * @return TRUE on success
      */
     function flip()
     {
