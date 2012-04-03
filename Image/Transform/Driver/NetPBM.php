@@ -24,6 +24,7 @@
  */
 
 require_once 'Image/Transform.php';
+require_once 'Image/Transform/Exception.php';
 require_once 'System.php';
 
 /**
