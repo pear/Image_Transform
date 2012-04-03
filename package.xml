@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.8.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Image_Transform</name>
  <channel>pear.php.net</channel>
  <summary>Provides a standard interface to manipulate images using different libraries</summary>
@@ -47,12 +47,10 @@ It provides :
   <email>davidc@php.net</email>
   <active>yes</active>
  </lead>
-
- <date>2011-03-17</date>
- <time>10:36:00</time>
-
+ <date>2012-04-04</date>
+ <time>08:29:34</time>
  <version>
-  <release>0.9.4</release>
+  <release>0.9.5</release>
   <api>0.9.3</api>
  </version>
  <stability>
@@ -60,12 +58,12 @@ It provides :
   <api>alpha</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
-
  <notes>
-QA Release
-- Fix bug #16070: Use Imagick3 on PHP5, not Imagick2 [fkrauthan, cweiske]
+QA release
+Request #16069 Gif transparent bug
+Bug #17229
+Bug #19007 Remove error reporting from tests
  </notes>
-
  <contents>
   <dir baseinstalldir="/" name="/">
    <file name="Docs/README" role="data" />
@@ -151,9 +149,9 @@ QA Release
    <file name="tests/images/expected/scaleByXTo200px.jpg" role="test" />
    <file name="tests/images/expected/scaleByYTo112px.jpg" role="test" />
    <file name="tests/images/expected/scalePct31_5s.jpg" role="test" />
+
   </dir>
  </contents>
-
  <dependencies>
   <required>
    <php>
@@ -164,11 +162,8 @@ QA Release
    </pearinstaller>
   </required>
  </dependencies>
-
  <phprelease />
-
  <changelog>
-
   <release>
    <version>
     <release>0.8</release>
@@ -184,7 +179,6 @@ QA Release
 Second public release, hopefully much more stable.  API nearly fixed.  NOT NECESSARILY COMPATIBLE WITH 0.1 - be warned!
    </notes>
   </release>
-
   <release>
    <version>
     <release>0.9.0</release>
@@ -200,7 +194,6 @@ Second public release, hopefully much more stable.  API nearly fixed.  NOT NECES
 Fixes quite a lot of problems, but still far from stable. GD driver should be much better. ImageMagick is the best driver, especially to deal with transparent and alpha-channel images. Due to the size of the images, the tests are not packaged, use CVS instead.
    </notes>
   </release>
-
   <release>
    <version>
     <release>0.9.1</release>
@@ -225,7 +218,6 @@ Fixes quite a lot of problems, but still far from stable. GD driver should be mu
 - Request #6004 Added 2 new methods fitX() and fitY() to fit an image within the given width or height (respectively). (jausions)
    </notes>
   </release>
-
   <release>
    <version>
     <release>0.9.3</release>
@@ -249,7 +241,6 @@ QA Release
 - Bug #14711 typo on file Imagick2.php - strcasecomp instead of strcasecmp 	dufuz
    </notes>
   </release>
-
   <release>
    <version>
     <release>0.9.4</release>
@@ -266,6 +257,24 @@ QA Release
 - Fix bug #16070: Use Imagick3 on PHP5, not Imagick2 [fkrauthan, cweiske]
    </notes>
   </release>
-
+  <release>
+   <version>
+    <release>0.9.5</release>
+    <api>0.9.3</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2012-04-04</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+QA release
+Request #16069 Gif transparent bug
+Bug #17229
+Bug #19007 Remove error reporting from tests
+Drop PHP 4
+   </notes>
+  </release>
  </changelog>
 </package>
