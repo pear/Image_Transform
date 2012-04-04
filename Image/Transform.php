@@ -200,7 +200,7 @@ class Image_Transform
      * @throws Image_Transform_Exception
      * @throws InvalidArgumentException
      */
-    function &factory($driver = '')
+    function factory($driver = '')
     {
         if ($driver == '') {
             $extensions = array(
