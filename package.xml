@@ -48,10 +48,10 @@ It provides :
   <active>yes</active>
  </lead>
  <date>2012-04-04</date>
- <time>08:29:34</time>
+ <time>09:34:15</time>
  <version>
-  <release>0.9.5</release>
-  <api>0.9.3</api>
+  <release>0.10.0</release>
+  <api>0.10.0</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -60,9 +60,7 @@ It provides :
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
 QA release
-Request #16069 Gif transparent bug
-Bug #17229
-Bug #19007 Remove error reporting from tests
+Introduce exceptions instead of PEAR_Error.
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -75,6 +73,7 @@ Bug #19007 Remove error reporting from tests
    <file name="Examples/test.tif" role="data" />
    <file name="Examples/test_netpbm.php" role="php" />
    <file name="Image/Transform.php" role="php" />
+   <file name="Image/Transform/Exception.php" role="php" />
    <file name="Image/Transform/Driver/Cairowrapper.php" role="php" />
    <file name="Image/Transform/Driver/ColorsDefs.php" role="php" />
    <file name="Image/Transform/Driver/GD.php" role="php" />
@@ -274,6 +273,22 @@ Request #16069 Gif transparent bug
 Bug #17229
 Bug #19007 Remove error reporting from tests
 Drop PHP 4
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.10.0</release>
+    <api>0.10.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2012-04-04</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+QA release
+Introduce exceptions instead of PEAR_Error.
    </notes>
   </release>
  </changelog>
