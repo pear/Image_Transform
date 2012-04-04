@@ -68,7 +68,7 @@ It provides :
    <package>
     <name>Image_Transform_GD</name>
     <channel>pear.php.net</channel>
-    <min>0.1.0</min>
+    <min>0.10.0</min>
    </package>
    <extension>
     <name>gd</name>
