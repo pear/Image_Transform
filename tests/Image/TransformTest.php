@@ -14,14 +14,14 @@ class Image_TransformTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('PHP version is lower than php 5.0.0');
         }
 
-        $driver = Image_Transform::factory('imagick');
-        $bError = PEAR::isError($driver);
-        if ($bError) {
-            if ($driver->getCode() == IMAGE_TRANSFORM_ERROR_UNSUPPORTED) {
-                $this->markTestSkipped($driver->getMessage());
-            } else {
-                $this->fail($driver->getMessage(), $driver->getCode());
+        try {
+            $driver = Image_Transform::factory('imagick');
+        } catch (Image_Transform_Exception $ite) {
+            if ($ite->getCode() == IMAGE_TRANSFORM_ERROR_UNSUPPORTED) {
+                $this->markTestSkipped($ite->getMessage());
             }
+
+            throw $ite;
         }
 
         $this->assertInstanceOf('Image_Transform_Driver_Imagick3', $driver);
